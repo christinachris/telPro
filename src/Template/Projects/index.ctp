@@ -415,9 +415,12 @@ $conn = ConnectionManager::get('default');
                                     </div>
                                 </div>
                             </td>
+                            <?php if(sizeOf($project->start_date)>0){ ?>
                             <td><?php echo date_format($project->start_date, "d M Y "); ?></td>
+                            <?php } else { ?> <td></td> <?php } ?>
+                            <?php if(sizeOf($project->end_date)>0){ ?>
                             <td><?php echo date_format($project->end_date, "d M Y "); ?></td>
-
+                            <?php } else { ?> <td></td> <?php } ?>
                             <td><?= $project->has('client') ? $this->Html->link($project->client->first_name . ' ' . $project->client->last_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id],['data-toggle' => "kt-popover", 'data-content' => "View Client Details", 'data-placement' => 'bottom']) : '' ?></td>
                             <td>
                                 <div class=""><?php foreach ($project->talents as $talent) { ?>
