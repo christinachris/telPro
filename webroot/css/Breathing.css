@@ -1,0 +1,82 @@
+.breath {
+    animation: phone-outer 3000ms infinite;
+}
+
+
+@keyframes phone-outer {
+    0% {
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow:
+            0 0 0 0em rgba(177, 209, 240,0),
+            0.3em 0.3em 0.4em rgba(255,255,255, 0.2);
+    }
+    33.3333% {
+        transform: translate3d(0, 0, 0) scale(1.1);
+        box-shadow:
+            0 0 0 0em rgba(177, 209, 240, 1),
+            0.3em 0.3em 0.4em rgba(255,255,255, 0.5);
+    }
+    66.6666% {
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow:
+            0 0 0 0.5em rgba(177, 209, 240, 0),
+            0.3em 0.3em 0.4em  rgba(255,255,255, 0.2);
+    }
+    100% {
+        transform: translate3d(0, 0, 0) scale(1);
+        box-shadow:
+            0 0 0 0em rgba(177, 209, 240, 0),
+            0.3em 0.3em 0.4em rgba(255,255,255, 0.2);
+    }
+}
+
+/*@keyframes phone-inner {*/
+    /*0% {*/
+        /*opacity: 1;*/
+        /*transform: translate3d(0, 0, 0) scale(0);*/
+    /*}*/
+    /*33.3333% {*/
+        /*opacity: 1;*/
+        /*transform: translate3d(0, 0, 0) scale(0.9);*/
+    /*}*/
+    /*66.6666% {*/
+        /*opacity: 0;*/
+        /*transform: translate3d(0, 0, 0) scale(0);*/
+    /*}*/
+    /*100% {*/
+        /*opacity: 0;*/
+        /*transform: translate3d(0, 0, 0) scale(0);*/
+    /*}*/
+/*}*/
+
+input[type=checkbox] {
+    position: relative;
+    cursor: pointer;
+}
+input[type=checkbox]:before {
+    content: "";
+    display: block;
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    top: 0;
+    left: 0;
+    border: 1px solid #716aca;
+    border-radius: 3px;
+    background-color: white;
+}
+input[type=checkbox]:checked:after {
+    content: "";
+    display: block;
+    width: 5px;
+    height: 10px;
+    border: solid #716aca;
+    border-width: 0 2px 2px 0;
+    -webkit-transform: rotate(45deg);
+    -ms-transform: rotate(45deg);
+    transform: rotate(45deg);
+    position: absolute;
+    top: 2px;
+    left: 6px;
+}
+

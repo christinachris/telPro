@@ -1,0 +1,562 @@
+<?php
+/**
+ * @var \App\View\AppView $this
+ * @var \App\Model\Entity\Task[]|\Cake\Collection\CollectionInterface $tasks
+ */
+
+use Cake\Datasource\ConnectionManager;
+use Cake\I18n\I18n;
+use Cake\I18n\Time;
+
+//I18n::Locale('es-au');
+// my_connection is defined in your database config
+$conn = ConnectionManager::get('default');
+?>
+<!-- begin:: Header Topbar -->
+<?= $this->Flash->render() ?>
+
+
+<div class="kt-header__topbar">
+    <?php
+    $results = $conn
+        ->execute('select * from tasks');
+    $count = 0;
+    foreach ($results
+
+             as $task) {
+        $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
+        $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
+        $datediff = date_diff($sys_date, $due_date);
+
+        if ($datediff->days < 10) {
+            $count = $count + 1
+            ?>
+            <?php
+        }
+        if (!empty($task['moved_date'])) {
+            $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
+            $datediff_Moved = date_diff($moved_date, $sys_date);
+            if ($task['status_id'] == 3) {
+                if ($datediff_Moved->days > 5) {
+                    $count = $count + 1;
+                }
+            }
+        }
+
+    }
+
+    ?>
+    <!--begin: Notifications -->
+    <div class="kt-header__topbar-item dropdown">
+        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
+											<span class="kt-header__topbar-icon">
+												<i class="flaticon2-bell-alarm-symbol"></i>
+												<span class="kt-badge kt-badge--success kt-hidden"></span>
+											</span>
+            <span class="kt-badge kt-badge--danger"
+                  style=" position: absolute;top: -5px;right: -5px; width:24px; height:24px ;opacity: 0.9 ; font-weight: 500;font-size: 15px"> <?php echo $count; ?></span>
+        </div>
+        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
+            <form>
+
+                <!--begin: Head -->
+                <div class="kt-head kt-head--skin-light kt-head--fit-x" style="padding-bottom: 20px">
+                    <h3 class="kt-head__title" style="text-align: center">
+                        User Notifications
+                        <span class="btn btn-label-primary btn-sm btn-bold btn-font-md"><?php echo $count ?> new </span>
+                    </h3>
+                </div>
+
+                <!--end: Head -->
+                <div class="tab-content">
+                    <div class="tab-pane active show" id="topbar_notifications_notifications" role="tabpanel">
+                        <div class="kt-notification kt-margin-t-10 kt-margin-b-10 kt-scroll" data-scroll="true"
+                             data-height="300" data-mobile-height="200">
+                            <?php
+                            $results = $conn
+                                ->execute('select * from tasks');
+
+                            foreach ($results as $task) {
+                                $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
+                                $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
+                                $datediff = date_diff($sys_date, $due_date);
+                                if ($datediff->days < 10) {
+                                    ?>
+                                    <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $task['project_id']]); ?>" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon2-line-chart kt-font-success"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title">
+                                                Task: <b> <?php echo $task["task_name"] ?> </b> is coming to the due
+                                                date !
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                <?php echo $datediff->days ?> Days left
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <?php
+                                }
+                                if (!empty($task['moved_date'])) {
+                                    $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
+                                    $datediff_Moved = date_diff($moved_date, $sys_date);
+                                    if ($task['status_id'] == 3) {
+                                        if ($datediff_Moved->days > 5) { ?>
+                                            <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index",  $task['project_id']]); ?>" class="kt-notification__item">
+                                                <div class="kt-notification__item-icon">
+                                                    <i class="flaticon2-bar-chart kt-font-info"></i>
+                                                </div>
+                                                <div class="kt-notification__item-details">
+                                                    <div class="kt-notification__item-title">
+                                                        Task: <b> <?php echo $task["task_name"] ?> </b> needs to be
+                                                        followed up !
+                                                    </div>
+                                                    <div class="kt-notification__item-time">
+                                                        <?php echo $datediff->days ?> Days passed
+                                                    </div>
+                                                </div>
+                                            </a>
+                                            <?php
+                                        }
+                                    }
+                                }
+                            }
+                            ?>
+
+                        </div>
+                    </div>
+
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!--end: Notifications -->
+
+    <!--begin: User bar -->
+    <div class="kt-header__topbar-item kt-header__topbar-item--user">
+        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
+            <span class="kt-header__topbar-welcome kt-visible-desktop" style="font-size: 16px">G'day ,</span>
+            <span class="kt-header__topbar-username kt-visible-desktop" style="font-size: 16px"><?php echo $user_name ?> ! </span>
+            <span class="kt-header__topbar-icon kt-bg-brand kt-font-lg kt-font-bold kt-font-light kt-hidden">S</span>
+            <span class="kt-header__topbar-icon kt-hidden"><i class="flaticon2-user-outline-symbol"></i></span>
+        </div>
+        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
+
+            <!--begin: Head -->
+            <div class="kt-user-card kt-user-card--skin-light kt-notification-item-padding-x">
+                <div class="kt-user-card__avatar">
+
+
+                    <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
+                    <span
+                        class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden">S</span>
+                </div>
+                <div class="kt-user-card__name">
+                    <?php echo $user_role. ":  ". $user_name ?>
+                </div>
+                <!--                <div class="kt-user-card__badge">-->
+                <!--                    <span class="btn btn-label-primary btn-sm btn-bold btn-font-md">23 messages</span>-->
+                <!--                </div>-->
+            </div>
+
+            <!--end: Head -->
+
+            <!--begin: Navigation -->
+            <div class="kt-notification">
+                <!--                <a href="#" class="kt-notification__item">-->
+                <!--                    <div class="kt-notification__item-icon">-->
+                <!--                        <i class="flaticon2-calendar-3 kt-font-success"></i>-->
+                <!--                    </div>-->
+                <!--                    <div class="kt-notification__item-details">-->
+                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
+                <!--                            My Profile-->
+                <!--                        </div>-->
+                <!--                        <div class="kt-notification__item-time">-->
+                <!--                            Account settings and more-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </a>-->
+                <!--                <a href="#" class="kt-notification__item">-->
+                <!--                    <div class="kt-notification__item-icon">-->
+                <!--                        <i class="flaticon2-mail kt-font-warning"></i>-->
+                <!--                    </div>-->
+                <!--                    <div class="kt-notification__item-details">-->
+                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
+                <!--                            My Messages-->
+                <!--                        </div>-->
+                <!--                        <div class="kt-notification__item-time">-->
+                <!--                            Inbox and tasks-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </a>-->
+                <!--                <a href="#" class="kt-notification__item">-->
+                <!--                    <div class="kt-notification__item-icon">-->
+                <!--                        <i class="flaticon2-rocket-1 kt-font-danger"></i>-->
+                <!--                    </div>-->
+                <!--                    <div class="kt-notification__item-details">-->
+                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
+                <!--                            My Activities-->
+                <!--                        </div>-->
+                <!--                        <div class="kt-notification__item-time">-->
+                <!--                            Logs and notifications-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </a>-->
+                <!--                <a href="#" class="kt-notification__item">-->
+                <!--                    <div class="kt-notification__item-icon">-->
+                <!--                        <i class="flaticon2-hourglass kt-font-brand"></i>-->
+                <!--                    </div>-->
+                <!--                    <div class="kt-notification__item-details">-->
+                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
+                <!--                            My Tasks-->
+                <!--                        </div>-->
+                <!--                        <div class="kt-notification__item-time">-->
+                <!--                            latest tasks and projects-->
+                <!--                        </div>-->
+                <!--                    </div>-->
+                <!--                </a>-->
+                <div class="kt-notification__custom">
+                    <?= $this->Html->link('<span class="btn btn-primary"><i class="flaticon2-plus]"></i> Sign Out</span>', ['controller' => 'Users', 'action' => 'logout', 'type' => 'button'], ['escape' => false]) ?>
+                    <!--                    <a href="custom_user_login-v2.html" target="_blank" class="btn btn-label-brand btn-sm btn-bold">Sign-->
+                    <!--                        Out</a>-->
+                </div>
+            </div>
+
+            <!--end: Navigation -->
+        </div>
+    </div>
+    <!--end: User bar -->
+
+</div>
+<!-- end:: Header Topbar -->
+</div>
+</div>
+</div>
+<!-- end:: Header -->
+<div class="kt-header__bottom">
+    <div class="kt-container">
+
+        <!-- begin: Header Menu -->
+        <div class="kt-header-menu-wrapper" id="kt_header_menu_wrapper">
+            <div id="kt_header_menu" class="kt-header-menu">
+
+                <ul class="kt-menu__nav ">
+                    <li class="kt-menu__item   " aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>" class="kt-menu__link "><span class="kt-menu__link-text">Projects </span></a></li>
+                    <li class="kt-menu__item  kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Talents', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Talent</span></a></li>
+                    <li class="kt-menu__item kt-menu__item--active kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Clients', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Client</span></a></li>
+                </ul>
+
+            </div>
+
+        </div>
+        <!-- end: Header Menu -->
+    </div>
+</div>
+
+<div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--ver kt-grid--stretch">
+    <div class="kt-container kt-body  kt-grid kt-grid--ver" id="kt_body">
+        <div class="kt-grid__item kt-grid__item--fluid kt-grid kt-grid--hor">
+            <!-- Header End -->
+
+
+
+            <div class="kt-subheader   kt-grid__item" id="kt_subheader">
+    <div class="kt-subheader__main">
+        <a href="<?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>"
+        <h3 class="kt-subheader__title">
+            Dashboard </h3>
+        </a>
+        <span class="kt-subheader__separator kt-hidden"></span>
+
+
+
+        <div class="kt-subheader__breadcrumbs">
+           <i class="flaticon2-shelter"></i></a>
+            <span class="kt-subheader__breadcrumbs-separator"></span>
+            <a href="" class="kt-subheader__breadcrumbs-link">
+
+            </a>
+
+
+                <span class="kt-subheader__breadcrumbs-separator"></span>
+                Archived Client List
+            <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
+        </div>
+    </div>
+    <div class="kt-subheader__toolbar">
+        <div class="kt-subheader__wrapper">
+            <div class="btn kt-subheader__btn-daterange" title="Select dashboard daterange">
+                <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
+                <span class="kt-subheader__btn-daterange-date"
+                      id="kt_dashboard_daterangepicker_date"><?php echo date("M d") ?></span>
+                <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px"
+                     height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">
+                    <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                        <rect id="bound" x="0" y="0" width="24" height="24"/>
+                        <path
+                            d="M4.875,20.75 C4.63541667,20.75 4.39583333,20.6541667 4.20416667,20.4625 L2.2875,18.5458333 C1.90416667,18.1625 1.90416667,17.5875 2.2875,17.2041667 C2.67083333,16.8208333 3.29375,16.8208333 3.62916667,17.2041667 L4.875,18.45 L8.0375,15.2875 C8.42083333,14.9041667 8.99583333,14.9041667 9.37916667,15.2875 C9.7625,15.6708333 9.7625,16.2458333 9.37916667,16.6291667 L5.54583333,20.4625 C5.35416667,20.6541667 5.11458333,20.75 4.875,20.75 Z"
+                            id="check" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                        <path
+                            d="M2,11.8650466 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L12.9835977,18 C12.7263047,14.0909841 9.47412135,11 5.5,11 C4.23590829,11 3.04485894,11.3127315 2,11.8650466 Z M6,7 C5.44771525,7 5,7.44771525 5,8 C5,8.55228475 5.44771525,9 6,9 L15,9 C15.5522847,9 16,8.55228475 16,8 C16,7.44771525 15.5522847,7 15,7 L6,7 Z"
+                            id="Combined-Shape" fill="#000000"/>
+                    </g>
+                </svg>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="kt-content kt-grid__item kt-grid__item--fluid">
+    <div class="kt-content  kt-grid__item kt-grid__item--fluid" id="kt_content">
+        <div class="kt-portlet__body">
+            <!--begin: Selected Rows Group Action Form -->
+            <div class="kt-portlet kt-portlet--mobile">
+                <div class="kt-portlet__head kt-portlet__head--lg">
+                    <div class="kt-portlet__head-label">
+										<span class="kt-portlet__head-icon">
+											<i class="flaticon2-list-1"></i>
+										</span>
+                        <h3 class="kt-portlet__head-title">
+                            Archive List
+                            <small>:</small>
+                        </h3>
+                    </div>
+                    <div class="kt-portlet__head-toolbar">
+                        <div class="kt-portlet__head-wrapper">
+                            &nbsp;
+                            <div class="dropdown dropdown-inline">
+                                <?= $this->Html->link('<span class="btn btn-outline-primary"><i class="flaticon-eye"></i> View Clients</span>', ['controller' => 'Clients', 'action' => 'Index', 'type' => 'button'], ['escape' => false]) ?>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="kt-portlet__body">
+                    <!--begin: Search Form -->
+                    <div class="kt-form kt-form--label-right kt-margin-t-20 kt-margin-b-10">
+                        <div class="row align-items-center">
+                            <div class="col-xl-8 order-2 order-xl-1">
+                                <div class="row align-items-center">
+                                    <div class="col-md-4 kt-margin-b-20-tablet-and-mobile">
+                                        <div class="kt-input-icon kt-input-icon--left">
+                                            <input type="text" class="form-control" placeholder="Search..."
+                                                   id="generalSearch" onkeyup="Search()">
+                                            <span class="kt-input-icon__icon kt-input-icon__icon--left">
+							<span><i class="la la-search"></i></span>
+						</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-4 order-1 order-xl-2 kt-align-right">
+                                <a href="#" class="btn btn-default kt-hidden">
+                                    <i class="la la-cart-plus"></i> New Order
+                                </a>
+                                <div
+                                    class="kt-separator kt-separator--border-dashed kt-separator--space-lg d-xl-none"></div>
+                            </div>
+                        </div>
+                        <!--end: Search Form -->
+                    </div>
+                    <!--begin: Selected Rows Group Action Form -->
+                    <div class="kt-form kt-form--label-align-right kt-margin-t-20 collapse"
+                         id="kt_datatable_group_action_form">
+                        <div class="row align-items-center">
+                            <div class="col-xl-12">
+                                <div class="kt-form__group kt-form__group--inline">
+                                    <div class="kt-form__label kt-form__label-no-wrap">
+                                        <label class="kt-font-bold kt-font-danger-">Selected
+                                            <span id="kt_datatable_selected_number">0</span> records:</label>
+                                    </div>
+                                    <div class="kt-form__control">
+                                        <div class="btn-toolbar">
+                                            <div class="dropdown">
+                                                <button type="button" class="btn btn-brand btn-sm dropdown-toggle"
+                                                        data-toggle="dropdown">
+                                                    Update status
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <a class="dropdown-item" href="#">Pending</a>
+                                                    <a class="dropdown-item" href="#">Delivered</a>
+                                                    <a class="dropdown-item" href="#">Canceled</a>
+                                                </div>
+                                            </div>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-sm btn-danger" type="button"
+                                                    id="kt_datatable_delete_all">Delete All
+                                            </button>
+                                            &nbsp;&nbsp;&nbsp;
+                                            <button class="btn btn-sm btn-success" type="button" data-toggle="modal"
+                                                    data-target="#kt_modal_fetch_id">Fetch Selected Records
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--end: Selected Rows Group Action Form -->
+                </div>
+                <div class="kt-portlet__body kt-portlet__body--fit">
+                    <!--begin: Datatable -->
+                    <div
+                        class="kt-datatable kt-datatable--default kt-datatable--brand kt-datatable--scroll kt-datatable--loaded"
+                        id="server_record_selection" style="">
+                        <table class="table" id="myClientTable">
+                            <thead>
+                            <tr>
+                                <th style="width: 3%"><?= __('') ?></th>
+                                <th style="width: 10%"><?= $this->Paginator->sort('first_name', 'Full name') ?></th>
+                                <th style="width: 10%"><?= $this->Paginator->sort('preferred_name') ?></th>
+                                <th style="width: 10%"><?= $this->Paginator->sort('phone_no') ?></th>
+                                <th style="width: 18%"><?= $this->Paginator->sort('email') ?></th>
+                                <th style="width: 10%"><?= __('Last Contacted Date') ?></th>
+                                <th style="width: 14%"><?= __('Lifecycle Stage') ?></th>
+                                <th style="width: 10%" class="actions"><?= __('Actions') ?></th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            <?php foreach ($clients as $client): ?>
+                                <tr>
+                                    <td>
+                                        <?php if ($client->flag == 1): ?>
+
+                                            <link rel='stylesheet'
+                                                  href='https://use.fontawesome.com/releases/v5.7.0/css/all.css'
+                                                  integrity='sha384-lZN37f5QGtY3VHgisS14W3ExzMWZxybE1SJSEsQp9S+oqd12jhcu+A56Ebc1zFSJ'
+                                                  crossorigin='anonymous'>
+                                            <i class='far fa-bell' style="font-size:30px;width: 3%;color:red"></i>
+                                        <?php else: ?>
+                                            <?= h("") ?>
+                                        <?php endif; ?>
+                                    </td>
+                                    <td><?= $this->Html->link(h($client->first_name) . ' ' . h($client->last_name), ['action' => 'view', $client->id]) ?></td>
+                                    <td>
+                                        <?= h($client->preferred_name) ?>
+                                    </td>
+                                    <td>
+                                        <?= h($client->phone_no) ?>
+                                    </td>
+                                    <td>
+                                        <?= h($client->email) ?>
+                                    </td>
+                                    <td>
+                                        <?= h($client->last_contactdate) ?>
+                                    </td>
+
+                                    <td>
+                                        <?= h($client->lifecycle_stage) ?>
+                                    </td>
+                                    <td class="kt-datatable__cell--left kt-datatable__cell" data-field="Actions"
+                                        data-autohide-disabled="false">
+                                        <a>
+                                            <?= $this->Html->link('',
+                                                ['action' => 'unarchive', $client->id],
+                                                ['confirm' => __('Are you sure you want to unarchive {0}?', $client->first_name.' '.$client->last_name),
+                                                    'class' => "flaticon-refresh",
+                                                    'style' => 'padding : 5px ; font-size: 20px',
+                                                    'data-toggle' => "kt-popover",
+                                                    'data-content' => "Unarchive Talent",
+                                                    'data-placement' => 'bottom']) ?>
+                                        </a>
+                                        <a>
+                                            <?= $this->Form->postLink('  ',
+                                                ['action' => 'delete', $client->id],
+                                                ['confirm' => __('Are you sure you want to DELETE {0}'),
+                                                    'class' => "flaticon2-delete",
+                                                    'style' => 'padding : 5px ; font-size: 18px',
+                                                    'data-toggle' => "kt-popover",
+                                                    'data-content' => "Delete Client",
+                                                    'data-placement' => 'bottom'],
+                                                ['confirm' => __('Are you sure you want to delete {0}?', $client->first_name . ' ' . $client->last_name)]) ?>
+                                        </a>
+                                    </td>
+                                </tr>
+                            <?php endforeach; ?>
+                            </tbody>
+                        </table>
+
+                        <div class="kt-datatable__pager kt-datatable--paging-loaded">
+                            <ul class="kt-datatable__pager-nav">
+                                <li>
+                                    <a title="First"
+                                       class="kt-datatable__pager-link kt-datatable__pager-link--first kt-datatable__pager-link--disabled"
+                                       data-page="1" disabled="disabled">
+                                        <i class="flaticon2-fast-back"></i><?= $this->Paginator->first('' . __('first')) ?>
+                                    </a>
+                                </li>
+                                <li>
+                                    <a title="Previous"
+                                       class="kt-datatable__pager-link kt-datatable__pager-link--prev kt-datatable__pager-link--disabled"
+                                       data-page="1" disabled="disabled"><i class="flaticon2-back"></i>
+                                        <?= $this->Paginator->prev('' . __(' ')) ?></a>
+                                </li>
+                                <li style=""></li>
+                                <li style="display: none;"><input type="text" class="kt-pager-input form-control"
+                                                                  title="Page number"><?= $this->Paginator->numbers() ?>
+                                </li>
+                                <li><a title="Next" class="kt-datatable__pager-link kt-datatable__pager-link--next"
+                                       data-page="2">
+                                        <i class="flaticon2-next"></i><?= $this->Paginator->next(__(' ') . ' ') ?></a>
+                                </li>
+                                <li><a title="Last" class="kt-datatable__pager-link kt-datatable__pager-link--last"
+                                       data-page="35"><i
+                                            class="flaticon2-fast-next"></i><?= $this->Paginator->last(__('last') . ' >>') ?>
+                                    </a>
+                                </li>
+                            </ul>
+                            <div class="kt-datatable__pager-info">
+                                <span
+                                    class="kt-datatable__pager-detail"><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</div>
+<script>
+    function flag() {
+        return false;
+    }
+</script>
+<script>
+    function Search() {
+        // Declare variables
+        var input, filter, table, tr, td, i, txtValue, j;
+        input = document.getElementById("generalSearch");
+        filter = input.value.toUpperCase();
+        table = document.getElementById("myClientTable");
+        tr = table.getElementsByTagName("tr");
+
+        // Loop through all table rows, and hide those who don't match the search query
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+
+            if (td) {
+                txtValue = td.textContent || td.innerText;
+                if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+            for (j = 1; j < 7; j++) {
+                td = tr[i].getElementsByTagName("td")[j];
+                if (td) {
+                    txtValue += td.textContent || td.innerText;
+                    if (txtValue.toUpperCase().indexOf(filter) > -1) {
+                        tr[i].style.display = "";
+                    } else {
+                        tr[i].style.display = "none";
+                    }
+                }
+            }
+        }
+
+
+    }
+</script>
+
