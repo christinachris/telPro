@@ -38,10 +38,11 @@
                                 </div>
                             </div>
                             <div class="kt-login__actions">
-                               <!-- <button id="kt_login_signin_submit" class="btn btn-pill kt-login__btn-primary">Sign In</button>-->
 
                                 <?= $this->Form->button('Login',['class'=>'btn btn-pill kt-login__btn-primary']); ?>
+
                                 <?= $this->Form->end() ?>
+                                <?= $this->Html->link('<span class="btn btn-pill kt-login__btn-primary"> Forget password?</span>', ['controller' => 'Users', 'action' => 'forgetPassword'], ['escape' => false]) ?>
 
                 </div>
             </div>

@@ -39,10 +39,6 @@ class ClientNotesTable extends Table
         $this->belongsTo('Clients', [
             'foreignKey' => 'client_id'
         ]);
-
-        $this->belongsTo('Talents', [
-            'foreignKey' => 'talent_id'
-        ]);
     }
 
     /**

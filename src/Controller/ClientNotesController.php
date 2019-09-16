@@ -119,9 +119,9 @@ class ClientNotesController extends AppController
     }
 
 
-//    public function isAuthorized($user)
-//    {
-//
-//        return false;
-//    }
+    public function isAuthorized($user)
+    {
+
+        return true;
+    }
 }

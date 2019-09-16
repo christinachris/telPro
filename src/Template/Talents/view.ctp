@@ -12,229 +12,6 @@ use Cake\I18n\Time;
 // my_connection is defined in your database config
 $conn = ConnectionManager::get('default');
 ?>
-<!-- begin:: Header Topbar -->
-<?= $this->Flash->render() ?>
-
-
-<div class="kt-header__topbar">
-    <?php
-    $results = $conn
-        ->execute('select * from tasks');
-    $count = 0;
-    foreach ($results
-
-             as $task) {
-        $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
-        $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
-        $datediff = date_diff($sys_date, $due_date);
-
-        if ($datediff->days < 10) {
-            $count = $count + 1
-            ?>
-            <?php
-        }
-        if (!empty($task['moved_date'])) {
-            $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
-            $datediff_Moved = date_diff($moved_date, $sys_date);
-            if ($task['status_id'] == 3) {
-                if ($datediff_Moved->days > 5) {
-                    $count = $count + 1;
-                }
-            }
-        }
-
-    }
-
-    ?>
-    <!--begin: Notifications -->
-    <div class="kt-header__topbar-item dropdown">
-        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
-											<span class="kt-header__topbar-icon">
-												<i class="flaticon2-bell-alarm-symbol"></i>
-												<span class="kt-badge kt-badge--success kt-hidden"></span>
-											</span>
-            <span class="kt-badge kt-badge--danger"
-                  style=" position: absolute;top: -5px;right: -5px; width:24px; height:24px ;opacity: 0.9 ; font-weight: 500;font-size: 15px"> <?php echo $count; ?></span>
-        </div>
-        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
-            <form>
-
-                <!--begin: Head -->
-                <div class="kt-head kt-head--skin-light kt-head--fit-x" style="padding-bottom: 20px">
-                    <h3 class="kt-head__title" style="text-align: center">
-                        User Notifications
-                        <span class="btn btn-label-primary btn-sm btn-bold btn-font-md"><?php echo $count ?> new </span>
-                    </h3>
-                </div>
-
-                <!--end: Head -->
-                <div class="tab-content">
-                    <div class="tab-pane active show" id="topbar_notifications_notifications" role="tabpanel">
-                        <div class="kt-notification kt-margin-t-10 kt-margin-b-10 kt-scroll" data-scroll="true"
-                             data-height="300" data-mobile-height="200">
-                            <?php
-                            $results = $conn
-                                ->execute('select * from tasks');
-
-                            foreach ($results as $task) {
-                                $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
-                                $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
-                                $datediff = date_diff($sys_date, $due_date);
-                                if ($datediff->days < 10) {
-                                    ?>
-                                    <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $task['project_id']]); ?>" class="kt-notification__item">
-                                        <div class="kt-notification__item-icon">
-                                            <i class="flaticon2-line-chart kt-font-success"></i>
-                                        </div>
-                                        <div class="kt-notification__item-details">
-                                            <div class="kt-notification__item-title">
-                                                Task: <b> <?php echo $task["task_name"] ?> </b> is coming to the due
-                                                date !
-                                            </div>
-                                            <div class="kt-notification__item-time">
-                                                <?php echo $datediff->days ?> Days left
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <?php
-                                }
-                                if (!empty($task['moved_date'])) {
-                                    $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
-                                    $datediff_Moved = date_diff($moved_date, $sys_date);
-                                    if ($task['status_id'] == 3) {
-                                        if ($datediff_Moved->days > 5) { ?>
-                                            <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index",  $task['project_id']]); ?>" class="kt-notification__item">
-                                                <div class="kt-notification__item-icon">
-                                                    <i class="flaticon2-bar-chart kt-font-info"></i>
-                                                </div>
-                                                <div class="kt-notification__item-details">
-                                                    <div class="kt-notification__item-title">
-                                                        Task: <b> <?php echo $task["task_name"] ?> </b> needs to be
-                                                        followed up !
-                                                    </div>
-                                                    <div class="kt-notification__item-time">
-                                                        <?php echo $datediff->days ?> Days passed
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <?php
-                                        }
-                                    }
-                                }
-                            }
-                            ?>
-
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!--end: Notifications -->
-
-    <!--begin: User bar -->
-    <div class="kt-header__topbar-item kt-header__topbar-item--user">
-        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
-            <span class="kt-header__topbar-welcome kt-visible-desktop" style="font-size: 16px">G'day ,</span>
-            <span class="kt-header__topbar-username kt-visible-desktop" style="font-size: 16px"><?php echo $user_name ?> ! </span>
-            <span class="kt-header__topbar-icon kt-bg-brand kt-font-lg kt-font-bold kt-font-light kt-hidden">S</span>
-            <span class="kt-header__topbar-icon kt-hidden"><i class="flaticon2-user-outline-symbol"></i></span>
-        </div>
-        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
-
-            <!--begin: Head -->
-            <div class="kt-user-card kt-user-card--skin-light kt-notification-item-padding-x">
-                <div class="kt-user-card__avatar">
-
-
-                    <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-                    <span
-                        class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden">S</span>
-                </div>
-                <div class="kt-user-card__name">
-                    <?php echo $user_role. ":  ". $user_name ?>
-                </div>
-                <!--                <div class="kt-user-card__badge">-->
-                <!--                    <span class="btn btn-label-primary btn-sm btn-bold btn-font-md">23 messages</span>-->
-                <!--                </div>-->
-            </div>
-
-            <!--end: Head -->
-
-            <!--begin: Navigation -->
-            <div class="kt-notification">
-                <!--                <a href="#" class="kt-notification__item">-->
-                <!--                    <div class="kt-notification__item-icon">-->
-                <!--                        <i class="flaticon2-calendar-3 kt-font-success"></i>-->
-                <!--                    </div>-->
-                <!--                    <div class="kt-notification__item-details">-->
-                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-                <!--                            My Profile-->
-                <!--                        </div>-->
-                <!--                        <div class="kt-notification__item-time">-->
-                <!--                            Account settings and more-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </a>-->
-                <!--                <a href="#" class="kt-notification__item">-->
-                <!--                    <div class="kt-notification__item-icon">-->
-                <!--                        <i class="flaticon2-mail kt-font-warning"></i>-->
-                <!--                    </div>-->
-                <!--                    <div class="kt-notification__item-details">-->
-                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-                <!--                            My Messages-->
-                <!--                        </div>-->
-                <!--                        <div class="kt-notification__item-time">-->
-                <!--                            Inbox and tasks-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </a>-->
-                <!--                <a href="#" class="kt-notification__item">-->
-                <!--                    <div class="kt-notification__item-icon">-->
-                <!--                        <i class="flaticon2-rocket-1 kt-font-danger"></i>-->
-                <!--                    </div>-->
-                <!--                    <div class="kt-notification__item-details">-->
-                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-                <!--                            My Activities-->
-                <!--                        </div>-->
-                <!--                        <div class="kt-notification__item-time">-->
-                <!--                            Logs and notifications-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </a>-->
-                <!--                <a href="#" class="kt-notification__item">-->
-                <!--                    <div class="kt-notification__item-icon">-->
-                <!--                        <i class="flaticon2-hourglass kt-font-brand"></i>-->
-                <!--                    </div>-->
-                <!--                    <div class="kt-notification__item-details">-->
-                <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-                <!--                            My Tasks-->
-                <!--                        </div>-->
-                <!--                        <div class="kt-notification__item-time">-->
-                <!--                            latest tasks and projects-->
-                <!--                        </div>-->
-                <!--                    </div>-->
-                <!--                </a>-->
-                <div class="kt-notification__custom">
-                    <?= $this->Html->link('<span class="btn btn-primary"><i class="flaticon2-plus]"></i> Sign Out</span>', ['controller' => 'Users', 'action' => 'logout', 'type' => 'button'], ['escape' => false]) ?>
-                    <!--                    <a href="custom_user_login-v2.html" target="_blank" class="btn btn-label-brand btn-sm btn-bold">Sign-->
-                    <!--                        Out</a>-->
-                </div>
-            </div>
-
-            <!--end: Navigation -->
-        </div>
-    </div>
-    <!--end: User bar -->
-
-</div>
-<!-- end:: Header Topbar -->
-</div>
-</div>
-</div>
-<!-- end:: Header -->
 <?= $this->Html->css('wizard-v3.demo8.css') ?>
 <div class="kt-header__bottom">
     <div class="kt-container">
@@ -242,15 +19,14 @@ $conn = ConnectionManager::get('default');
         <!-- begin: Header Menu -->
         <div class="kt-header-menu-wrapper" id="kt_header_menu_wrapper">
             <div id="kt_header_menu" class="kt-header-menu">
-
                 <ul class="kt-menu__nav ">
+                    <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>" class="kt-menu__link ">
+                            <span class="kt-menu__link-text">Dashboard </span></a></li>
                     <li class="kt-menu__item   " aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>" class="kt-menu__link "><span class="kt-menu__link-text">Projects </span></a></li>
                     <li class="kt-menu__item kt-menu__item--active kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Talents', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Talent</span></a></li>
                     <li class="kt-menu__item  kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Clients', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Client</span></a></li>
                 </ul>
-
             </div>
-
         </div>
         <!-- end: Header Menu -->
     </div>
@@ -265,8 +41,11 @@ $conn = ConnectionManager::get('default');
 
             <div class="kt-subheader   kt-grid__item" id="kt_subheader">
                 <div class="kt-subheader__main">
+                    <?= $this->Flash->render() ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>"
                     <h3 class="kt-subheader__title">
                         Dashboard </h3>
+                    </a>
                     <span class="kt-subheader__separator kt-hidden"></span>
                     <div class="kt-subheader__breadcrumbs">
                         <a href="#" class="kt-subheader__breadcrumbs-home"><i class="flaticon2-shelter"></i></a>
@@ -321,19 +100,15 @@ $conn = ConnectionManager::get('default');
                                                     <i class="la la-long-arrow-left"></i>
                                                     Back
                                                 </a>
-                                                <div style="margin-right: ;float:right;">
+                                                <div style="margin-right:-15% ;float:right;">
                                                     <a >
-                                                        <?= $this->Html->link('<span class="btn btn-sm btn-clean btn-icon btn-icon-sm" ><i class="flaticon2-note"></i></span>', ['action' => 'edit', $talent->id], ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "Edit Talent", 'data-placement' => 'bottom']) ?>
+                                                        <?= $this->Html->link('<span class="btn btn-secondary" ><i class="flaticon2-note"></i>Edit</span>', ['action' => 'edit', $talent->id], ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "Edit Talent", 'data-placement' => 'bottom']) ?>
                                                     </a>
                                                 </div>
-                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content"
-                                                     data-ktwizard-state="current">
-                                                    <div class="kt-heading kt-heading--md"><?= h($talent->first_name).' '.h($talent->last_name)  ?><br><h6><p><?= h($talent->email) ?></p></h6></div>
-
-                                                    <div class="kt-form__section kt-form__section--first">
-                                                        <div class="kt-wizard-v3__review">
-                                                            <div class="kt-wizard-v3__review-item">
-                                                                <div class="kt-wizard-v2__review-content">
+                                                <div class="kt-wizard-v3__content kt-wizard-v3__review kt-wizard-v2__review-content kt-wizard-v3__review-item kt-form__section kt-form__section--first" data-ktwizard-type="step-content" data-ktwizard-state="current">
+                                                    <div class="kt-heading kt-heading--md">
+                                                        <?= h($talent->first_name).' '.h($talent->last_name)  ?><br><h6><p><?= h($talent->email) ?></p></h6>
+                                                    </div>
                                                                     First Name:<br><h5> <?= h($talent->first_name) ?></h5><br>
                                                                     Last Name:<br><h5> <?= h($talent->last_name) ?></h5><br>
                                                                     Preferred Name:<br><h5> <?= h($talent->preferred_name) ?></h5><br>
@@ -349,14 +124,10 @@ $conn = ConnectionManager::get('default');
                                                                     Position:<br><h5> <?= h($talent->position) ?></h5><br>
                                                                     Quality of Work:<br><h5> <?= h($talent->quality_of_work) ?>
                                                                     </h5><br>
-                                                                    Speciality:<br><h5> <?= $talent->has('speciality') ? $this->Html->link($talent->speciality->name, ['controller' => 'Specialities', 'action' => 'view', $talent->speciality->id]) : '' ?>
+                                                                    Speciality:<br><h5> <?= $talent->has('speciality') ? $this->Html->link($talent->speciality->name, ['controller' => 'Specialities', 'action' => 'index']) : '' ?>
                                                                     </h5><br>
-                                                                    Skill Category: <?= $talent->has('skill_category') ? $this->Html->link($talent->skill_category->name, ['controller' => 'SkillCategories', 'action' => 'view', $talent->skill_category->id]) : '' ?>
+                                                                    Skill Category:<br><h5> <?= $talent->has('skill_category') ? $this->Html->link($talent->skill_category->name, ['controller' => 'SkillCategories', 'action' => 'view', $talent->skill_category->id]) : '' ?>
                                                                     </h5><br>
-                                                                </div>
-                                                            </div>
-                                                        </div>
-                                                    </div>
                                                 </div>
                                             </a>
                                         </div>
@@ -410,38 +181,40 @@ $conn = ConnectionManager::get('default');
                                                         <div class="col-xl-12 kt-scroll ps ps--active-y">
                                                             <div class="kt-portlet__body">
 
-                                                                <div class="row">
-                                                                    <div class="col-xl-10"></div>
-                                                                    <div class="col-xl-6" style="margin-left: 50%; float:right;">
+                                                                <div class="row" >
+                                                                    <div class="col-xl-4"
+                                                                         style="margin-left: 60%; float:right;">
                                                                         <?php echo $this->Html->link('<span class="btn btn-primary" style="float:right"><i class="flaticon2-plus"></i>Add Note</span>',
                                                                             array('type' => 'button'), ['escape' => false, 'data-target' => '#kt_modal_6note', 'data-toggle' => 'modal'])
                                                                         ?>
 
                                                                     </div>
 
-                                                                    <div data-scroll="true" data-height="500"
-                                                                         style="height: 500px; overflow: hidden; width:600px;">
 
-                                                                        <div class="kt-timeline-v1 kt-timeline-v1--justified"
-                                                                             style="margin-left:5%;">
+                                                                    <div class="col-lg-12" data-scroll="true" data-height="700"
+                                                                         style="height: 700px; overflow: hidden; ">
+
+                                                                        <div
+                                                                            class="kt-timeline-v1 kt-timeline-v1--justified"
+                                                                            style="margin-left:5%;">
                                                                             <?php if (!empty($talent->talent_notes)): ?>
                                                                                 <?php foreach (array_reverse($talent->talent_notes) as $talentNotes): ?>
+
                                                                                     <div class="kt-timeline-v1__items"
                                                                                          style="margin-bottom: -5%;">
                                                                                         <div class="kt-timeline-v1__marker"></div>
-                                                                                        <div
-                                                                                            class="kt-timeline-v1__item kt-timeline-v1__item--first">
-                                                                                            <div
-                                                                                                class="kt-timeline-v1__item-circle">
+                                                                                        <div class="kt-timeline-v1__item kt-timeline-v1__item--first">
+                                                                                            <div class="kt-timeline-v1__item-circle">
                                                                                                 <div class="kt-bg-danger"></div>
                                                                                             </div>
                                                                                             <span class=" kt-font-brand">
-															                                                                <b><?php echo date_format($talentNotes->created_date,'d/m/Y H:m') ?></b></span>
+															                                 <b><?php echo date_format($talentNotes->created_date,'d/m/Y H:m') ?></b></span>
+
                                                                                             <div
                                                                                                 class="kt-timeline-v1__item-content"
                                                                                                 style="max-width: 90%;">
                                                                                                 <div class="kt-timeline-v1__item-title ">
-                                                                                                    <div style="float: right; margin-top: -3%">
+                                                                                                    <div style="float: right; ">
                                                                                                         <button
                                                                                                             class="editNoteButton btn btn-sm btn-clean btn-icon btn-icon-sm"
                                                                                                             data-note-id="<?php echo $talentNotes->id ?>"
@@ -454,222 +227,238 @@ $conn = ConnectionManager::get('default');
                                                                                                         <?= $this->Html->link('<span class="btn btn-sm btn-clean btn-icon btn-icon-sm"><i class="flaticon2-delete"></i></span>', ['controller' => 'TalentNotes', 'action' => 'delete', $talentNotes->id], ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "delete note", 'data-placement' => 'bottom', 'confirm' => 'Are you sure you wish to delete this note?']) ?>
 
                                                                                                     </div>
+
                                                                                                 </div>
+
                                                                                                 <div
-                                                                                                    class="kt-timeline-v1__item-body"
-                                                                                                    style=" word-wrap:break-word;">
+                                                                                                    class="kt-timeline-v1__item-body "
+                                                                                                    style="word-wrap:break-word;">
                                                                                                     <p>
                                                                                                         <?= h($talentNotes->content) ?>
                                                                                                     </p>
                                                                                                 </div>
+                                                                                                <div style="float: right">
+                                                                                                    <div class="checkbox">
+                                                                                                        <label>
+                                                                                                            <style>
+                                                                                                                .switch {
+                                                                                                                    position: relative;
+                                                                                                                    display: inline-block;
+                                                                                                                    width: 30px;
+                                                                                                                    height: 17px;
+                                                                                                                }
+
+                                                                                                                .switch input {
+                                                                                                                    opacity: 0;
+                                                                                                                    width: 0;
+                                                                                                                    height: 0;
+                                                                                                                }
+
+                                                                                                                .slider {
+                                                                                                                    position: absolute;
+                                                                                                                    cursor: pointer;
+                                                                                                                    top: 0;
+                                                                                                                    left: 0;
+                                                                                                                    right: 0;
+                                                                                                                    bottom: 0;
+                                                                                                                    background-color: #ccc;
+                                                                                                                    -webkit-transition: .4s;
+                                                                                                                    transition: .4s;
+                                                                                                                }
+
+                                                                                                                .slider:before {
+                                                                                                                    position: absolute;
+                                                                                                                    content: "";
+                                                                                                                    height: 13px;
+                                                                                                                    width: 13px;
+                                                                                                                    left: 2px;
+                                                                                                                    bottom: 2px;
+                                                                                                                    background-color: white;
+                                                                                                                    -webkit-transition: .4s;
+                                                                                                                    transition: .4s;
+                                                                                                                }
+
+                                                                                                                input:checked + .slider {
+                                                                                                                    background-color: #5c00e6;
+                                                                                                                }
+
+                                                                                                                input:focus + .slider {
+                                                                                                                    box-shadow: 0 0 1px #5c00e6;
+                                                                                                                }
+
+                                                                                                                input:checked + .slider:before {
+                                                                                                                    -webkit-transform: translateX(13px);
+                                                                                                                    -ms-transform: translateX(13px);
+                                                                                                                    transform: translateX(13px);
+                                                                                                                }
+
+                                                                                                                /* Rounded sliders */
+                                                                                                                .slider.round {
+                                                                                                                    border-radius: 17px;
+                                                                                                                }
+
+                                                                                                                .slider.round:before {
+                                                                                                                    border-radius: 50%;
+                                                                                                                }
+                                                                                                            </style>
+
+                                                                                                            <label class="switch">
+                                                                                                                <?php if ( $talentNotes->if_flag==1):?>
+                                                                                                                    <input type="checkbox" onclick="notePass(<?php echo $talentNotes->id?>,<?php echo $talentNotes->if_flag?>)"  checked >
+                                                                                                                    <span class="slider round" data-toggle = "kt-popover" data-content = "Unflag Note" data-placement = 'bottom'></span>
+                                                                                                                <?php else:?>
+                                                                                                                    <input type="checkbox"  onclick="notePass(<?php echo $talentNotes->id?>,<?php echo $talentNotes->if_flag?>)" >
+                                                                                                                    <span class="slider round" data-toggle = "kt-popover" data-content = "Flag Note" data-placement = 'bottom'></span>
+                                                                                                                <?php endif?>
+                                                                                                            </label>
+                                                                                                    </div>
+                                                                                                </div>
 
                                                                                             </div>
                                                                                         </div>
+
                                                                                     </div>
+
                                                                                 <?php endforeach; ?>
+
                                                                             <?php endif; ?>
+
                                                                         </div>
+
+
                                                                     </div>
+
                                                                 </div>
+
+
                                                             </div>
                                                         </div>
                                                     </div>
                                                 </form>
                                                 <!--end: Form Wizard Step 1-->
-                                                <!--begin: Form Wizard Step 2-->
-                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content">
+
+                                                <!--start: Form Wizard Step 2-->
+                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content"
+                                                     >
                                                     <div class="col-xl-12 kt-scroll ps ps--active-y">
                                                         <div class="kt-portlet__body">
 
-                                                            <div class="row">
-                                                                <div class="col-xl-10"></div>
-                                                                <div class="col-xl-6"
-                                                                     style="margin-left: 50%; float:right;">
+                                                            <div class="row" >
+                                                                <div class="col-xl-4"
+                                                                     style="margin-left: 60%; float:right;">
 
-                                                                    <!--?php echo $this->Html->link('<span class="btn btn-primary" style="float:right"><i class="flaticon2-plus"></i>Edit Activity</span>',
-                                                                        array('type'=> 'button'),['escape'=>false, 'data-target'=>'#editactivity','data-toggle'=>'modal'])
-                                                                    ?-->
 
                                                                 </div>
 
 
-                                                                <div data-scroll="true" data-height="500"
-                                                                     style="height: 500px; overflow: hidden; width:600px;">
+                                                                <div class="col-lg-12" data-scroll="true" data-height="700"
+                                                                     style="height: 700px; overflow: hidden; ">
 
-                                                                    <div class="kt-timeline-v1 kt-timeline-v1--justified" style="margin-left:5%;">
+                                                                    <div
+                                                                        class="kt-timeline-v1 kt-timeline-v1--justified"
+                                                                        style="margin-left:5%;">
                                                                         <?php if (!empty($allActivity)): ?>
-                                                                        <?php foreach ($allActivity as $activity): ?>
-                                                                        <div class="kt-timeline-v1__items"
-                                                                             style="margin-bottom: -5%;">
-                                                                            <div
-                                                                                    class="kt-timeline-v1__marker"></div>
-                                                                            <div
-                                                                                    class="kt-timeline-v1__item kt-timeline-v1__item--first">
-                                                                                <div
-                                                                                        class="kt-timeline-v1__item-circle">
-                                                                                    <div
-                                                                                            class="kt-bg-danger"></div>
-                                                                                </div>
+                                                                            <?php foreach ($allActivity as $activity): ?>
 
-                                                                                <span class=" kt-font-brand">
+                                                                                <div class="kt-timeline-v1__items"
+                                                                                     style="margin-bottom: -5%;">
+                                                                                    <div class="kt-timeline-v1__marker"></div>
+                                                                                    <div class="kt-timeline-v1__item kt-timeline-v1__item--first">
+                                                                                        <div class="kt-timeline-v1__item-circle">
+                                                                                            <div class="kt-bg-danger"></div>
+                                                                                        </div>
+                                                                                        <span class=" kt-font-brand">
 															                                                                  <b><?php echo $activity['create_date']->format('d/m/Y H:i'); ?></b></span>
-                                                                                <div
-                                                                                        class="kt-timeline-v1__item-content"
-                                                                                        style="max-width: 90%;">
+
+                                                                                        <div
+                                                                                            class="kt-timeline-v1__item-content"
+                                                                                            style="max-width: 90%;">
 
 
-                                                                                    <div
-                                                                                            class="kt-timeline-v1__item-body"
-                                                                                            style=" word-wrap:break-word;">
-                                                                                        <?php foreach($client as $clients){
-                                                                                        if($clients['id']==$activity['client_id']){
-                                                                                        $clientfn=$clients['first_name'];
-                                                                                        $clientln=$clients['last_name'];
-                                                                                        }
-                                                                                        } ?>
-                                                                                        <?php if($activity['content']=='Email'){ ?>
-                                                                                        <p><?php echo $talentfn.' '.$talentln.' added a Email activity for '.$clientfn.' '.$clientln; ?></p>
-                                                                                        <p><?php echo 'Summary: '.$activity['summary'];?></p>
-                                                                                        <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
-                                                                                        <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
-                                                                                        <?php }else if($activity['content']=='Phone Call'){?>
-                                                                                        <p><?php echo $talentfn.' '.$talentln.' added a Phone Call activity for '.$clientfn.' '.$clientln; ?></p>
-                                                                                        <p><?php echo 'Summary: '.$activity['summary'];?></p>
-                                                                                        <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
-                                                                                        <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
-                                                                                        <?php }else if($activity['content']=='Virtual Meeting'){?>
-                                                                                        <p><?php echo $talentfn.' '.$talentln.' added a Virtual Meeting Call activity for '.$clientfn.' '.$clientln; ?></p>
-                                                                                        <p><?php echo 'Summary: '.$activity['summary'];?></p>
-                                                                                        <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
-                                                                                        <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
-                                                                                        <?php }else if($activity['content']=='Meeting'){?>
-                                                                                        <p><?php echo $talentfn.' '.$talentln.' added a Meeting activity for '.$clientfn.' '.$clientln; ?></p>
-                                                                                        <p><?php echo 'Summary: '.$activity['summary'];?></p>
-                                                                                        <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
-                                                                                        <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
-                                                                                        <?php }else if($activity['content']=='Text Message'){?>
-                                                                                        <p><?php echo $talentfn.' '.$talentln.' added a Text Message activity for '.$clientfn.' '.$clientln; ?></p>
-                                                                                        <p><?php echo 'Summary: '.$activity['summary'];?></p>
-                                                                                        <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
-                                                                                        <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
-                                                                                        <?php } else{ ?>
-                                                                                        <p><?php echo $talentfn.' '.$talentln.' added a note for '.$clientfn.' '.$clientln; ?></p>
-                                                                                        <p><?php echo 'Notes: '.$activity['content'];?></p>
-                                                                                        <?php } ?>
-                                                                                    </div>
-                                                                                    <div
-                                                                                            class="kt-timeline-v1__item-body">
+                                                                                            <div
+                                                                                                class="kt-timeline-v1__item-body"
+                                                                                                style=" word-wrap:break-word;">
 
-                                                                                        <div style="float: right">
-                                                                                            <div class="checkbox">
+                                                                                                <?php foreach($client as $clients){
+                                                                                                    if($clients['id']==$activity['client_id']){
+                                                                                                        $clientfn=$clients['first_name'];
+                                                                                                        $clientln=$clients['last_name'];
+                                                                                                    }
+                                                                                                } ?>
 
-                                                                                                    <style>
-                                                                                                        .switch {
-                                                                                                            position: relative;
-                                                                                                            display: inline-block;
-                                                                                                            width: 30px;
-                                                                                                            height: 17px;
-                                                                                                        }
+                                                                                                <?php if($activity['content']=='Email'){ ?>
+                                                                                                    <p><?php echo $talentfn.' '.$talentln.' added a Email activity for '.$clientfn.' '.$clientln; ?></p>
+                                                                                                    <p><?php echo 'Summary: '.$activity['summary'];?></p>
+                                                                                                    <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
+                                                                                                    <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
+                                                                                                <?php }else if($activity['content']=='Phone Call'){?>
+                                                                                                    <p><?php echo $talentfn.' '.$talentln.' added a Phone Call activity for '.$clientfn.' '.$clientln; ?></p>
+                                                                                                    <p><?php echo 'Summary: '.$activity['summary'];?></p>
+                                                                                                    <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
+                                                                                                    <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
+                                                                                                <?php }else if($activity['content']=='Virtual Meeting'){?>
+                                                                                                    <p><?php echo $talentfn.' '.$talentln.' added a Virtual Meeting Call activity for '.$clientfn.' '.$clientln; ?></p>
+                                                                                                    <p><?php echo 'Summary: '.$activity['summary'];?></p>
+                                                                                                    <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
+                                                                                                    <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
+                                                                                                <?php }else if($activity['content']=='Meeting'){?>
+                                                                                                    <p><?php echo $talentfn.' '.$talentln.' added a Meeting activity for '.$clientfn.' '.$clientln; ?></p>
+                                                                                                    <p><?php echo 'Summary: '.$activity['summary'];?></p>
+                                                                                                    <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
+                                                                                                    <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
+                                                                                                <?php }else if($activity['content']=='Text Message'){?>
+                                                                                                    <p><?php echo $talentfn.' '.$talentln.' added a Text Message activity for '.$clientfn.' '.$clientln; ?></p>
+                                                                                                    <p><?php echo 'Summary: '.$activity['summary'];?></p>
+                                                                                                    <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
+                                                                                                    <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
+                                                                                                <?php } else{ ?>
+                                                                                                    <p><?php echo $talentfn.' '.$talentln.' added a note for '.$clientfn.' '.$clientln; ?></p>
+                                                                                                    <p><?php echo 'Notes: '.$activity['content'];?></p>
+                                                                                                <?php } ?>
+                                                                                            </div>
 
-                                                                                                        .switch input {
-                                                                                                            opacity: 0;
-                                                                                                            width: 0;
-                                                                                                            height: 0;
-                                                                                                        }
 
-                                                                                                        .slider {
-                                                                                                            position: absolute;
-                                                                                                            cursor: pointer;
-                                                                                                            top: 0;
-                                                                                                            left: 0;
-                                                                                                            right: 0;
-                                                                                                            bottom: 0;
-                                                                                                            background-color: #ccc;
-                                                                                                            -webkit-transition: .4s;
-                                                                                                            transition: .4s;
-                                                                                                        }
-
-                                                                                                        .slider:before {
-                                                                                                            position: absolute;
-                                                                                                            content: "";
-                                                                                                            height: 13px;
-                                                                                                            width: 13px;
-                                                                                                            left: 2px;
-                                                                                                            bottom: 2px;
-                                                                                                            background-color: white;
-                                                                                                            -webkit-transition: .4s;
-                                                                                                            transition: .4s;
-                                                                                                        }
-
-                                                                                                        input:checked + .slider {
-                                                                                                            background-color: #5c00e6;
-                                                                                                        }
-
-                                                                                                        input:focus + .slider {
-                                                                                                            box-shadow: 0 0 1px #5c00e6;
-                                                                                                        }
-
-                                                                                                        input:checked + .slider:before {
-                                                                                                            -webkit-transform: translateX(13px);
-                                                                                                            -ms-transform: translateX(13px);
-                                                                                                            transform: translateX(13px);
-                                                                                                        }
-
-                                                                                                        /* Rounded sliders */
-                                                                                                        .slider.round {
-                                                                                                            border-radius: 17px;
-                                                                                                        }
-
-                                                                                                        .slider.round:before {
-                                                                                                            border-radius: 50%;
-                                                                                                        }
-                                                                                                    </style>
-
+                                                                                            <div
+                                                                                                class="kt-timeline-v1__item-body">
 
                                                                                             </div>
                                                                                         </div>
                                                                                     </div>
 
-                                                                                    <div
-                                                                                            class="kt-timeline-v1__item-body">
-
-                                                                                    </div>
                                                                                 </div>
-                                                                            </div>
+
+                                                                            <?php endforeach; ?>
+
+                                                                        <?php endif; ?>
+
 
                                                                         </div>
 
-                                                                        <?php endforeach; ?>
-
-                                                                        <?php endif; ?></div>
+                                                                    </div>
 
 
                                                                 </div>
 
-                                                            </div>
+
 
 
                                                         </div>
-                                                    </div>
+                                                        <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                            <div class="ps__thumb-x" tabindex="0"
+                                                                 style="left: 0px; width: 0px;"></div>
+                                                        </div>
+                                                        <div class="ps__rail-y"
+                                                             style="top: 0px; height: 380px; right: 0px;">
+                                                            <div class="ps__thumb-y" tabindex="0"
+                                                                 style="top: 0px; height: 300px;"></div>
+                                                        </div>
 
-
-                                                    <!--Begin::Timeline 3 -->
-
-
-                                                    <!--End::Timeline 3 -->
-                                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
-                                                        <div class="ps__thumb-x" tabindex="0"
-                                                             style="left: 0px; width: 0px;"></div>
-                                                    </div>
-                                                    <div class="ps__rail-y"
-                                                         style="top: 0px; height: 380px; right: 0px;">
-                                                        <div class="ps__thumb-y" tabindex="0"
-                                                             style="top: 0px; height: 300px;"></div>
                                                     </div>
                                                 </div>
 
 
                                                 <!--end: Form Wizard Step 2-->
+
                                                 <!--begin: Form Wizard Step 3-->
                                                 <div class="kt-wizard-v3__content" data-ktwizard-type="step-content">
                                                     <div class="kt-form__section kt-form__section--first">
@@ -910,4 +699,34 @@ $conn = ConnectionManager::get('default');
                         });
                     })
                 })
+            </script>
+            <script>
+                function notePass($hello,$flag1){
+                    var string1 =$hello.toString();
+                    var test1;
+                    if($flag1==1){
+                        test1=0;
+                    }
+                    else{
+                        test1=1;
+                    }
+
+
+
+                    $.ajax({
+                        url: '<?php echo $this->Url->build([
+                            'controller' => 'TalentNotes',
+                            'action' => 'edit'
+                        ])?>' + '/' + string1,
+                        type:'POST',
+                        headers: {
+                            'X-CSRF-Token': '<?= h($this->request->getParam('_csrfToken')); ?>'
+                        },
+                        data:{'if_flag':test1},
+                        success: function(){
+                        }
+
+
+                    });
+                }
             </script>

@@ -108,10 +108,6 @@ class TalentsTable extends Table
             ->maxLength('address', 1000)
             ->allowEmptyString('address');
 
-        $validator
-            ->date('join_date')
-            //->requirePresence('join_date', 'create')
-            ->allowEmptyDate('join_date', false);
 
         $validator
             ->scalar('speciality')

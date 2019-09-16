@@ -39,9 +39,6 @@ class ActivitiesTable extends Table
         $this->belongsTo('Clients', [
             'foreignKey' => 'client_id'
         ]);
-        $this->belongsTo('Talents', [
-            'foreignKey' => 'talent_id'
-        ]);
     }
 
     /**
@@ -85,9 +82,6 @@ class ActivitiesTable extends Table
             ->time('time')
             ->requirePresence('time', 'create')
             ->notEmpty('time');
-
-
-
 
 
         return $validator;

@@ -76,7 +76,7 @@ class AppController extends Controller
 
 
     public function beforeFilter(Event $event) {
-        $this->Auth->allow('logout');
+        $this->Auth->allow(['logout','forgetPassword','resetPassword']);
 
     }
 }

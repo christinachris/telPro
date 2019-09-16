@@ -33,7 +33,6 @@ class ClientNote extends Entity
         'id_flag' => true,
         'client_id' => true,
         'client' => true,
-        'client_note_flag'=>true,
-        'talent_id'=>true
+        'client_note_flag'=>true
     ];
 }

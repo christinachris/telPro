@@ -32,16 +32,18 @@ class ClientsController extends AppController
 
     public function limitIndex(){
 
+        $this->paginate = [
+            'contain' => ['Talents'],'limit'=>'100'
+        ];
         $clients = $this->Clients->find('all')->where([ 'Clients.id'==3])->contain([]);
         $clients = $this->paginate($clients);
 
     }
     public function index()
     {
-//        $this->paginate = [
-//            'contain' => ['Talents'],'limit'=>'20','order' => [
-//                'Clients.id' => 'desc']
-//        ];
+        $this->paginate = [
+            'contain' => ['Talents'],'limit'=>'100'
+        ];
         $user_id=$this->Auth->user('id');
         $user_role=$this->Auth->user('role');
         $user_name=$this->Auth->user('username');
@@ -60,13 +62,20 @@ class ClientsController extends AppController
             }
             $this->loadModel('Projects');
 
+            if(empty($array)){
+                $clients = $this->Clients->find('all')->where(['Clients.id' => -1])->contain(['Talents','Activities','clientNotes']);
+                $clients = $this->paginate($clients);
+            }
+            else{
             $project = $this->Projects->find('all')->where(['id IN'=>$array])->toArray();
             foreach($project as $some){
 
                 $arrays[]=$some->client_id;
             }
+
             $clients = $this->Clients->find('all')->where(['Clients.archive' => false,'Clients.id IN'=>$arrays])->contain(['Talents','Activities','clientNotes']);
             $clients = $this->paginate($clients);
+            }
 
         }
         else if($view_full_client_list==1){
@@ -77,6 +86,7 @@ class ClientsController extends AppController
             $clients = $this->Clients->find('all')->where(['Clients.id' => -1])->contain(['Talents','Activities','clientNotes']);
             $clients = $this->paginate($clients);
         }
+
 
         $this->set("user_name", $user_name);
 
@@ -116,10 +126,7 @@ class ClientsController extends AppController
             }
 
         }
-        $lastcontacted=$this->Activities->find('all', array('order' => array('Activities.id' => 'DESC')))->where(['Activities.client_id'=>107]);
-        $clients->last_contactdate=$lastcontacted->first();
 
-        $this->set(compact('clients', 'lastcontacted'));
         $this->set('activity', $activity);
 
 
@@ -131,6 +138,7 @@ class ClientsController extends AppController
             $clientNote->create_date= Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
             $clientNote->edit_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
             $clientNote->talent_id=$this->Auth->user('id');
+
 
             if ($this->ClientNotes->save($clientNote)) {
                 $this->Flash->success(__('The client note has been saved.'));
@@ -213,7 +221,9 @@ class ClientsController extends AppController
             $activity->edit_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
             $activity->client_id=$id;
             $activity->activity_flag=0;
-            $activity->talent_id=$user_id;
+            $activity->talent_id=$this->Auth->user('id');
+
+
 
             if ($this->Activities->save($activity)) {
                 $this->Flash->success(__('The activity has been added.'));
@@ -228,7 +238,9 @@ class ClientsController extends AppController
             $clientNote->create_date= Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
             $clientNote->edit_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
             $clientNote->client_id=$id;
-            $clientNote->talent_id=$user_id;
+            $clientNote->talent_id=$this->Auth->user('id');
+
+
             if ($this->ClientNotes->save($clientNote)) {
                 $this->Flash->success(__('The client note has been saved.'));
 
@@ -238,6 +250,26 @@ class ClientsController extends AppController
         }
         $this->set('clientNote', $clientNote);
 
+        /* cannot get activity id for each activity, so comment it for now.
+
+    if ($this->request->is(['patch', 'post', 'put'])) {
+        $activity = $this->Activities->patchEntity($activity, $this->request->getData());
+        $activity->edit_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
+        $activity->client_id=$id;
+        $activity->summary=$this->request->getData();
+        $activity->type=$this->request->getData();
+        $activity->date=$this->request->getData();
+        $activity->time=$this->request->getData();
+
+        $this->Activities->save($activity);
+
+        if ($this->Activities->save($activity)) {
+            $this->Flash->success(__('The activity has been saved.'));
+
+            return $this->redirect(['action' => 'view',$id]);
+        }
+        $this->Flash->error(__('The activity could not be saved. Please, try again.'));
+    }*/
     }
 
 
@@ -347,6 +379,7 @@ class ClientsController extends AppController
         $user_role=$this->Auth->user('role');
         $user_name=$this->Auth->user('username');
 
+
         $this->set("user_name", $user_name);
         $this->set("user_role", $user_role);
 
@@ -362,7 +395,9 @@ class ClientsController extends AppController
             for($i=0;$i<sizeof($clientphones);$i++){
                 $this->Phones->delete($clientphones[$i]);
             }
+
             foreach($this->request->getData()['Phones'] as $i => $phone){
+                // var_dump($this->request->getData());
                 $phones = $this->Phones->newEntity();
                 $phones->title=$this->request->getData()['Phones'][$i]['title'];
                 $phones->phone_no=$this->request->getData()['Phones'][$i]['phone_no'];
@@ -373,9 +408,13 @@ class ClientsController extends AppController
                 else{
                     $phones->is_primary = 0;
                 }
+
                 $phones->client_id=$client->id;
+
+
                 $this->Phones->save($phones);
             }
+
             for($i=0;$i<sizeof($clientemails);$i++){
                 $this->Emails->delete($clientemails[$i]);
             }
@@ -394,10 +433,14 @@ class ClientsController extends AppController
                 }
 
                 $emails->client_id=$client->id;
+
+
                 $this->Emails->save($emails);
             }
 
             $client = $this->Clients->patchEntity($client, $this->request->getData());
+
+
             $this->Clients->save($client);
             $this->Flash->success(__('The client has been updated.'));
             return $this->redirect(["controller"=>"Clients", 'action' => 'index']);
@@ -468,7 +511,7 @@ class ClientsController extends AppController
             throw new NotFoundException();
         }
 
-        // If a client is archived, its archive will be 1
+        // If an article is archived, it is "unpublished" as well
         $clients->archive = true;
 
         if ($this->Clients->save($clients)) {
@@ -537,8 +580,16 @@ class ClientsController extends AppController
 
             }
         }
-        if(in_array($this->request->getParam('action'),['archive','archiveIndex'])){
-            return parent::isAuthorized($user);
+        if(in_array($this->request->getParam('action'),['archive'])&&$user['permission_archive_client']){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['unarchive'])&&$user['permission_unarchive_client']){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['archiveIndex'])&&$user['permission_view_archive_client_list']){
+            return true;
         }
 
         if ($this->request->getParam('action') === 'index'&&($user['permission_view_full_client_list']==1||$user['permission_view_limited_client_list']==1)) {
@@ -557,7 +608,7 @@ class ClientsController extends AppController
         }
 
 
-        return true;
+        return false;
     }
 
 

@@ -3,237 +3,16 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\Task[]|\Cake\Collection\CollectionInterface $tasks
  */
-
+$this->response->header(['Access-Control-Allow-Header' => 'X-DEBUGKIT-ID']);
 use Cake\Datasource\ConnectionManager;
 use Cake\I18n\I18n;
 use Cake\I18n\Time;
 use Cake\Core\Configure;
+
 //I18n::Locale('es-au');
 // my_connection is defined in your database config
 $conn = ConnectionManager::get('default');
 ?>
-<!-- begin:: Header Topbar -->
-
-<div class="kt-header__topbar">
-    <?php
-    $results = $conn
-        ->execute('select * from tasks');
-    $count = 0;
-    foreach ($results
-
-             as $task) {
-        $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
-        $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
-        $datediff = date_diff($sys_date, $due_date);
-
-        if ($datediff->days < 10) {
-            $count = $count + 1
-            ?>
-            <?php
-        }
-        if (!empty($task['moved_date'])) {
-            $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
-            $datediff_Moved = date_diff($moved_date, $sys_date);
-            if ($task['status_id'] == 3) {
-                if ($datediff_Moved->days > 5) {
-                    $count = $count + 1;
-                }
-            }
-        }
-
-    }
-
-    ?>
-    <!--begin: Notifications -->
-    <div class="kt-header__topbar-item dropdown">
-        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
-											<span class="kt-header__topbar-icon">
-												<i class="flaticon2-bell-alarm-symbol"></i>
-												<span class="kt-badge kt-badge--success kt-hidden"></span>
-											</span>
-            <span class="kt-badge kt-badge--danger"
-                  style=" position: absolute;top: -5px;right: -5px; width:24px; height:24px ;opacity: 0.9 ; font-weight: 500;font-size: 15px"> <?php echo $count; ?></span>
-        </div>
-        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
-            <form>
-
-                <!--begin: Head -->
-                <div class="kt-head kt-head--skin-light kt-head--fit-x" style="padding-bottom: 20px">
-                    <h3 class="kt-head__title" style="text-align: center">
-                        User Notifications
-                        <span class="btn btn-label-primary btn-sm btn-bold btn-font-md"><?php echo $count ?> new </span>
-                    </h3>
-                </div>
-
-                <!--end: Head -->
-                <div class="tab-content">
-                    <div class="tab-pane active show" id="topbar_notifications_notifications" role="tabpanel">
-                        <div class="kt-notification kt-margin-t-10 kt-margin-b-10 kt-scroll" data-scroll="true"
-                             data-height="300" data-mobile-height="200">
-                            <?php
-                            $results = $conn
-                                ->execute('select * from tasks');
-
-                            foreach ($results as $task) {
-                                $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
-                                $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
-                                $datediff = date_diff($sys_date, $due_date);
-                                if ($datediff->days < 10) {
-                                    ?>
-                                    <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $task['project_id']]); ?>"
-                                       class="kt-notification__item">
-                                        <div class="kt-notification__item-icon">
-                                            <i class="flaticon2-line-chart kt-font-success"></i>
-                                        </div>
-                                        <div class="kt-notification__item-details">
-                                            <div class="kt-notification__item-title">
-                                                Task: <b> <?php echo $task["task_name"] ?> </b> is coming to the due
-                                                date !
-                                            </div>
-                                            <div class="kt-notification__item-time">
-                                                <?php echo $datediff->days ?> Days left
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <?php
-                                }
-                                if (!empty($task['moved_date'])) {
-                                    $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
-                                    $datediff_Moved = date_diff($moved_date, $sys_date);
-                                    if ($task['status_id'] == 3) {
-                                        if ($datediff_Moved->days > 5) { ?>
-                                            <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $task['project_id']]); ?>"
-                                               class="kt-notification__item">
-                                                <div class="kt-notification__item-icon">
-                                                    <i class="flaticon2-bar-chart kt-font-info"></i>
-                                                </div>
-                                                <div class="kt-notification__item-details">
-                                                    <div class="kt-notification__item-title">
-                                                        Task: <b> <?php echo $task["task_name"] ?> </b> needs to be
-                                                        followed up !
-                                                    </div>
-                                                    <div class="kt-notification__item-time">
-                                                        <?php echo $datediff->days ?> Days passed
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <?php
-                                        }
-                                    }
-                                }
-                            }
-                            ?>
-
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!--end: Notifications -->
-
-    <!--begin: User bar -->
-    <div class="kt-header__topbar-item kt-header__topbar-item--user">
-        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
-            <span class="kt-header__topbar-welcome kt-visible-desktop" style="font-size: 16px">G'day ,</span>
-            <span class="kt-header__topbar-username kt-visible-desktop" style="font-size: 16px"><?php echo $this->Session->read('Auth.User.username') ?> ! </span>
-            <span class="kt-header__topbar-icon kt-bg-brand kt-font-lg kt-font-bold kt-font-light kt-hidden">S</span>
-            <span class="kt-header__topbar-icon kt-hidden"><i class="flaticon2-user-outline-symbol"></i></span>
-        </div>
-        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
-
-            <!--begin: Head -->
-            <div class="kt-user-card kt-user-card--skin-light kt-notification-item-padding-x">
-                <div class="kt-user-card__avatar">
-                    <!--                    <img class="kt-hidden-" alt="Pic" src="../assets/media/users/300_25.jpg"/>-->
-
-                    <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-                    <span
-                        class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden">S</span>
-                </div>
-                <div class="kt-user-card__name">
-                    <?php echo  $this->Session->read('Auth.User.role'). ":  ".  $this->Session->read('Auth.User.username') ?>
-                </div>
-                <!--                <div class="kt-user-card__badge">-->
-                <!--                    <span class="btn btn-label-primary btn-sm btn-bold btn-font-md">23 messages</span>-->
-                <!--                </div>-->
-            </div>
-
-            <!--end: Head -->
-
-            <!--begin: Navigation -->
-            <div class="kt-notification">
-<!--                <a href="#" class="kt-notification__item">-->
-<!--                    <div class="kt-notification__item-icon">-->
-<!--                        <i class="flaticon2-calendar-3 kt-font-success"></i>-->
-<!--                    </div>-->
-<!--                    <div class="kt-notification__item-details">-->
-<!--                        <div class="kt-notification__item-title kt-font-bold">-->
-<!--                            My Profile-->
-<!--                        </div>-->
-<!--                        <div class="kt-notification__item-time">-->
-<!--                            Account settings and more-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </a>-->
-<!--                <a href="#" class="kt-notification__item">-->
-<!--                    <div class="kt-notification__item-icon">-->
-<!--                        <i class="flaticon2-mail kt-font-warning"></i>-->
-<!--                    </div>-->
-<!--                    <div class="kt-notification__item-details">-->
-<!--                        <div class="kt-notification__item-title kt-font-bold">-->
-<!--                            My Messages-->
-<!--                        </div>-->
-<!--                        <div class="kt-notification__item-time">-->
-<!--                            Inbox and tasks-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </a>-->
-<!--                <a href="#" class="kt-notification__item">-->
-<!--                    <div class="kt-notification__item-icon">-->
-<!--                        <i class="flaticon2-rocket-1 kt-font-danger"></i>-->
-<!--                    </div>-->
-<!--                    <div class="kt-notification__item-details">-->
-<!--                        <div class="kt-notification__item-title kt-font-bold">-->
-<!--                            My Activities-->
-<!--                        </div>-->
-<!--                        <div class="kt-notification__item-time">-->
-<!--                            Logs and notifications-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </a>-->
-<!--                <a href="#" class="kt-notification__item">-->
-<!--                    <div class="kt-notification__item-icon">-->
-<!--                        <i class="flaticon2-hourglass kt-font-brand"></i>-->
-<!--                    </div>-->
-<!--                    <div class="kt-notification__item-details">-->
-<!--                        <div class="kt-notification__item-title kt-font-bold">-->
-<!--                            My Tasks-->
-<!--                        </div>-->
-<!--                        <div class="kt-notification__item-time">-->
-<!--                            latest tasks and projects-->
-<!--                        </div>-->
-<!--                    </div>-->
-<!--                </a>-->
-                <div class="kt-notification__custom">
-                    <?= $this->Html->link('<span class="btn btn-primary"><i class="flaticon2-plus]"></i> Sign Out</span>', ['controller' => 'Users', 'action' => 'logout', 'type' => 'button'], ['escape' => false]) ?>
-                </div>
-            </div>
-
-            <!--end: Navigation -->
-        </div>
-    </div>
-    <!--end: User bar -->
-
-</div>
-<!-- end:: Header Topbar -->
-</div>
-</div>
-</div>
-<!-- end:: Header -->
-
 <div class="kt-header__bottom">
     <div class="kt-container">
 
@@ -242,6 +21,8 @@ $conn = ConnectionManager::get('default');
             <div id="kt_header_menu" class="kt-header-menu">
 
                 <ul class="kt-menu__nav ">
+                    <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>" class="kt-menu__link ">
+                            <span class="kt-menu__link-text">Dashboard </span></a></li>
                     <li class="kt-menu__item  kt-menu__item--active " aria-haspopup="true"><a
                             href=" <?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>"
                             class="kt-menu__link "><span class="kt-menu__link-text">Projects </span></a></li>
@@ -267,8 +48,11 @@ $conn = ConnectionManager::get('default');
 
             <div class="kt-subheader   kt-grid__item" id="kt_subheader">
                 <div class="kt-subheader__main">
+                    <?= $this->Flash->render() ?>
+                    <a href="<?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>"
                     <h3 class="kt-subheader__title">
                         Dashboard </h3>
+                    </a>
                     <span class="kt-subheader__separator kt-hidden"></span>
                     <div class="kt-subheader__breadcrumbs">
                         <a href="<?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>"
@@ -288,27 +72,32 @@ $conn = ConnectionManager::get('default');
                         <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
                     </div>
                 </div>
-                <div class="kt-subheader__toolbar">
-                    <div class="kt-subheader__wrapper">
-                        <div class="btn kt-subheader__btn-daterange" title="Select dashboard daterange">
-                            <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
-                            <span class="kt-subheader__btn-daterange-date"
-                                  id="kt_dashboard_daterangepicker_date"><?php echo date("M d") ?></span>
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
-                                 width="24px"
-                                 height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">
-                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
-                                    <rect id="bound" x="0" y="0" width="24" height="24"/>
-                                    <path
-                                        d="M4.875,20.75 C4.63541667,20.75 4.39583333,20.6541667 4.20416667,20.4625 L2.2875,18.5458333 C1.90416667,18.1625 1.90416667,17.5875 2.2875,17.2041667 C2.67083333,16.8208333 3.29375,16.8208333 3.62916667,17.2041667 L4.875,18.45 L8.0375,15.2875 C8.42083333,14.9041667 8.99583333,14.9041667 9.37916667,15.2875 C9.7625,15.6708333 9.7625,16.2458333 9.37916667,16.6291667 L5.54583333,20.4625 C5.35416667,20.6541667 5.11458333,20.75 4.875,20.75 Z"
-                                        id="check" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
-                                    <path
-                                        d="M2,11.8650466 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L12.9835977,18 C12.7263047,14.0909841 9.47412135,11 5.5,11 C4.23590829,11 3.04485894,11.3127315 2,11.8650466 Z M6,7 C5.44771525,7 5,7.44771525 5,8 C5,8.55228475 5.44771525,9 6,9 L15,9 C15.5522847,9 16,8.55228475 16,8 C16,7.44771525 15.5522847,7 15,7 L6,7 Z"
-                                        id="Combined-Shape" fill="#000000"/>
-                                </g>
-                            </svg>
-                        </div>
+                <div class="kt-subheader__toolbar" style="display: ">
+                    <div class="btn btn-primary btn-block" data-toggle="kt-popover"
+                        data-content="Activity History" title="" data-placement="left">
+                        <a class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn"><i
+                                class="flaticon2-writing"></i>Activity History</a>
                     </div>
+<!--                    <div class="kt-subheader__wrapper">-->
+<!--                        <div class="btn kt-subheader__btn-daterange" title="Select dashboard daterange">-->
+<!--                            <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;-->
+<!--                            <span class="kt-subheader__btn-daterange-date"-->
+<!--                                  id="kt_dashboard_daterangepicker_date">--><?php //echo date("M d") ?><!--</span>-->
+<!--                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
+<!--                                 width="24px"-->
+<!--                                 height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">-->
+<!--                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">-->
+<!--                                    <rect id="bound" x="0" y="0" width="24" height="24"/>-->
+<!--                                    <path-->
+<!--                                        d="M4.875,20.75 C4.63541667,20.75 4.39583333,20.6541667 4.20416667,20.4625 L2.2875,18.5458333 C1.90416667,18.1625 1.90416667,17.5875 2.2875,17.2041667 C2.67083333,16.8208333 3.29375,16.8208333 3.62916667,17.2041667 L4.875,18.45 L8.0375,15.2875 C8.42083333,14.9041667 8.99583333,14.9041667 9.37916667,15.2875 C9.7625,15.6708333 9.7625,16.2458333 9.37916667,16.6291667 L5.54583333,20.4625 C5.35416667,20.6541667 5.11458333,20.75 4.875,20.75 Z"-->
+<!--                                        id="check" fill="#000000" fill-rule="nonzero" opacity="0.3"/>-->
+<!--                                    <path-->
+<!--                                        d="M2,11.8650466 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L12.9835977,18 C12.7263047,14.0909841 9.47412135,11 5.5,11 C4.23590829,11 3.04485894,11.3127315 2,11.8650466 Z M6,7 C5.44771525,7 5,7.44771525 5,8 C5,8.55228475 5.44771525,9 6,9 L15,9 C15.5522847,9 16,8.55228475 16,8 C16,7.44771525 15.5522847,7 15,7 L6,7 Z"-->
+<!--                                        id="Combined-Shape" fill="#000000"/>-->
+<!--                                </g>-->
+<!--                            </svg>-->
+<!--                        </div>-->
+<!--                    </div>-->
                 </div>
             </div>
 
@@ -316,24 +105,22 @@ $conn = ConnectionManager::get('default');
                 <!-- Start : Sticky-toolbar-->
                 <ul class="kt-sticky-toolbar" style="margin-top: 30px;">
                     <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--success" id="kt_demo_panel_toggle"
-                        data-toggle="kt-tooltip" title="" data-placement="right"
-                        data-original-title="Check out more demos">
+                        data-toggle="kt-popover" data-content="Home Page" title="" data-placement="right">
                         <a href="<?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>"
                            class=""><i
                                 class="flaticon-home-2"></i></a>
                     </li>
-                    <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--brand" data-toggle="kt-tooltip" title=""
-                        data-placement="left" data-original-title="Layout Builder">
+                    <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--brand" data-toggle="kt-popover"
+                        data-content="Label Setting" title=""
+                        data-placement="left">
                         <a href="<?php echo $this->Url->build(["controller" => "colours", "action" => "index"]); ?>"><i
                                 class="flaticon2-gear"></i></a>
                     </li>
-                    <!--    <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--warning" data-toggle="kt-tooltip" title="" data-placement="left" data-original-title="Documentation">-->
-                    <!--        <a href="https://keenthemes.com/metronic/?page=docs" target="_blank"><i class="flaticon2-telegram-logo"></i></a>-->
-                    <!--    </li>-->
-                    <!---->
-                    <!--    <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--danger" id="kt_sticky_toolbar_chat_toggler" data-toggle="kt-tooltip" title="" data-placement="left" data-original-title="Chat Example">-->
-                    <!--        <a href="#" data-toggle="modal" data-target="#kt_chat_modal"><i class="flaticon2-chat-1"></i></a>-->
-                    <!--    </li>-->
+
+
+                    <!--                        <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--danger" id="kt_sticky_toolbar_chat_toggler" data-toggle="kt-tooltip" title="" data-placement="left" data-original-title="Chat Example">-->
+                    <!--                            <a href="#" data-toggle="modal" data-target="#kt_chat_modal"><i class="flaticon2-chat-1"></i></a>-->
+                    <!--                        </li>-->
                 </ul>
                 <!-- End : Sticky-toolbar-->
 
@@ -373,12 +160,15 @@ $conn = ConnectionManager::get('default');
                                 <input type="hidden" id="kt_slider_1" name="project_num"
                                        value=" <?php echo $projectNum->progress_num; ?>" data-min="0"
                                        data-grid="true"
-                                       data-project-id="<?php echo $id; ?>">
+                                       data-project-id="<?php echo $id; ?>"
+                                >
                             </div>
                         </div>
                         <div class="col-lg-2 col-md-2 col-sm-2" style="margin-top: 15px">
                             <button type="button" id="Btn-progress"
                                     class="btn btn-success btn-elevate btn-pill btn-elevate-air btn-md"
+                                    data-user-name="<?php echo $this->Session->read('Auth.User.username') ?>"
+                                    data-user-role="<?php echo $this->Session->read('Auth.User.role') ?>"
                                     style="margin-left: 15px">
                                 Update
                             </button>
@@ -390,11 +180,10 @@ $conn = ConnectionManager::get('default');
                         </div>
                     </div>
                     <span>
-                <b>Start Date : <?php echo $name->start_date;
+                <b>Start Date : <?php echo date("m-d-Y H:i:s", strtotime($name->start_date));
                     } ?> </b>
 			</span>
                 </div>
-
             </div>
             <div class="board">
                 <?php
@@ -423,7 +212,8 @@ $conn = ConnectionManager::get('default');
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg" style="margin-top: 50px" role="document">
 
-                                <?= $this->Form->create($taskAdd, ['enctype' => 'multipart/form-data']) ?>
+                                <!--it will check if the upload img is valid before submitting  If validate() function returns true, the form will be submitted, otherwise, it'll not submit the data.-->
+                                <?= $this->Form->create($taskAdd, ['onsubmit'=>'return Validate(this)','enctype' => 'multipart/form-data']) ?>
 
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -522,6 +312,7 @@ $conn = ConnectionManager::get('default');
                                                     <?php
                                                     $results = $conn
                                                         ->execute('select * from talent_projects, talents where talent_projects.talent_id = talents.id and talent_projects.project_id = :id ', ['id' => $id]);
+
                                                     $talent_list = [];
                                                     foreach ($results as $talent) {
                                                         $talent_list = $talent_list + [$talent['id'] => $talent['position'] . " - " . $talent['first_name'] . " " . $talent['last_name']];
@@ -559,10 +350,10 @@ $conn = ConnectionManager::get('default');
                                                 <div class="col-lg-6">
                                                     <?php echo $this->Form->control('due_date', [
                                                         'templates' => ['inputContainer' => '{{content}}'],
-                                                        'class' => 'input-group date form-control col-lg-8 col-md-9 col-sm-12 ',
+                                                        'class' => 'input-group date form-control col-lg-8 col-md-9 col-sm-12 datetimepicker_5',
                                                         'type' => 'text',
                                                         'required' => 'required',
-                                                        'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
+                                                        //'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
                                                         'label' => [
                                                             'class' => 'col-form-label col-lg-5 col-sm-12',
                                                             'text' => 'Task Due Date'
@@ -575,14 +366,18 @@ $conn = ConnectionManager::get('default');
                                                     <?php echo $this->Form->control('description', [
                                                         'templates' => ['inputContainer' => '{{content}}'],
                                                         'type' => 'textarea',
-                                                        'maxlength' => '4000',
-                                                        'row' => '5',
-                                                        'class' => 'form-control col-lg-10 col-md-10 col-sm-12',
+                                                        'maxlength'=>'5000',
+                                                        //'maxlength' => '4000',
+                                                        'row' => '8 ',
+                                                        'class' => 'form-control mytextarea col-lg-10 col-md-10 col-sm-12',
                                                         'label' => [
                                                             'class' => 'col-form-label col-lg-3 col-sm-12',
                                                             'text' => 'Description'
                                                         ]
-                                                    ]); ?>
+                                                    ]);
+                                                    ?>
+
+
                                                 </div>
                                                 <?php
                                                 echo $this->Form->hidden('project_id', ['value' => $id]);
@@ -596,10 +391,12 @@ $conn = ConnectionManager::get('default');
                                                     <?php
                                                     echo $this->Form->control('upload', [
                                                         'type' => 'file',
+                                                        'multiple' => true,
                                                         'class' => 'custom-file-upload kt-dropzone dropzone dz-clickable',
                                                         'style' => 'padding-top:60px'
                                                     ]);
                                                     ?>
+
                                                 </div>
                                             </div>
                                         </div>
@@ -609,13 +406,25 @@ $conn = ConnectionManager::get('default');
                                             </button>
                                             <!--Button has not template in Cakephp, need to set a templates before change it -->
                                             <?php
+                                            $resultscounts = $conn
+                                                ->execute('select * from tasks');
+
+                                            $max_id = 0 ;
+                                            foreach ($resultscounts as $resultscount) {
+                                                if($resultscount['id']>$max_id ){
+                                                    $max_id=$resultscount['id'];
+                                                }
+                                            }
                                             $this->Form->setTemplates([
                                                 'button' => '<button{{attrs}}>{{text}}</button>'])
+
                                             ?>
 
                                             <?= $this->Form->button('Submit ', [
                                                 'type' => 'submit',
                                                 'class' => 'btn btn-brand',
+                                                'id' => 'add_submit',
+                                                'data-task-id' => $max_id+1,
                                                 'escape' => false
                                             ]);
                                             ?>
@@ -628,23 +437,29 @@ $conn = ConnectionManager::get('default');
                         </div>
                         <!--end::Modal-->
 
-                        <ul class="sortable "
+                        <ul class="sortable ui-sortable "
                             id="sort<?php echo $status->status_id; ?>"
-                            data-status-id="<?php echo $status->status_id; ?>">
+                            data-status-id="<?php echo $status->status_id; ?>"
+                            data-status-name="<?php echo $status->status_name; ?>">
                             <?php foreach ($tasks as $task) {
                                 if ($task->status_id == $status->status_id) { ?>
-                                    <li class="text-row ui-sortable-handle"
-                                        data-task-id="<?php echo $task->id; ?>">
+                                    <li id="<?php echo $task->id; ?>" class="text-row "
+                                        data-task-id="<?php echo $task->id; ?>"
+                                        data-project-id="<?php echo $task->project_id; ?>"
+                                        data-user-name="<?php echo $this->Session->read('Auth.User.username') ?>"
+                                        data-user-role="<?php echo $this->Session->read('Auth.User.role') ?>">
                                         <a href="#" data-toggle="modal"
                                            data-target="#kt_modala_<?php echo $task->id; ?>">
-                                            <div class="kt-portlet kt-portlet--mobile kt-portlet--sortable"
+                                            <div id="<?php echo $task->id; ?>"
+                                                 class="kt-portlet"
                                                  style="margin-bottom: 0px">
                                                 <div class="kt-portlet__head"
                                                      style="min-height: 10px ; padding-left: 5px ; padding-top: 3px ; padding-bottom: 3px ; padding-right: 0px ;border:none ; cursor: default">
 
                                     <span
-                                        class="kt-badge  kt-badge--inline kt-badge--pill kt-badge--rounded"
+                                        class="kt-badge name2 kt-badge--inline kt-badge--pill kt-badge--rounded"
                                         style="min-height: 20px ; font-weight: bold; color: #ffffff ;
+                                                                              padding: 5px !important;
                                     background-color:
                                     <?php
                                         if (!empty($task->colour_id)) {
@@ -667,25 +482,41 @@ $conn = ConnectionManager::get('default');
                                         } ?>
                                     </span>
                                                     <?php if ($task->allocated_talent != NULL) { ?>
-                                                        <span
-                                                            class=" name kt-badge kt-badge--outline kt-badge--primary  kt-badge--inline kt-badge--pill kt-badge--sm"
-                                                            style="  margin-bottom: 8px;
-                                                                              font-weight: bold;">
+                                                        <span id="responsive_headline"
+                                                              class="name kt-badge kt-badge--outline kt-badge--primary  kt-badge--inline kt-badge--pill kt-badge--sm"
+                                                              style="  margin-bottom: 1px;
+                                                                              font-weight: bold; ">
                                                                 <style>
                                                                       /* Portrait and Landscape */
                                                                       @media only screen
-                                                                      and (min-device-width: 834px)
-                                                                      and (max-device-width: 1112px) {
+                                                                      and (min-device-width: 830px) {
                                                                           .name {
-                                                                              margin-bottom: 8px;
-                                                                              font-weight: bold;
+                                                                              /*margin-bottom: 8px;*/
+                                                                              /*font-weight: bold;*/
                                                                               height: auto !important;
                                                                               line-height: 1;
                                                                               margin-left: 10px;
+                                                                              max-height: 25px;
+                                                                              border-style: dotted !important;
                                                                           }
 
                                                                       }
+                                                                      /* Portrait and Landscape */
+                                                                      .name2 {
+
+                                                                          height: auto !important;
+                                                                          line-height: 1; max-height: 30px;
+                                                                      }
+
+                                                                      }
                                                                 </style>
+                                                                                      <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="24px" height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon">
+                                                            <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                                                <polygon id="Shape" points="0 0 24 0 24 24 0 24"/>
+                                                                <path d="M18,14 C16.3431458,14 15,12.6568542 15,11 C15,9.34314575 16.3431458,8 18,8 C19.6568542,8 21,9.34314575 21,11 C21,12.6568542 19.6568542,14 18,14 Z M9,11 C6.790861,11 5,9.209139 5,7 C5,4.790861 6.790861,3 9,3 C11.209139,3 13,4.790861 13,7 C13,9.209139 11.209139,11 9,11 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                                                <path d="M17.6011961,15.0006174 C21.0077043,15.0378534 23.7891749,16.7601418 23.9984937,20.4 C24.0069246,20.5466056 23.9984937,21 23.4559499,21 L19.6,21 C19.6,18.7490654 18.8562935,16.6718327 17.6011961,15.0006174 Z M0.00065168429,20.1992055 C0.388258525,15.4265159 4.26191235,13 8.98334134,13 C13.7712164,13 17.7048837,15.2931929 17.9979143,20.2 C18.0095879,20.3954741 17.9979143,21 17.2466999,21 C13.541124,21 8.03472472,21 0.727502227,21 C0.476712155,21 -0.0204617505,20.45918 0.00065168429,20.1992055 Z" id="Combined-Shape" fill="#000000" fill-rule="nonzero"/>
+                                                            </g>
+                                                        </svg>
                                                             <?php
                                                             $results = $conn
                                                                 ->execute('select * from talent_projects, talents where talent_projects.talent_id = talents.id and talent_projects.project_id = :id and talent_projects.talent_id = :talent_id', ['id' => $task->project_id, 'talent_id' => $task->allocated_talent]);
@@ -786,18 +617,34 @@ $conn = ConnectionManager::get('default');
                                         <div id="taskid" value="<?php echo $task->id ?>"
                                              data-task-id="<?php echo $task->id ?>"
                                              data-url="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $task->project_id]); ?>"
-                                             data-project-id="<?php $task->project_id ?>"></div>
+                                             data-project-id="<?php $task->project_id ?>"
+                                             data-p-id="<?php $id ?>"
+                                             data-user-name="<?php echo $this->Session->read('Auth.User.username') ?>"
+                                             data-user-role="<?php echo $this->Session->read('Auth.User.role') ?>"></div>
                                         <div class="modal-dialog modal-lg" style="margin-top: 50px" role="document">
                                             <?php $taskEdit = null ?>
-                                            <?= $this->Form->create($taskEdit, ['enctype' => 'multipart/form-data', 'url' => ['controller' => 'Tasks', 'action' => 'edit', $task->id]]) ?>
+
+                                            <!--it will check if the upload img is valid before submitting  If validate() function returns true, the form will be submitted, otherwise, it'll not submit the data.-->
+                                            <?= $this->Form->create($taskEdit, ['onsubmit'=>'return Validate(this)','enctype' => 'multipart/form-data', 'url' => ['controller' => 'Tasks', 'action' => 'edit', $task->id]]) ?>
+
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title" id="exampleModalLabel">Edit Task</h5>
-                                                    <div class="right-align col-lg-6 col-md-6 col-sm-6">
+                                                    <div id="task_value"
+                                                         data-t-id="<?php echo $task->id ?>"
+                                                         class="right-align col-lg-7">
+                                                        <button type="button"
+                                                                class="btn  btn-outline-danger"
+                                                                id="delete_alert"
+                                                                data-url="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $task->project_id]); ?>"
+                                                                data-t-id="<?php echo $task->id ?>"
+                                                                data-task-id="<?php echo $task->id ?>"
 
-                                                        <button type="button" class="btn btn-sm btn-secondary btn-custom"
-                                                                id="delete_alert" data-task-id="
-                                                       <?php echo $task->id ?>" style="margin-left: 5px">
+                                                                data-p-id="<?php $id ?>"
+                                                                data-user-name="<?php echo $this->Session->read('Auth.User.username') ?>"
+                                                                data-user-role="<?php echo $this->Session->read('Auth.User.role') ?>"
+                                                                data-project-id="<?php echo $task->project_id; ?>"
+                                                                style="margin-left: 5px">
                                                             Delete
                                                         </button>
 
@@ -806,14 +653,17 @@ $conn = ConnectionManager::get('default');
                                                             'button' => '<button{{attrs}}>{{text}}</button>'])
                                                         ?>
                                                     </div>
-                                                    <div class="right-align col-lg-4 col-md-4 col-sm-4">
-                                                        <button type="button" class="btn btn-secondary"
-                                                                data-dismiss="modal">
-                                                            Cancel
-                                                        </button>
+                                                    <div class="right-align col-lg-3">
+                                                        <!--                                                        <button type="button" class="btn btn-secondary"-->
+                                                        <!--                                                                data-dismiss="modal">-->
+                                                        <!--                                                            Cancel-->
+                                                        <!--                                                        </button>-->
+
                                                         <?= $this->Form->button('Submit ', [
                                                             'type' => 'submit',
-                                                            'class' => 'btn btn-success',
+                                                            'class' => 'btn btn-success btn-block',
+                                                            'id' => 'edit_submit',
+                                                            'data-task-id' => $task->id,
                                                             'escape' => false
                                                         ]);
                                                         ?>
@@ -829,116 +679,132 @@ $conn = ConnectionManager::get('default');
 
                                                 <div class="modal-body">
                                                     <div class="kt-form">
-                                                        <div class="form-group " style="margin : 3px">
-                                                            <label class="col-form-label col-lg-3 col-sm-12"> Task
-                                                                Trait </label>
-                                                            <?php
+                                                        <div class="accordion accordion-light  accordion-toggle-arrow" id="accordionExample5">
+                                                            <div class="card">
+                                                                <div class="card-header" id="headingOne5">
+                                                                    <div class="card-title" data-toggle="collapse" data-target="#collapseOne5" aria-expanded="true" aria-controls="collapseOne5">
+                                                                        <i class="flaticon-pie-chart-1"></i> Task Traits & Allocated Talent
+                                                                    </div>
+                                                                </div>
+                                                                <div id="collapseOne5" class="collapse" aria-labelledby="headingOne5" data-parent="#accordionExample5">
+                                                                    <div class="card-body">
+                                                                        <div class="form-group " style="margin : 3px">
+                                                                            <label class="col-form-label col-lg-3 col-sm-12"> Task
+                                                                                Trait </label>
+                                                                            <?php
 
-                                                            echo $this->Form->control('trait_contact',
-                                                                [
-                                                                    'templates' => ['inputContainer' => '{{content}}'],
-                                                                    'type' => 'checkbox',
-                                                                    'value' => 'Y',
-                                                                    'hiddenField' => 'N',
-                                                                    'checked' => ($task->trait_contact == 'Y' ? true : false),
-                                                                    'label' => [
-                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
-                                                                        'text' => '     <span class="kt-badge kt-badge--success kt-badge--lg breath"
+                                                                            echo $this->Form->control('trait_contact',
+                                                                                [
+                                                                                    'templates' => ['inputContainer' => '{{content}}'],
+                                                                                    'type' => 'checkbox',
+                                                                                    'value' => 'Y',
+                                                                                    'hiddenField' => 'N',
+                                                                                    'checked' => ($task->trait_contact == 'Y' ? true : false),
+                                                                                    'label' => [
+                                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                                        'text' => '     <span class="kt-badge kt-badge--success kt-badge--lg breath"
                                                       style="background-color: #0079bf ; margin: 10px ;margin-left: 15px"><i
                                                         class="flaticon-speech-bubble-1"></i></span> &nbsp; Contact &nbsp; ',
-                                                                        'escape' => false
-                                                                    ]
-                                                                ]);
-                                                            echo $this->Form->control('trait_repeat',
-                                                                [
-                                                                    'templates' => ['inputContainer' => '{{content}}'],
-                                                                    'type' => 'checkbox',
-                                                                    'value' => 'Y',
-                                                                    'hiddenField' => 'N',
-                                                                    'checked' => ($task->trait_repeat == 'Y' ? true : false),
-                                                                    'label' => [
-                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
-                                                                        'text' => '<span  style="margin: 10px; margin-left: 15px" class="kt-badge kt-badge--success kt-badge--lg breath"><i
+                                                                                        'escape' => false
+                                                                                    ]
+                                                                                ]);
+                                                                            echo $this->Form->control('trait_repeat',
+                                                                                [
+                                                                                    'templates' => ['inputContainer' => '{{content}}'],
+                                                                                    'type' => 'checkbox',
+                                                                                    'value' => 'Y',
+                                                                                    'hiddenField' => 'N',
+                                                                                    'checked' => ($task->trait_repeat == 'Y' ? true : false),
+                                                                                    'label' => [
+                                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                                        'text' => '<span  style="margin: 10px; margin-left: 15px" class="kt-badge kt-badge--success kt-badge--lg breath"><i
                                                         class="flaticon2-circular-arrow "></i></span> &nbsp; Repeat &nbsp;&nbsp; ',
-                                                                        'escape' => false
-                                                                    ]
-                                                                ]);
-                                                            ?>
-                                                        </div>
-                                                        <div class="form-group" style="margin : 3px">
-                                                            <label class="col-form-label col-lg-3 col-sm-12"> Task
-                                                                Trait </label>
-                                                            <?php
-                                                            echo $this->Form->control('trait_important',
-                                                                [
-                                                                    'templates' => ['inputContainer' => '{{content}}'],
-                                                                    'type' => 'checkbox',
-                                                                    'value' => 'Y',
-                                                                    'hiddenField' => 'N',
-                                                                    'checked' => ($task->trait_important == 'Y' ? true : false),
-                                                                    'label' => [
-                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
-                                                                        'text' => '<span  style="margin: 10px ;margin-left: 15px" class="kt-badge kt-badge--danger kt-badge--lg fa-beat"><i
+                                                                                        'escape' => false
+                                                                                    ]
+                                                                                ]);
+                                                                            ?>
+                                                                        </div>
+                                                                        <div class="form-group" style="margin : 3px">
+                                                                            <label class="col-form-label col-lg-3 col-sm-12"> Task
+                                                                                Trait </label>
+                                                                            <?php
+                                                                            echo $this->Form->control('trait_important',
+                                                                                [
+                                                                                    'templates' => ['inputContainer' => '{{content}}'],
+                                                                                    'type' => 'checkbox',
+                                                                                    'value' => 'Y',
+                                                                                    'hiddenField' => 'N',
+                                                                                    'checked' => ($task->trait_important == 'Y' ? true : false),
+                                                                                    'label' => [
+                                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                                        'text' => '<span  style="margin: 10px ;margin-left: 15px" class="kt-badge kt-badge--danger kt-badge--lg fa-beat"><i
                                                         class="flaticon2-attention"></i></span> Important',
-                                                                        'escape' => false
-                                                                    ]
-                                                                ]);
-                                                            echo $this->Form->control('trait_uncertain',
-                                                                [
-                                                                    'templates' => ['inputContainer' => '{{content}}'],
-                                                                    'type' => 'checkbox',
-                                                                    'value' => 'Y',
-                                                                    'hiddenField' => 'N',
-                                                                    'class' => 'labe',
-                                                                    'checked' => ($task->trait_uncertain == 'Y' ? true : false),
-                                                                    'label' => [
-                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
-                                                                        'text' => '<span style="margin: 10px ;margin-left: 15px"
+                                                                                        'escape' => false
+                                                                                    ]
+                                                                                ]);
+                                                                            echo $this->Form->control('trait_uncertain',
+                                                                                [
+                                                                                    'templates' => ['inputContainer' => '{{content}}'],
+                                                                                    'type' => 'checkbox',
+                                                                                    'value' => 'Y',
+                                                                                    'hiddenField' => 'N',
+                                                                                    'class' => 'labe',
+                                                                                    'checked' => ($task->trait_uncertain == 'Y' ? true : false),
+                                                                                    'label' => [
+                                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                                        'text' => '<span style="margin: 10px ;margin-left: 15px"
                                                   class="kt-badge kt-badge--warning kt-badge--lg fa-beat"><b>?</b></span> Uncertain',
-                                                                        'escape' => false
-                                                                    ]
-                                                                ]);
-                                                            ?>
-                                                        </div>
-                                                        <div class="form-group row" style="margin : 3px">
-                                                            <div class="col-lg-6">
-                                                                <?php
-                                                                $options = [NULL => '     '];
-                                                                echo $this->Form->control('colour_id',
-                                                                    [
-                                                                        'templates' => ['inputContainer' => '{{content}}'],
-                                                                        'type' => 'select',
-                                                                        'options' => $options + $card_types,
-                                                                        'value' => $task->colour_id,
-                                                                        'class' => 'form-control col-lg-8 col-md-9 col-sm-12',
-                                                                        'label' => [
-                                                                            'class' => 'col-form-label col-lg-3 col-sm-12',
-                                                                            'text' => 'Card Type'
-                                                                        ]
-                                                                    ]); ?>
-                                                            </div>
-                                                            <div class="col-lg-6">
-                                                                <?php
-                                                                $results = $conn
-                                                                    ->execute('select * from talent_projects, talents where talent_projects.talent_id = talents.id and talent_projects.project_id = :id ', ['id' => $id]);
-                                                                $talent_list = [];
-                                                                foreach ($results as $talent) {
-                                                                    $talent_list = $talent_list + [$talent['id'] => $talent['position'] . " - " . $talent['first_name'] . " " . $talent['last_name']];
-                                                                }
+                                                                                        'escape' => false
+                                                                                    ]
+                                                                                ]);
+                                                                            ?>
+                                                                        </div>
+                                                                        <div class="form-group row" style="margin : 3px">
+                                                                            <div class="col-lg-6">
+                                                                                <?php
+                                                                                $options = [NULL => '     '];
+                                                                                echo $this->Form->control('colour_id',
+                                                                                    [
+                                                                                        'templates' => ['inputContainer' => '{{content}}'],
+                                                                                        'type' => 'select',
+                                                                                        'options' => $options + $card_types,
+                                                                                        'value' => $task->colour_id,
+                                                                                        'class' => 'form-control col-lg-8 col-md-9 col-sm-12',
+                                                                                        'label' => [
+                                                                                            'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                                            'text' => 'Card Type'
+                                                                                        ]
+                                                                                    ]); ?>
+                                                                            </div>
+                                                                            <div class="col-lg-6">
+                                                                                <?php
+                                                                                $results = $conn
+                                                                                    ->execute('select * from talent_projects, talents where talent_projects.talent_id = talents.id and talent_projects.project_id = :id ', ['id' => $id]);
+                                                                                $talent_list = [];
+                                                                                foreach ($results as $talent) {
+                                                                                    $talent_list = $talent_list + [$talent['id'] => $talent['position'] . " - " . $talent['first_name'] . " " . $talent['last_name']];
+                                                                                }
 
-                                                                $options = [NULL => '     '];
-                                                                echo $this->Form->control('allocated_talent',
-                                                                    [
-                                                                        'templates' => ['inputContainer' => '{{content}}'],
-                                                                        'type' => 'select',
-                                                                        'options' => $options + $talent_list,
-                                                                        'value' => $task->allocated_talent,
-                                                                        'class' => 'form-control col-lg-8 col-md-9 col-sm-12',
-                                                                        'label' => [
-                                                                            'class' => 'col-form-label col-lg-5 col-sm-12',
-                                                                            'text' => 'Allocate Talents'
-                                                                        ]
-                                                                    ]); ?>
+                                                                                $options = [NULL => '     '];
+                                                                                echo $this->Form->control('allocated_talent',
+                                                                                    [
+                                                                                        'templates' => ['inputContainer' => '{{content}}'],
+                                                                                        'type' => 'select',
+                                                                                        'options' => $options + $talent_list,
+                                                                                        'value' => $task->allocated_talent,
+                                                                                        'class' => 'form-control col-lg-8 col-md-9 col-sm-12',
+                                                                                        'label' => [
+                                                                                            'class' => 'col-form-label col-lg-5 col-sm-12',
+                                                                                            'text' => 'Allocate Talents'
+                                                                                        ]
+                                                                                    ]); ?>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="card">
+
                                                             </div>
                                                         </div>
                                                         <div class="form-group row" style="margin : 3px">
@@ -958,11 +824,12 @@ $conn = ConnectionManager::get('default');
                                                             <div class="col-lg-6">
                                                                 <?php echo $this->Form->hidden('create_date', ['value' => $task->create_date]); ?>
                                                                 <?php echo $this->Form->control('due_date', [
-                                                                    'value' => date_format($task->due_date, 'd/m/Y h:i A'),
+                                                                    'value' =>$task->due_date->i18nFormat('dd MMMM yyyy - hh:mm aaa'),
+                                                                    //'value' => date_format($task->due_date, 'd/m/Y h:i A'),
                                                                     'templates' => ['inputContainer' => '{{content}}'],
-                                                                    'class' => 'input-group date form-control col-lg-8 col-md-9 col-sm-12 ',
+                                                                    'class' => 'input-group date form-control col-lg-8 col-md-9 col-sm-12 datetimepicker_5',
                                                                     'type' => 'text',
-                                                                    'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
+                                                                    //'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
                                                                     'label' => [
                                                                         'class' => 'col-form-label col-lg-5 col-sm-12',
                                                                         'text' => 'Task Due Date'
@@ -979,20 +846,21 @@ $conn = ConnectionManager::get('default');
                                                         <!--                                      class="kt-form__seperator kt-form__seperator--dashed kt-form__seperator--space"></div>-->
                                                         <div class="form-group  " style="margin : 3px">
                                                             <div class="col-lg-12">
-                                                                <?php echo $this->Form->control('description', [
+                                                                <?php
+                                                                echo $this->Form->control('description', [
                                                                     'value' => $task->description,
                                                                     'templates' => ['inputContainer' => '{{content}}'],
                                                                     'type' => 'textarea',
-                                                                    'maxlength' => '4000',
-                                                                    // Rich text section
-                                                                    //'data-provide' => 'markdown',
-                                                                    'row' => '5',
-                                                                    'class' => 'form-control col-lg-10 col-md-10 col-sm-12',
+                                                                    'data-desc-text' => $task->description,
+                                                                    'row' => '10',
+                                                                    'id' => 'desc',
+                                                                    'class' => 'form-control mytextarea col-lg-10 col-md-10 col-sm-12',
                                                                     'label' => [
-                                                                        'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                        'class' => 'col-form-label  col-lg-3 col-sm-12',
                                                                         'text' => 'Description'
                                                                     ]
                                                                 ]); ?>
+
                                                             </div>
 
                                                             <div class="form-group row" style="margin : 5px">
@@ -1031,11 +899,13 @@ $conn = ConnectionManager::get('default');
                                                                     <label class="col-form-label" for="description"
                                                                            style="margin-top: 5px">Upload New
                                                                         Image</label>
+
                                                                     <?php
                                                                     echo $this->Form->control('upload', [
                                                                         'type' => 'file',
                                                                         'class' => 'custom-file-upload kt-dropzone dropzone dz-clickable',
-                                                                        'style' => 'padding-top:60px'
+                                                                        'style' => 'padding-top:60px',
+                                                                        'multiple' => true
                                                                     ]);
                                                                     ?>
                                                                 </div>
@@ -1047,6 +917,7 @@ $conn = ConnectionManager::get('default');
                                                         echo $this->Form->hidden('status_id', ['value' => $task->status_id]);
                                                         echo $this->Form->hidden('label_id', ['value' => $task->label_id]);
                                                         ?>
+
                                                         <?= $this->Form->end() ?>
 
                                                     </div>
@@ -1055,40 +926,36 @@ $conn = ConnectionManager::get('default');
                                                     <hr class="hr2"/>
 
                                                     <!--begin::Accordion-->
-                                                    <div class="accordion accordion-solid accordion-toggle-plus"
-                                                         id="accordionExample6">
+                                                    <div class="accordion accordion-light  accordion-toggle-arrow" id="accordionExample5">
                                                         <div class="card">
-                                                            <div class="card-header" id="headingOne6">
-                                                                <div class="card-title" data-toggle="collapse"
-                                                                     data-target="#collapseOne6" aria-expanded="false"
-                                                                     aria-controls="collapseOne6"
-                                                                     style="color: #716aca !important;">
-                                                                    <i class="flaticon-comment"
-                                                                       style="font-size: 1.2rem "></i> Comments
+                                                            <div class="card-header" id="headingTwo5">
+                                                                <div class="card-title collapsed" data-toggle="collapse" data-target="#collapseTwo5" aria-expanded="ture" aria-controls="collapseTwo5">
+                                                                    <i class="flaticon-comment"></i> Comments
                                                                 </div>
                                                             </div>
-                                                            <div id="collapseOne6" class="collapse"
-                                                                 aria-labelledby="headingOne6"
-                                                                 data-parent="#accordionExample6">
+                                                            <div id="collapseTwo5" class="collapse show" aria-labelledby="headingTwo5" data-parent="#accordionExample5">
                                                                 <div class="card-body">
                                                                     <?php $comment = null ?>
-                                                                    <?= $this->Form->create($comment, ['url' => ['controller' => 'Comments', 'action' => 'add', $task->project_id]]) ?>
+                                                                    <?= $this->Form->create($comment, ['url' => ['controller' => 'Comments', 'action' => 'add', $task->project_id,$task->id]]) ?>
 
                                                                     <div class="kt-form" style="margin-top: 5px">
                                                                         <div class="modal-body">
                                                                             <?php echo $this->Form->hidden('comment_date', ['value' => date("Y-m-d H:i:s")]); ?>
+                                                                            <?php echo $this->Form->hidden('user_name', ['value' => $this->Session->read('Auth.User.username')]); ?>
                                                                             <div class="form-group row kt-margin-b-20">
-                                                                                <?php echo $this->Form->control('comment_desc', [
-                                                                                    'templates' => ['inputContainer' => '{{content}}'],
-                                                                                    'type' => 'textarea',
-                                                                                    'maxlength' => '800',
-                                                                                    'rows' => '2',
-                                                                                    'class' => 'form-control col-lg-6 col-md-7 col-sm-12',
-                                                                                    'label' => [
-                                                                                        'class' => 'col-form-label col-lg-2 col-sm-12',
-                                                                                        'text' => 'Comments'
-                                                                                    ]
-                                                                                ]); ?>
+                                                                                <div class="col-lg-12">
+                                                                                    <?php echo $this->Form->control('comment_desc', [
+                                                                                        'templates' => ['inputContainer' => '{{content}}'],
+                                                                                        'type' => 'textarea',
+                                                                                        'maxlength' => '800',
+                                                                                        'rows' => '3',
+                                                                                        'class' => 'form-control mention col-lg-10 col-md-10 col-sm-12',
+                                                                                        'label' => [
+                                                                                            'class' => 'col-form-label col-lg-2 col-sm-12',
+                                                                                            'text' => 'Comments'
+                                                                                        ]
+                                                                                    ]); ?>
+                                                                                </div>
 
                                                                                 <?php echo $this->Form->hidden('task_id', ['value' => $task->id]); ?>
                                                                                 <?php $this->Form->setTemplates(['button' => '<button{{attrs}}>{{text}}</button>']) ?>
@@ -1096,7 +963,7 @@ $conn = ConnectionManager::get('default');
                                                                                     ['controller' => 'Comments', 'action' => 'add', $task->project_id],
                                                                                     [
                                                                                         'class' => 'btn btn-brand btn-sm',
-                                                                                        'style' => 'margin-left : 15px',
+                                                                                        'style' => 'margin : 15px',
                                                                                         'id' => $task->project_id,
                                                                                         'escape' => false
                                                                                     ]);
@@ -1124,143 +991,148 @@ $conn = ConnectionManager::get('default');
                                                                                         History </label>
                                                                                     <!--Begin::Portlet-->
                                                                                     <div class="" style="width:100%">
-                                                                                        <div class="kt-scroll"
-                                                                                             data-scroll="true"
-                                                                                             data-height="420"
-                                                                                             data-mobile-height="300">
-                                                                                            <div
-                                                                                                class="kt-timeline-v1 kt-timeline-v1--justified"
-                                                                                                style="margin: 15px">
-                                                                                                <div
-                                                                                                    class="kt-timeline-v1__items">
-                                                                                                    <div
-                                                                                                        class="kt-timeline-v1__marker"></div>
+                                                                                        <div class="kt-scroll" data-scroll="true" data-height="800" data-mobile-height="300">
+                                                                                            <!-- Time Line -->
+                                                                                            <div class="kt-timeline-v1 kt-timeline-v1--justified" style="margin: 15px">
+                                                                                                <div class="kt-timeline-v1__items">
+                                                                                                    <div class="kt-timeline-v1__marker"></div>
                                                                                                     <?php foreach ($results as $row) { ?>
-                                                                                                        <div
-                                                                                                            class="kt-timeline-v1__item">
-                                                                                                            <div
-                                                                                                                class="kt-timeline-v1__item-circle">
-                                                                                                                <div
-                                                                                                                    class="kt-bg-danger"></div>
+                                                                                                        <div class="kt-timeline-v1__item kt-timeline-v1__item--right">
+                                                                                                            <div class="kt-timeline-v1__item-circle" >
+                                                                                                                <div class="kt-bg-success" ></div>
                                                                                                             </div>
-
                                                                                                             <span
                                                                                                                 class="kt-timeline-v1__item-time kt-font-brand"
                                                                                                                 style="right: 0;">
-															<?php echo date_format((date_create_from_format('Y-m-d H:i:s', $row["comment_date"])), "d M Y H:i:s"); ?>
-                                                                                                                <span></span>
-														</span>
-                                                                                                            <div
-                                                                                                                class="kt-timeline-v1__item-content"
-                                                                                                                style="padding: 1rem">
-                                                                                                                <div
-                                                                                                                    class="kt-timeline-v1__item-body">
-
-                                                                                                                    <h6>
-                                                                                                                        <?php echo $row["comment_desc"]; ?>
-                                                                                                                    </h6>
+                                                                                                                <?php echo date_format((date_create_from_format('Y-m-d H:i:s', $row["comment_date"])), "d M Y H:i:s"); ?>
+                                                                                                                <span></span></span>
+                                                                                                            <div class="kt-timeline-v1__item-content" style="    position: relative; border-radius: 20px; padding: 1.5rem; margin-right: 50px ;background-color: #f6f8ff;">
+                                                                                                                <div class="kt-timeline-v1__item-title" style="color: #1dc9b7">
+                                                                                                                    <?php echo $row["user_name"]." :"; ?>
                                                                                                                 </div>
-                                                                                                                <div
-                                                                                                                    class="kt-timeline-v1__item-actions">
-                                                                                                                    <a href="#"
-                                                                                                                       class="btn btn-sm btn-clean btn-icon btn-icon-sm"
-                                                                                                                       data-toggle="modal"
-                                                                                                                       data-target="#kt_modaleditcomments_<?php echo $row["comment_id"]; ?>">
-                                                                                                                        <i class="flaticon2-note"
-                                                                                                                           data-toggle="kt-popover"
-                                                                                                                           data-content="Edit Comment"
-                                                                                                                           data-placement='bottom'></i>
-                                                                                                                    </a>
-
-                                                                                                                    <?= $this->Html->link('<span class="btn btn-sm btn-clean btn-icon btn-icon-sm"><i class="flaticon2-delete"></i></span>',
-                                                                                                                        ['controller' => 'Comments', 'action' => 'delete', $row["comment_id"],$task->project_id],
-                                                                                                                        ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "Delete Comment", 'data-placement' => 'bottom', 'confirm' => 'Are you sure you wish to delete this comment?']) ?>
-
-                                                                                                                    <!--begin::Modal : Edit Comments -->
-
-                                                                                                                    <div
-                                                                                                                        class="modal fade"
-                                                                                                                        id="kt_modaleditcomments_<?php echo $row["comment_id"]; ?>"
-                                                                                                                        class="kt_modal_<?php echo $row["comment_id"]; ?>"
-                                                                                                                        role="dialog"
-                                                                                                                        aria-labelledby="exampleModalLabel"
-                                                                                                                        aria-hidden="true"
-                                                                                                                        tabindex="-2">
-                                                                                                                        <div
-                                                                                                                            class="modal-dialog modal-md "
-                                                                                                                            style="margin-top: 10%"
-                                                                                                                            role="document">
-                                                                                                                            <?php $comment = null ?>
-                                                                                                                            <?= $this->Form->create($comment, ['url' => ['controller' => 'Comments', 'action' => 'edit', $row["comment_id"],$task->project_id]]) ?>
-
+                                                                                                                <div class="kt-timeline-v1__item-body" style="margin-top: 0px">
+                                                                                                                    <div class="kt-widget4">
+                                                                                                                        <div class="kt-widget4__item">
+                                                                                                                            <div class="kt-widget4__pic">
+                                                                                                                                <!--                                                                                                                                <img src="../assets/media/users/100_4.jpg" alt="">-->
+                                                                                                                            </div>
+                                                                                                                            <div class="kt-widget4__info">
+                                                                                                                                <a href="#" class="kt-widget4__username">
+                                                                                                                                </a>
+                                                                                                                                <p class="kt-widget4__text" style="color: #565c84">
+                                                                                                                                    <?php echo $row["comment_desc"]; ?>
+                                                                                                                                </p>
+                                                                                                                            </div>
                                                                                                                             <div
-                                                                                                                                class="modal-content">
+                                                                                                                                class="kt-timeline-v1__item-actions" style="margin-top: 10px">
+                                                                                                                                <a href="#"
+                                                                                                                                   class="btn btn-sm btn-clean btn-icon btn-icon-sm"
+                                                                                                                                   data-toggle="modal"
+                                                                                                                                   data-target="#kt_modaleditcomments_<?php echo $row["comment_id"]; ?>">
+                                                                                                                                    <i class="flaticon2-note"
+                                                                                                                                       data-toggle="kt-popover"
+                                                                                                                                       data-content="Edit Comment"
+                                                                                                                                       data-placement='bottom'></i>
+                                                                                                                                </a>
+
+                                                                                                                                <?= $this->Html->link('<span class="btn btn-sm btn-clean btn-icon btn-icon-sm"><i class="flaticon2-delete"></i></span>',
+                                                                                                                                    ['controller' => 'Comments', 'action' => 'delete', $row["comment_id"], $task->project_id],
+                                                                                                                                    ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "Delete Comment", 'data-placement' => 'bottom', 'confirm' => 'Are you sure you wish to delete this comment?']) ?>
+
+                                                                                                                                <!--begin::Modal : Edit Comments -->
+
                                                                                                                                 <div
-                                                                                                                                    class="modal-header">
-                                                                                                                                    <h5 class="modal-title"
-                                                                                                                                        id="exampleModalLabel">
-                                                                                                                                        Comments</h5>
-                                                                                                                                    <button
-                                                                                                                                        type="button"
-                                                                                                                                        class="close"
-                                                                                                                                        data-dismiss="modal"
-                                                                                                                                        aria-label="Close">
+                                                                                                                                    class="modal fade"
+                                                                                                                                    id="kt_modaleditcomments_<?php echo $row["comment_id"]; ?>"
+                                                                                                                                    class="kt_modal_<?php echo $row["comment_id"]; ?>"
+                                                                                                                                    role="dialog"
+                                                                                                                                    aria-labelledby="exampleModalLabel"
+                                                                                                                                    aria-hidden="true"
+                                                                                                                                    tabindex="-2">
+                                                                                                                                    <div
+                                                                                                                                        class="modal-dialog modal-md "
+                                                                                                                                        style="margin-top: 10%"
+                                                                                                                                        role="document">
+                                                                                                                                        <?php $comment = null ?>
+                                                                                                                                        <?= $this->Form->create($comment, ['url' => ['controller' => 'Comments', 'action' => 'edit', $row["comment_id"], $task->project_id]]) ?>
+
+                                                                                                                                        <div
+                                                                                                                                            class="modal-content">
+                                                                                                                                            <div
+                                                                                                                                                class="modal-header">
+                                                                                                                                                <h5 class="modal-title"
+                                                                                                                                                    id="exampleModalLabel">
+                                                                                                                                                    Comments</h5>
+                                                                                                                                                <button
+                                                                                                                                                    type="button"
+                                                                                                                                                    class="close"
+                                                                                                                                                    data-dismiss="modal"
+                                                                                                                                                    aria-label="Close">
                                                                                                                 <span
                                                                                                                     aria-hidden="true"
                                                                                                                     class="la la-remove"></span>
-                                                                                                                                    </button>
-                                                                                                                                </div>
-                                                                                                                                <div
-                                                                                                                                    class="kt-form kt-form--fit kt-form--label-right">
-                                                                                                                                    <div
-                                                                                                                                        class="modal-body">
-                                                                                                                                        <?php echo $this->Form->hidden('comment_date', ['value' => date("Y-m-d H:i:s")]); ?>
-                                                                                                                                        <div
-                                                                                                                                            class="form-group row kt-margin-b-20">
-                                                                                                                                            <?php echo $this->Form->control('comment_desc', [
-                                                                                                                                                'value' => $row["comment_desc"],
-                                                                                                                                                'templates' => ['inputContainer' => '{{content}}'],
-                                                                                                                                                'type' => 'textarea',
-                                                                                                                                                'rows' => '5',
-                                                                                                                                                'class' => 'form-control col-lg-6 col-md-7 col-sm-12',
-                                                                                                                                                'label' => [
-                                                                                                                                                    'class' => 'col-form-label col-lg-3 col-sm-12',
-                                                                                                                                                    'text' => 'Comments'
-                                                                                                                                                ]
-                                                                                                                                            ]); ?>
-                                                                                                                                        </div>
-                                                                                                                                        <?php echo $this->Form->hidden('task_id', ['value' => $task->id]); ?>
-                                                                                                                                    </div>
-                                                                                                                                    <div
-                                                                                                                                        class="modal-footer">
-                                                                                                                                        <button
-                                                                                                                                            type="button"
-                                                                                                                                            class="btn btn-secondary"
-                                                                                                                                            data-dismiss="modal">
-                                                                                                                                            Cancel
-                                                                                                                                        </button>
-                                                                                                                                        <!--Button has not template in Cakephp, need to set a templates before change it -->
-                                                                                                                                        <?php
-                                                                                                                                        $this->Form->setTemplates([
-                                                                                                                                            'button' => '<button{{attrs}}>{{text}}</button>'])
-                                                                                                                                        ?>
+                                                                                                                                                </button>
+                                                                                                                                            </div>
+                                                                                                                                            <div
+                                                                                                                                                class="kt-form kt-form--fit kt-form--label-right">
+                                                                                                                                                <div
+                                                                                                                                                    class="modal-body">
 
-                                                                                                                                        <?= $this->Form->postButton('Submit ',
-                                                                                                                                            ['controller' => 'Comments', 'action' => 'edit', $row["comment_id"],$task->project_id],
-                                                                                                                                            [
-                                                                                                                                                'class' => 'btn btn-brand',
-                                                                                                                                                'id' => $row["comment_id"],
-                                                                                                                                                'escape' => false
-                                                                                                                                            ]);
-                                                                                                                                        ?>
-                                                                                                                                        <?= $this->Form->end() ?>
+                                                                                                                                                    <?php
+                                                                                                                                                    echo $this->Form->hidden('comment_date', ['value' => date("Y-m-d H:i:s")]); ?>
+                                                                                                                                                    <?php echo $this->Form->hidden('user_name', ['value' => $this->Session->read('Auth.User.username')]); ?>
+                                                                                                                                                    <div
+                                                                                                                                                        class="form-group row kt-margin-b-20">
+                                                                                                                                                        <?php echo $this->Form->control('comment_desc', [
+                                                                                                                                                            'value' => $row["comment_desc"],
+                                                                                                                                                            'templates' => ['inputContainer' => '{{content}}'],
+                                                                                                                                                            'type' => 'textarea',
+                                                                                                                                                            'rows' => '5',
+                                                                                                                                                            'class' => 'form-control col-lg-6 col-md-7 col-sm-12',
+                                                                                                                                                            'label' => [
+                                                                                                                                                                'class' => 'col-form-label col-lg-3 col-sm-12',
+                                                                                                                                                                'text' => 'Comments'
+                                                                                                                                                            ]
+                                                                                                                                                        ]); ?>
+                                                                                                                                                    </div>
+                                                                                                                                                    <?php echo $this->Form->hidden('task_id', ['value' => $task->id]); ?>
+                                                                                                                                                </div>
+                                                                                                                                                <div
+                                                                                                                                                    class="modal-footer">
+                                                                                                                                                    <button
+                                                                                                                                                        type="button"
+                                                                                                                                                        class="btn btn-secondary"
+                                                                                                                                                        data-dismiss="modal">
+                                                                                                                                                        Cancel
+                                                                                                                                                    </button>
+                                                                                                                                                    <!--Button has not template in Cakephp, need to set a templates before change it -->
+                                                                                                                                                    <?php
+                                                                                                                                                    $this->Form->setTemplates([
+                                                                                                                                                        'button' => '<button{{attrs}}>{{text}}</button>'])
+                                                                                                                                                    ?>
+
+                                                                                                                                                    <?= $this->Form->postButton('Submit ',
+                                                                                                                                                        ['controller' => 'Comments', 'action' => 'edit', $row["comment_id"], $task->project_id],
+                                                                                                                                                        [
+                                                                                                                                                            'class' => 'btn btn-brand',
+                                                                                                                                                            'id' => $row["comment_id"],
+                                                                                                                                                            'escape' => false
+                                                                                                                                                        ]);
+                                                                                                                                                    ?>
+                                                                                                                                                    <?= $this->Form->end() ?>
+                                                                                                                                                </div>
+                                                                                                                                            </div>
+                                                                                                                                        </div>
                                                                                                                                     </div>
                                                                                                                                 </div>
+                                                                                                                                <!--end::Modal-->
                                                                                                                             </div>
                                                                                                                         </div>
                                                                                                                     </div>
-                                                                                                                    <!--end::Modal-->
                                                                                                                 </div>
+                                                                                                                <!--                                                                                                                <div class="kt-timeline-v1__item-actions">-->
+                                                                                                                <!--                                                                                                                    <a href="#" class="btn btn-sm btn-brand">Check all</a>-->
+                                                                                                                <!--                                                                                                                </div>-->
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     <?php }; ?>
@@ -1277,9 +1149,7 @@ $conn = ConnectionManager::get('default');
                                                             </div>
                                                         </div>
                                                     </div>
-
                                                     <!--end::Accordion-->
-
                                                 </div>
                                             </div>
                                         </div>
@@ -1289,7 +1159,9 @@ $conn = ConnectionManager::get('default');
                                 }
                             }
                             ?>
+
                         </ul>
+
 
                     </div>
                     <?php
@@ -1297,13 +1169,229 @@ $conn = ConnectionManager::get('default');
                 ?>
             </div>
         </div>
+        <!-- begin::Quick Panel -->
+        <div id="kt_quick_panel" class="kt-quick-panel">
+
+            <a href="#" class="kt-quick-panel__close" id="kt_quick_panel_close_btn"><i class="flaticon2-delete"></i></a>
+            <div class="kt-quick-panel__nav">
+                <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand  kt-notification-item-padding-x"
+                    role="tablist">
+                    <li class="nav-item active">
+                        <a class="nav-link active" data-toggle="tab" href="#kt_quick_panel_tab_notifications"
+                           role="tab">Activity History</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" id="delete_logs" data-project-id="<?php if(!empty($task->project_id)){ echo $task->project_id; } ?>">Clear Log
+                            History</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="kt-quick-panel__content">
+                <div class="tab-content">
+                    <div class="tab-pane fade show kt-scroll active" id="kt_quick_panel_tab_notifications"
+                         role="tabpanel">
+                        <div class="kt-notification">
+                            <?php foreach ($logs
+
+                                           as $log) {
+                                $due_date = date_create_from_format('Y-m-d H:i:s', date_format($log->log_time, 'Y-m-d H:i:s'));
+                                $sys_date = date_create_from_format('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+                                $datediff = date_diff($due_date, $sys_date);
+                                if ($datediff->d > 0) {
+                                    $message = $datediff->format(" %d Days %h Hours %i Minute");
+                                } elseif ($datediff->h > 0) {
+                                    $message = $datediff->format("%h Hours %i Minute");
+                                } else {
+                                    $message = $datediff->format("%i Minutes");
+                                }
+
+                                ?>
+
+
+                                <?php if ($log->action_type == "Updated Project Progress") { ?>
+                                    <a href="#" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon-diagram kt-font-success"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title">
+                                                <?php echo $log->user_role . " " ?>
+                                                <b> <?php echo $log->user_name ?></b> <?php echo " has " . $log->action_type . " to " ?>
+                                                <b> <?php echo $log->value; ?> </b>
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                <b><?php echo $message; ?></b> ago
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php } elseif ($log->action_type == "Moved") { ?>
+                                    <a href="#" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon2-box-1 kt-font-info"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title">
+                                                <?php echo $log->user_role . " " ?>
+                                                <b> <?php echo $log->user_name ?></b> <?php echo " has " . $log->action_type . " Card " ?>
+                                                <b> <?php echo "'" . $log->task_name . "' "; ?>  </b> to
+                                                <b> <?php echo $log->value; ?> </b>
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                <b><?php echo $message; ?></b> ago
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php } elseif ($log->action_type == "Deleted") { ?>
+                                    <a href="#" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon-delete kt-font-danger"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title">
+                                                <?php echo $log->user_role . " " ?>
+                                                <b> <?php echo $log->user_name ?></b> <?php echo " has " . $log->action_type . " Card " ?>
+                                                <b> <?php echo "'" . $log->task_name . "' "; ?>
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                <b><?php echo $message; ?></b> ago
+                                            </div>
+                                        </div>
+                                    </a>
+                                <?php } elseif ($log->action_type == "Added") { ?>
+                                    <a href="#" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon2-plus-1 kt-font-success"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title">
+                                                <?php echo $log->user_role . " " ?>
+                                                <b> <?php echo $log->user_name ?></b> <?php echo " has " . $log->action_type . " New Task " ?>
+                                                <b> <?php echo "'" . $log->task_name . "' "; ?>
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                <b><?php echo $message; ?></b> ago
+                                            </div>
+                                        </div>
+                                    </a>
+
+                                <?php } elseif ($log->action_type == "Modified") { ?>
+                                    <a href="#" class="kt-notification__item">
+                                        <div class="kt-notification__item-icon">
+                                            <i class="flaticon-edit-1 kt-font-warning"></i>
+                                        </div>
+                                        <div class="kt-notification__item-details">
+                                            <div class="kt-notification__item-title">
+                                                <?php echo $log->user_role . " " ?>
+                                                <b> <?php echo $log->user_name ?></b> <?php echo " has " . $log->action_type . " Task:  " ?>
+                                                <b> <?php echo "'" . $log->task_name . "' ";
+                                                    ?>
+                                            </div>
+                                            <div class="kt-notification__item-time">
+                                                <b><?php echo $message; ?></b> ago
+                                            </div>
+                                        </div>
+                                    </a>
+                                    <?php
+                                }  } ?>
+
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="https://cdn.tiny.cloud/1/skxxriyhfnae4ssf886wrpuv496ctdpkp14xxnp6zhxzs4yy/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+
+        <!-- end::Quick Panel -->
         <?= $this->Html->css('trello-like.css') ?>
         <?= $this->Html->css('heartbeat.css') ?>
         <?= $this->Html->css('Breathing.css') ?>
+        <?= $this->Html->css('jquery.mentionsInput.css') ?>
         <?= $this->Html->script('https://code.jquery.com/jquery-1.12.4.js') ?>
+        <?= $this->Html->script('https://ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js') ?>
         <?= $this->Html->script('base/scripts.bundle.js') ?>
         <?= $this->Html->script('app/custom/general/crud/forms/widgets/ion-range-slider.js') ?>
         <?= $this->Html->script('dropzone.js') ?>
+
+        <style>
+            .tox-statusbar__branding{
+                display: none;
+            }
+            .tox-tinymce {
+                border: 1px solid #cccccc63 !important;
+                border-radius: 10px !important;
+
+            }
+            .tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary{
+                border: 1px solid #cccccc63 !important;
+            background:none
+
+            .tox .tox-tbtn {
+                height: 25px;
+                OPACITY: 0.6;
+            }
+            }
+        </style>
+
+        <script>
+            $(function () {
+
+                $('textarea.mention').mentionsInput({
+                    onDataRequest: function (mode, query, callback) {
+                        var data = [
+                            <?php
+                            foreach($talents as $talent){
+                            ?>
+
+                            {
+                                id: <?php echo $talent['id']; ?>,
+                                name: "<?php echo "@" . $talent['first_name'] . "-" . $talent['last_name']; ?>",
+                                'type': 'contact'
+                            },
+                            <?php }; ?>
+                        ];
+
+                        //     var test = [
+                        //     { id:1, name:'Kenneth Auchenberg',  'type':'contact' },
+                        //     { id:2, name:'Jon Froda', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:3, name:'Anders Pollas', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:4, name:'Kasper Hulthin', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:5, name:'Andreas Haugstrup', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:6, name:'Pete Lacey', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:7, name:'kenneth@auchenberg.dk', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:8, name:'Pete Awesome Lacey', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' },
+                        //     { id:9, name:'Kenneth Hulthin', 'avatar':'http://cdn0.4dots.com/i/customavatars/avatar7112_1.gif', 'type':'contact' }
+                        // ];
+
+                        data = _.filter(data, function (item) {
+                            return item.name.toLowerCase().indexOf(query.toLowerCase()) > -1
+                        });
+
+                        callback.call(this, data);
+                    },
+                    onCaret: true
+
+                    //Get Value from Text area
+                }).val(
+                    $(this).data("desc-text")
+                );
+
+
+
+                $('.get-syntax-text').click(function () {
+                    $('textarea.mention').mentionsInput('val', function (text) {
+                        alert(text);
+                    });
+                });
+
+                $('.get-mentions').click(function () {
+                    $('textarea.mention').mentionsInput('getMentions', function (data) {
+                        alert(JSON.stringify(data));
+                    });
+                });
+            });
+        </script>
+
+
 
         <style>
             #exampleSelectl-menu a:hover {
@@ -1328,7 +1416,9 @@ $conn = ConnectionManager::get('default');
             .irs--flat .irs-bar {
                 background-color: #1dc9b7 !important;
             }
-
+            .tox .tox-tbtn svg {
+                opacity: 0.6;
+            }
             /*.irs--flat .irs-handle > i:first-child {*/
             /*background-color: #0079bf!important;*/
             /*}*/
@@ -1349,15 +1439,18 @@ $conn = ConnectionManager::get('default');
             /*}*/
 
         </style>
-
         <script>
             $(function () {
                 $('ul[id^="sort"]').sortable({
                     connectWith: ".sortable",
                     receive: function (e, ui) {
-                        var status_id = $(ui.item).parent(".sortable").data(
-                            "status-id");
+                        var status_id = $(ui.item).parent(".sortable").data("status-id");
+                        var status_name = $(ui.item).parent(".sortable").data("status-name");
                         var task_id = $(ui.item).data("task-id");
+                        var project_id = $(ui.item).data("project-id");
+                        var user_name = $(ui.item).data("user-name");
+                        var user_role = $(ui.item).data("user-role");
+                        var action = "Moved";
                         $.ajax({
                             //url:"<?php //echo Router::url(array('controller' => 'Tasks' ,'action' => 'update_id',status_id,task_id , 'ext' =>'json'));?>//"
 
@@ -1371,7 +1464,25 @@ $conn = ConnectionManager::get('default');
                             ]);?>' + '/' + task_id + '/' + status_id,
                             type: 'GET',
 
-                            success: function (url) {
+                            success: function () {
+
+                                var task_id = $(ui.item).data("task-id");
+                                $.ajax({
+                                    url: '<?php echo $this->Url->build([
+                                        "controller" => "Logs",
+                                        "action" => "addLogs"
+                                    ]);?>' + '/' + action
+                                    + '/' + task_id
+                                    + '/' + project_id
+                                    + '/' + user_name
+                                    + '/' + user_role
+                                    + '/' + status_name,
+                                    type: 'GET',
+                                    success: function (data) {
+                                        //Refresh The DIV If Ajax has successfully passed !
+                                        $(".kt-quick-panel__content").load(location.href + " .kt-quick-panel__content");
+                                    }
+                                });
                                 // swal.fire({
                                 //     position: 'top',
                                 //     type: 'success',
@@ -1418,14 +1529,17 @@ $conn = ConnectionManager::get('default');
                 }).disableSelection();
             });
         </script>
-
-
         <script>
             //Update Porject Progress
             $(function () {
                 $('#Btn-progress').click(function () {
                     var num = $("#kt_slider_1").val();
                     var projectId = $("#kt_slider_1").data("project-id");
+
+                    var action = "Updated Project Progress";
+                    var user_name = $("#Btn-progress").data("user-name");
+                    var user_role = $("#Btn-progress").data("user-role");
+
                     $.ajax({
                         url: '<?php echo $this->Url->build([
                             "controller" => "Projects",
@@ -1433,6 +1547,22 @@ $conn = ConnectionManager::get('default');
                         ]);?>' + '/' + projectId + '/' + num,
                         type: 'GET',
                         success: function (data) {
+                            $.ajax({
+                                url: '<?php echo $this->Url->build([
+                                    "controller" => "Logs",
+                                    "action" => "addLogs"
+                                ]);?>' + '/' + action
+                                + '/' + 0
+                                + '/' + projectId
+                                + '/' + user_name
+                                + '/' + user_role
+                                + '/' + num,
+                                type: 'GET',
+                                success: function (data) {
+                                    //Refresh The DIV If Ajax has successfully passed !
+                                    $(".kt-quick-panel__content").load(location.href + " .kt-quick-panel__content");
+                                }
+                            });
                             swal.fire({
                                 "title": "Project Progress Updated !",
                                 "text": "The Progress has been successfully Updated !",
@@ -1471,7 +1601,6 @@ $conn = ConnectionManager::get('default');
             });
 
         </script>
-
         <script>
             $(function () {
                 $('.fetch').click(function () {
@@ -1510,8 +1639,14 @@ $conn = ConnectionManager::get('default');
         <script>
             $(function () {
                 $(document).on("click", "#delete_alert", function () {
-                    var taskId = $(this).data("task-id");
-                    var url = $("#taskid").data("url");
+                    // var taskId = $("#taskid").data("task-id");
+                    var task_Id = $(this).data("task-id");
+                    var url = $(this).data("url");
+                    var projectId = $("#kt_slider_1").data("project-id");
+                    var user_name = $(this).data("user-name");
+                    var user_role = $(this).data("user-role");
+                    var action = "Deleted";
+                    var taskId = $(this).val();
                     swal.fire({
                         title: 'Are you sure?',
                         text: "You won't be able to revert this!",
@@ -1522,24 +1657,96 @@ $conn = ConnectionManager::get('default');
                         if (result.value) {
                             $.ajax({
                                 url: '<?php echo $this->Url->build([
-                                    "controller" => "tasks",
-                                    "action" => "delete"
-                                ]);?>' + '/' + taskId,
+                                    "controller" => "Logs",
+                                    "action" => "addLogs"
+                                ]);?>' + '/' + action
+                                + '/' + task_Id
+                                + '/' + projectId
+                                + '/' + user_name
+                                + '/' + user_role,
                                 type: 'GET',
-                                success: function (data) {
-                                    swal.fire(
-                                        'Deleted!',
-                                        'Your file has been deleted.',
-                                        'success'
-                                    );
-                                    window.location.href = url;
+                                success: function () {
+                                    $.ajax({
+                                        url: '<?php echo $this->Url->build([
+                                            "controller" => "tasks",
+                                            "action" => "delete"
+                                        ]);?>' + '/' + task_Id,
+                                        type: 'GET',
+                                        success: function () {
+                                            swal.fire(
+                                                'Deleted!',
+                                                'Your file has been deleted.',
+                                                'success'
+                                            );
+                                        }
+                                    });
                                 }
                             });
+                            window.location.href = url;
+                            $(".board").load(location.href + " .board");
                         }
                     });
                 });
             });
         </script>
+        <!-- Task Edit : Ajax Adding logs -->
+        <script>
+            $(function () {
+                $(document).on("click", "#edit_submit", function () {
+                    // var taskId = $("#taskid").data("task-id");
+                    var task_Id = $(this).data("task-id");
+                    var projectId = $("#kt_slider_1").data("project-id");
+                    var user_name = $("#taskid").data("user-name");
+                    var user_role = $("#taskid").data("user-role");
+                    var action = "Modified";
+                    $.ajax({
+                        url: '<?php echo $this->Url->build([
+                            "controller" => "Logs",
+                            "action" => "addLogs"
+                        ]);?>' + '/' + action
+                        + '/' + task_Id
+                        + '/' + projectId
+                        + '/' + user_name
+                        + '/' + user_role,
+                        type: 'GET',
+                        success: function () {
+                            //Refresh The DIV If Ajax has successfully passed !
+                            $(".kt-quick-panel__content").load(location.href + " .kt-quick-panel__content");
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <!-- Task ADD : Ajax Adding logs -->
+        <script>
+            $(function () {
+                $(document).on("click", "#add_submit", function () {
+                    // var taskId = $("#taskid").data("task-id");
+                    var task_Id = $(this).data("task-id");
+                    var projectId = $("#kt_slider_1").data("project-id");
+                    var user_name = $("#taskid").data("user-name");
+                    var user_role = $("#taskid").data("user-role");
+                    var action = "Added";
+                    $.ajax({
+                        url: '<?php echo $this->Url->build([
+                            "controller" => "Logs",
+                            "action" => "addLogs"
+                        ]);?>' + '/' + action
+                        + '/' + task_Id
+                        + '/' + projectId
+                        + '/' + user_name
+                        + '/' + user_role,
+                        type: 'GET',
+                        success: function () {
+                            //Refresh The DIV If Ajax has successfully passed !
+                            $(".kt-quick-panel__content").load(location.href + " .kt-quick-panel__content");
+                        }
+                    });
+                });
+            });
+        </script>
+
 
         <!-- Delete Image  -->
         <script>
@@ -1568,19 +1775,17 @@ $conn = ConnectionManager::get('default');
             })
         </script>
 
-
-<!--        <script>-->
-<!--            $(function () {-->
-<!--                $('#kt_datetimepicker_2, #kt_datetimepicker_2_validate').datetimepicker({-->
-<!--                    todayHighlight: true,-->
-<!--                    autoclose: true,-->
-<!--                     pickerPosition: 'bottom-left',-->
-<!--                     format: 'dd/mm/yyyy HH:ii P'-->
-<!--                });-->
-<!--            });-->
-<!---->
-<!--        </script>-->
-
+        <!--        <script>-->
+        <!--            $(function () {-->
+        <!--                $('#kt_datetimepicker_2, #kt_datetimepicker_2_validate').datetimepicker({-->
+        <!--                    todayHighlight: true,-->
+        <!--                    autoclose: true,-->
+        <!--                     pickerPosition: 'bottom-left',-->
+        <!--                     format: 'dd/mm/yyyy HH:ii P'-->
+        <!--                });-->
+        <!--            });-->
+        <!---->
+        <!--        </script>-->
 
         <script>
             $(document).on("click", ".deleteNoteButton", function () {
@@ -1595,4 +1800,116 @@ $conn = ConnectionManager::get('default');
 
                 })
             })
+        </script>
+
+        <script>
+            $(window).on('load', function () {
+                //Get Param in URL
+                $.urlParam = function (name) {
+                    var results = new RegExp('[\?&]' + name + '=([^&#]*)').exec(window.location.href);
+                    if (results == null) {
+                        return null;
+                    }
+                    return decodeURI(results[1]) || 0;
+                };
+                //Get Param
+                var taskId = $.urlParam('task');
+                // alert(taskId);
+
+                //Animation - Highlight Cards 3 times
+                $('#' + taskId).effect("shake", {distance: 5, times: 5});
+                $('#' + taskId).animate({backgroundColor: '#FFA000'}, 3000);
+                // $('#'+ taskId).animate({backgroundColor: 'transparent'}, 800);
+                // $('#'+ taskId ).animate({backgroundColor: '#FFA000'}, 1000);
+                // $('#'+ taskId).animate({backgroundColor: 'transparent'}, 800);
+                // $('#'+ taskId ).animate({backgroundColor: '#FFA000'}, 1000);
+
+            });
+        </script>
+        <!--  Clear Logs -->
+        <script>
+            $(function () {
+                $(document).on("click", "#delete_logs", function () {
+                    var projectId = $(this).data("project-id");
+                    swal.fire({
+                        title: 'Are you sure?',
+                        text: "You won't be able to revert this!",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonText: 'Yes, delete it!'
+                    }).then(function (result) {
+                        if (result.value) {
+                            $.ajax({
+                                url: '<?php echo $this->Url->build([
+                                    "controller" => "logs",
+                                    "action" => "delete"
+                                ]);?>' + '/' + projectId,
+                                type: 'GET',
+                                success: function (data) {
+                                    swal.fire(
+                                        'Deleted!',
+                                        'Your file has been deleted.',
+                                        'success'
+                                    );
+                                    $(".kt-quick-panel__content").load(location.href + " .kt-quick-panel__content");
+                                }
+                            });
+                        }
+                    });
+                });
+            });
+        </script>
+
+        <!--Restrict the format of uploaded pictures-->
+        <script type="text/javascript">
+
+            var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+
+            function Validate(oForm) {
+                var arrInputs = oForm.getElementsByTagName("input");
+                for (var i = 0; i < arrInputs.length; i++) {
+                    var oInput = arrInputs[i];
+                    if (oInput.type == "file") {
+                        var sFileName = oInput.value;
+                        if (sFileName.length > 0) {
+                            var blnValid = false;
+                            for (var j = 0; j < _validFileExtensions.length; j++) {
+                                var sCurExtension = _validFileExtensions[j];
+                                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                                    blnValid = true;
+                                    break;
+                                }
+                            }
+
+                            if (!blnValid) {
+                                alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                                return false;
+                            }
+                        }
+                    }
+                }
+
+                return true;
+            }
+        </script>
+
+        <script type="text/javascript">
+            $(function() {
+
+                $(".datetimepicker_5").datetimepicker({
+                    format: "dd MM yyyy - HH:ii P",
+                    showMeridian: true,
+                    autoclose: true,
+                    todayBtn: true,
+                    todayHighlight: true
+                });
+            });
+        </script>
+
+        <script type="text/javascript">
+            tinymce.init({
+                selector: '.mytextarea',
+                plugins: "wordcount",  //count the word/characters
+            });
+
         </script>

@@ -4,6 +4,11 @@ namespace App\Controller;
 use App\Controller\AppController;
 use Cake\Controller\Component\AuthComponent;
 use Cake\Event\Event;
+use Cake\Mailer\Email;
+use Cake\Auth\DefaultPasswordHasher;
+use Cake\Utility\Security;
+use Cake\Mailer\TransportFactory;
+
 
 /**
  * Users Controller
@@ -25,6 +30,8 @@ class UsersController extends AppController
 
         $this->set(compact('users'));
     }
+
+
 
     /**
      * View method
@@ -52,9 +59,9 @@ class UsersController extends AppController
         $user = $this->Users->newEntity();
         if ($this->request->is('post')) {
             $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user->token = Security::hash(Security::randomBytes(32));
             if ($this->Users->save($user)) {
                 $this->Flash->success(__('The user has been saved.'));
-
                 return $this->redirect(['action' => 'index']);
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
@@ -67,6 +74,56 @@ class UsersController extends AppController
         $this->set("talents",$talent);
         $this->set(compact('user'));
 
+    }
+    public function forgetPassword(){
+        $myEmail = $this->request->getData('email');
+        $myToken = Security::hash(Security::randomBytes(32));
+
+        $user = $this->Users->find('all')->where(['email'=>$myEmail])->first();
+        if($this->request->is('post')){
+
+            $user = $this->Users->patchEntity($user, $this->request->getData());
+            $user->token = $myToken;
+            if($this->Users->save($user)){
+                $this->Flash->success(__('a reset password link has been sent to your email('.$myEmail.')'));
+                $email = new Email();
+                $email->setFrom(['2656514352@qq.com'=>'Set My Brand Up']);
+                $email->setTo($myEmail);
+                $email->setSubject("Reset Password");
+                $email->send("Please click link below to reset your password 
+                http://localhost:8765/users/resetPassword/$myToken");
+                return $this->redirect(['action' => 'login']);
+
+
+            }
+
+
+
+        }
+        $this->set(compact('user'));
+
+
+    }
+
+
+    public function resetPassword($token){
+        $user = $this->Users->find('all')->where(['token'=>$token])->first();
+        if($user==null){
+            $this->Flash->error(__('the link is expired'));
+            return $this->redirect(['action' => 'login']);
+
+        }
+        $myToken = Security::hash(Security::randomBytes(32));
+        if($this->request->is(['patch', 'post', 'put'])){
+            $user->password=$this->request->getData('password');
+            $user->token = $myToken;
+            if($this->Users->save($user)){
+                $this->Flash->success(__('The user has been saved.'));
+                return $this->redirect(['action' => 'login']);
+            }
+            $this->Flash->error(__('The user could not be saved. Please, try again.'));
+        }
+        $this->set(compact('user'));
     }
 
     /**
@@ -90,6 +147,12 @@ class UsersController extends AppController
             }
             $this->Flash->error(__('The user could not be saved. Please, try again.'));
         }
+        $this->loadModel('Talents');
+        $talent = $this->Talents->find('list',
+            ['valueField' => function($e){
+                return ' '. $e->first_name. ' ' . $e->last_name;
+            }])->toArray();
+        $this->set("talents",$talent);
         $this->set(compact('user'));
     }
 
@@ -104,10 +167,14 @@ class UsersController extends AppController
     {
         $this->request->allowMethod(['post', 'delete']);
         $user = $this->Users->get($id);
-        if ($this->Users->delete($user)) {
-            $this->Flash->success(__('The user has been deleted.'));
-        } else {
-            $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+        if($id!=30){
+            if ($this->Users->delete($user)) {
+                $this->Flash->success(__('The user has been deleted.'));
+            }else {
+                $this->Flash->error(__('The user could not be deleted. Please, try again.'));
+            }
+        }else{
+            $this->Flash->error(__('Super Admin can not be deleted'));
         }
 
         return $this->redirect(['action' => 'index']);
@@ -124,7 +191,7 @@ class UsersController extends AppController
                 $this->Auth->setUser($users);
                 return $this->redirect($this->Auth->redirectUrl());
             }
-            $this->Flash->error(__('Invalid username or password, try again'));
+            $this->Flash->error(__('Incorrect username or password. Please try again.'));
         }
     }
 
@@ -137,5 +204,14 @@ class UsersController extends AppController
         $this->Auth->allow('logout');
     }
 
+    public function isAuthorized($user)
+    {
+        if(in_array($this->request->getParam('action'),['add','edit','index','view','delete'])&&$user['id']==8){
+            return true;
+        }
+        if(in_array($this->request->getParam('action'),['forgetPassword','resetPassword'])){
+            return true;
+        }
+    }
 
 }

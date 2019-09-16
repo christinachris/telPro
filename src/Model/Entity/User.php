@@ -11,6 +11,8 @@ use Cake\ORM\Entity;
  * @property string|null $username
  * @property string|null $password
  * @property string|null $role
+ * @property string|null $email
+ * @property string|null $token
  * @property \Cake\I18n\FrozenTime|null $created
  * @property \Cake\I18n\FrozenTime|null $modified
  *
@@ -45,7 +47,24 @@ class User extends Entity
         'permission_edit_client'=>true,
         'permission_edit_talent'=>true,
         'permission_delete_talent'=>true,
-        'permission_delete_client'=>true
+        'permission_delete_client'=>true,
+        'permission_archive_client'=>true,
+        'permission_unarchive_client'=>true,
+        'permission_archive_talent'=>true,
+        'permission_unarchive_talent'=>true,
+        'permission_view_archive_client_list'=>true,
+        'permission_view_archive_talent_list'=>true,
+        'permission_view_full_project_list'=>true,
+        'permission_view_limited_project_list'=>true,
+        'permission_add_project'=>true,
+        'permission_edit_project'=>true,
+        'permission_archive_project'=>true,
+        'permission_unarchive_project'=>true,
+        'permission_view_archive_project_list'=>true,
+        'permission_delete_project'=>true,
+        'email'=>true,
+        'token'=>true
+
 
     ];
 

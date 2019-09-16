@@ -116,4 +116,19 @@ class ColoursController extends AppController
 
         return $this->redirect(['action' => 'index']);
     }
+
+    public function isAuthorized($user)
+    {
+
+        if(in_array($this->request->getParam('action'),['index','add','view','delete','archive','archiveIndex'])){
+            $user_id=$this->Auth->user('talent_id');
+            $user_role=$this->Auth->user('role');
+            $user_name=$this->Auth->user('username');
+            if($user_role=='Project Manager'||'Admin'|| 'Superadmin'){
+                return true;
+            }
+        }
+
+        return true;
+    }
 }

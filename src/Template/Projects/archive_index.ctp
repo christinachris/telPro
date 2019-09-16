@@ -14,192 +14,6 @@ use Cake\Core\Configure;
  $conn = ConnectionManager::get('default');
 
 ?>
-
-
-
-
-
-<!-- begin:: Header Topbar -->
-
-<div class="kt-header__topbar">
-    <?php
-    $results = $conn
-        ->execute('select * from tasks');
-    $count = 0;
-    foreach ($results
-
-             as $task) {
-        $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
-        $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
-        $datediff = date_diff($sys_date, $due_date);
-
-        if ($datediff->days < 10) {
-            $count = $count + 1
-            ?>
-            <?php
-        }
-        if (!empty($task['moved_date'])) {
-            $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
-            $datediff_Moved = date_diff($moved_date, $sys_date);
-            if ($task['status_id'] == 3) {
-                if ($datediff_Moved->days > 5) {
-                    $count = $count + 1;
-                }
-            }
-        }
-
-    }
-
-    ?>
-    <!--begin: Notifications -->
-    <div class="kt-header__topbar-item dropdown">
-        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
-											<span class="kt-header__topbar-icon">
-												<i class="flaticon2-bell-alarm-symbol"></i>
-												<span class="kt-badge kt-badge--success kt-hidden"></span>
-											</span>
-            <span class="kt-badge kt-badge--danger"
-                  style=" position: absolute;top: -5px;right: -5px; width:24px; height:24px ;opacity: 0.9 ; font-weight: 500;font-size: 15px"> <?php echo $count; ?></span>
-        </div>
-        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
-            <form>
-
-                <!--begin: Head -->
-                <div class="kt-head kt-head--skin-light kt-head--fit-x" style="padding-bottom: 20px">
-                    <h3 class="kt-head__title" style="text-align: center">
-                        User Notifications
-                        &nbsp;
-                        <!--                        <span class="btn btn-label-primary btn-sm btn-bold btn-font-md">23 new</span>-->
-                    </h3>
-                    <!--                    <ul class="nav nav-tabs nav-tabs-line nav-tabs-bold nav-tabs-line-3x nav-tabs-line-brand  kt-notification-item-padding-x" role="tablist">-->
-                    <!--                        <li class="nav-item">-->
-                    <!--                            <a class="nav-link active show" data-toggle="tab" href="#topbar_notifications_notifications" role="tab" aria-selected="true">Alerts</a>-->
-                    <!--                        </li>-->
-                    <!--                        <li class="nav-item">-->
-                    <!--                            <a class="nav-link" data-toggle="tab" href="#topbar_notifications_events" role="tab" aria-selected="false">Events</a>-->
-                    <!--                        </li>-->
-                    <!--                        <li class="nav-item">-->
-                    <!--                            <a class="nav-link" data-toggle="tab" href="#topbar_notifications_logs" role="tab" aria-selected="false">Logs</a>-->
-                    <!--                        </li>-->
-                    <!--                    </ul>-->
-                </div>
-
-                <!--end: Head -->
-                <div class="tab-content">
-                    <div class="tab-pane active show" id="topbar_notifications_notifications" role="tabpanel">
-                        <div class="kt-notification kt-margin-t-10 kt-margin-b-10 kt-scroll" data-scroll="true"
-                             data-height="300" data-mobile-height="200">
-                            <?php
-                            $results = $conn
-                                ->execute('select * from tasks');
-
-                            foreach ($results as $task) {
-                                $due_date = date_create_from_format('Y-m-d H:i:s', $task['due_date']);
-                                $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
-                                $datediff = date_diff($sys_date, $due_date);
-                                if ($datediff->days < 10) {
-                                    ?>
-                                    <a href="#" class="kt-notification__item">
-                                        <div class="kt-notification__item-icon">
-                                            <i class="flaticon2-line-chart kt-font-success"></i>
-                                        </div>
-                                        <div class="kt-notification__item-details">
-                                            <div class="kt-notification__item-title">
-                                                Task: <b> <?php echo $task["task_name"] ?> </b> is coming to the due
-                                                date !
-                                            </div>
-                                            <div class="kt-notification__item-time">
-                                                <?php echo $datediff->days ?> Days left
-                                            </div>
-                                        </div>
-                                    </a>
-                                    <?php
-                                }
-                                if (!empty($task['moved_date'])) {
-                                    $moved_date = date_create_from_format('Y-m-d H:i:s', $task['moved_date']);
-                                    $datediff_Moved = date_diff($moved_date, $sys_date);
-                                    if ($task['status_id'] == 3) {
-                                        if ($datediff_Moved->days > 5) { ?>
-                                            <a href="#" class="kt-notification__item">
-                                                <div class="kt-notification__item-icon">
-                                                    <i class="flaticon2-bar-chart kt-font-info"></i>
-                                                </div>
-                                                <div class="kt-notification__item-details">
-                                                    <div class="kt-notification__item-title">
-                                                        Task: <b> <?php echo $task["task_name"] ?> </b> needs to be
-                                                        followed up !
-                                                    </div>
-                                                    <div class="kt-notification__item-time">
-                                                        <?php echo $datediff->days ?> Days passed
-                                                    </div>
-                                                </div>
-                                            </a>
-                                            <?php
-                                        }
-                                    }
-                                }
-                            }
-                            ?>
-
-                        </div>
-                    </div>
-
-                </div>
-            </form>
-        </div>
-    </div>
-
-    <!--end: Notifications -->
-
-    <!--begin: User bar -->
-    <div class="kt-header__topbar-item kt-header__topbar-item--user">
-        <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">
-            <span class="kt-header__topbar-welcome kt-visible-desktop" style="font-size: 16px">G'day ,</span>
-            <span class="kt-header__topbar-username kt-visible-desktop" style="font-size: 16px"><?php echo $this->Session->read('Auth.User.username') ?> ! </span>
-            <span class="kt-header__topbar-icon kt-bg-brand kt-font-lg kt-font-bold kt-font-light kt-hidden">S</span>
-            <span class="kt-header__topbar-icon kt-hidden"><i class="flaticon2-user-outline-symbol"></i></span>
-        </div>
-        <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">
-
-            <!--begin: Head -->
-            <div class="kt-user-card kt-user-card--skin-light kt-notification-item-padding-x">
-                <div class="kt-user-card__avatar">
-                    <!--                    <img class="kt-hidden-" alt="Pic" src="../assets/media/users/300_25.jpg"/>-->
-
-                    <!--use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-                    <span
-                        class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden">S</span>
-                </div>
-                <div class="kt-user-card__name">
-                    <?php echo  $this->Session->read('Auth.User.role'). ":  ".  $this->Session->read('Auth.User.username') ?>
-                </div>
-                <!--                <div class="kt-user-card__badge">-->
-                <!--                    <span class="btn btn-label-primary btn-sm btn-bold btn-font-md">23 messages</span>-->
-                <!--                </div>-->
-            </div>
-
-            <!--end: Head -->
-
-            <!--begin: Navigation -->
-            <div class="kt-notification">
-                <div class="kt-notification__custom">
-                    <?= $this->Html->link('<span class="btn btn-primary"><i class="flaticon2-plus]"></i> Sign Out</span>', ['controller' => 'Users', 'action' => 'logout', 'type' => 'button'], ['escape' => false]) ?>
-                </div>
-            </div>
-
-            <!--end: Navigation -->
-        </div>
-    </div>
-    <!--end: User bar -->
-
-</div>
-<!-- end:: Header Topbar -->
-</div>
-</div>
-</div>
-<!-- end:: Header -->
-
-<?= $this->Flash->render() ?>
 <div class="kt-header__bottom">
     <div class="kt-container">
 
@@ -208,6 +22,8 @@ use Cake\Core\Configure;
             <div id="kt_header_menu" class="kt-header-menu">
 
                 <ul class="kt-menu__nav ">
+                    <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>" class="kt-menu__link ">
+                            <span class="kt-menu__link-text">Dashboard </span></a></li>
                     <li class="kt-menu__item  kt-menu__item--active " aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>" class="kt-menu__link "><span class="kt-menu__link-text">Projects </span></a></li>
                     <li class="kt-menu__item  kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Talents', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Talent</span></a></li>
                     <li class="kt-menu__item  kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Clients', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Client</span></a></li>
@@ -231,8 +47,11 @@ use Cake\Core\Configure;
 
 <div class="kt-subheader   kt-grid__item" id="kt_subheader">
     <div class="kt-subheader__main">
+        <?= $this->Flash->render() ?>
+        <a href="<?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>"
         <h3 class="kt-subheader__title">
             Dashboard </h3>
+        </a>
         <span class="kt-subheader__separator kt-hidden"></span>
         <div class="kt-subheader__breadcrumbs">
             <a href="<?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>"
@@ -357,8 +176,16 @@ use Cake\Core\Configure;
                                     </div>
                                 </div>
                             </td>
+                            <?php if($project->start_date!=null){ ?>
                             <td><?php echo date_format($project->start_date, "d M Y "); ?></td>
+                            <?php } else{ ?>
+                            <td></td>
+                            <?php } ?>
+                            <?php if($project->end_date!=null){ ?>
                             <td><?php echo date_format($project->end_date, "d M Y "); ?></td>
+                            <?php } else{ ?>
+                            <td></td>
+                            <?php } ?>
 
                             <td><?= $project->has('client') ? $this->Html->link($project->client->last_name . ' ' . $project->client->first_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id],['data-toggle' => "kt-popover", 'data-content' => "View Client Details", 'data-placement' => 'bottom']) : '' ?></td>
                             <td>
@@ -374,7 +201,7 @@ use Cake\Core\Configure;
                             <td class="actions">
                                <?= $this->Html->link('', ['action' => 'unarchive', $project->id], ['confirm' => __('Are you sure you want to UNarchive this project?'), 'class' => "btn btn-lg btn-clean  la la-refresh",'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Unarchive Project", 'data-placement' => 'bottom']) ?>
 
-                               <?= $this->Form->postLink('  ', ['action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to DELETE this project?'), 'class' => "btn btn-lg btn-clean  la la-close",'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Delete Project", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $project->project_name)]) ?>
+                               <?= $this->Form->postLink('  ', ['action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to DELETE this project?'), 'class' => "btn btn-lg btn-clean  la la-close",'style' => 'padding : 5px ; font-size: 25px; color:red', 'data-toggle' => "kt-popover", 'data-content' => "Delete Project", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $project->project_name)]) ?>
 
                             </td>
                         </tr>

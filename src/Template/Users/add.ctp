@@ -3,135 +3,9 @@
  * @var \App\View\AppView $this
  * @var \App\Model\Entity\User $user
  */
+
 ?>
 
-
-
-
-
-
-
-
-
-
-
-
-<!--begin: Notifications -->
-<!--<div class="kt-header__topbar-item dropdown">-->
-<!--    <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">-->
-<!--											<span class="kt-header__topbar-icon">-->
-<!--												<i class="flaticon2-bell-alarm-symbol"></i>-->
-<!--												<span class="kt-badge kt-badge--success kt-hidden"></span>-->
-<!--											</span>-->
-<!--        <span class="kt-badge kt-badge--danger"-->
-<!--             style=" position: absolute;top: -5px;right: -5px; width:24px; height:24px ;opacity: 0.9 ; font-weight: 500;font-size: 15px"> --><?php ////echo $count; ?><!--</span>-->
-<!--    </div>-->
-<!---->
-<!--    </div>-->
-<!--</div>-->
-
-<!--end: Notifications -->
-
-<!--begin: User bar -->
-<div class="kt-header__topbar-item kt-header__topbar-item--user">
-<!--    <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px">-->
-<!--        <span class="kt-header__topbar-welcome kt-visible-desktop" style="font-size: 16px">G'day ,</span>-->
-<!--       <span class="kt-header__topbar-username kt-visible-desktop" style="font-size: 16px">--><?php ////echo $user_name ?><!-- ! </span>-->
-<!--        <span class="kt-header__topbar-icon kt-bg-brand kt-font-lg kt-font-bold kt-font-light kt-hidden">S</span>-->
-<!--        <span class="kt-header__topbar-icon kt-hidden"><i class="flaticon2-user-outline-symbol"></i></span>-->
-<!--    </div>-->
-<!--    <div class="dropdown-menu dropdown-menu-fit dropdown-menu-right dropdown-menu-anim dropdown-menu-xl">-->
-<!---->
-<!--        begin: Head -->
-<!--        <div class="kt-user-card kt-user-card--skin-light kt-notification-item-padding-x">-->
-<!--            <div class="kt-user-card__avatar">-->
-<!---->
-<!---->
-<!--                use below badge element instead the user avatar to display username's first letter(remove kt-hidden class to display it) -->
-<!--                <span-->
-<!--                        class="kt-badge kt-badge--username kt-badge--unified-success kt-badge--lg kt-badge--rounded kt-badge--bold kt-hidden">S</span>-->
-<!--            </div>-->
-<!--            <div class="kt-user-card__name">-->
-<!--                --><?php //echo $user_role. ":  ". $user_name ?>
-<!--            </div>-->
-            <!--                <div class="kt-user-card__badge">-->
-            <!--                    <span class="btn btn-label-primary btn-sm btn-bold btn-font-md">23 messages</span>-->
-            <!--                </div>-->
-        </div>
-
-        <!--end: Head -->
-
-        <!--begin: Navigation -->
-        <div class="kt-notification">
-            <!--                <a href="#" class="kt-notification__item">-->
-            <!--                    <div class="kt-notification__item-icon">-->
-            <!--                        <i class="flaticon2-calendar-3 kt-font-success"></i>-->
-            <!--                    </div>-->
-            <!--                    <div class="kt-notification__item-details">-->
-            <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-            <!--                            My Profile-->
-            <!--                        </div>-->
-            <!--                        <div class="kt-notification__item-time">-->
-            <!--                            Account settings and more-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </a>-->
-            <!--                <a href="#" class="kt-notification__item">-->
-            <!--                    <div class="kt-notification__item-icon">-->
-            <!--                        <i class="flaticon2-mail kt-font-warning"></i>-->
-            <!--                    </div>-->
-            <!--                    <div class="kt-notification__item-details">-->
-            <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-            <!--                            My Messages-->
-            <!--                        </div>-->
-            <!--                        <div class="kt-notification__item-time">-->
-            <!--                            Inbox and tasks-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </a>-->
-            <!--                <a href="#" class="kt-notification__item">-->
-            <!--                    <div class="kt-notification__item-icon">-->
-            <!--                        <i class="flaticon2-rocket-1 kt-font-danger"></i>-->
-            <!--                    </div>-->
-            <!--                    <div class="kt-notification__item-details">-->
-            <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-            <!--                            My Activities-->
-            <!--                        </div>-->
-            <!--                        <div class="kt-notification__item-time">-->
-            <!--                            Logs and notifications-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </a>-->
-            <!--                <a href="#" class="kt-notification__item">-->
-            <!--                    <div class="kt-notification__item-icon">-->
-            <!--                        <i class="flaticon2-hourglass kt-font-brand"></i>-->
-            <!--                    </div>-->
-            <!--                    <div class="kt-notification__item-details">-->
-            <!--                        <div class="kt-notification__item-title kt-font-bold">-->
-            <!--                            My Tasks-->
-            <!--                        </div>-->
-            <!--                        <div class="kt-notification__item-time">-->
-            <!--                            latest tasks and projects-->
-            <!--                        </div>-->
-            <!--                    </div>-->
-            <!--                </a>-->
-            <div class="kt-notification__custom">
-                <?= $this->Html->link('<span class="btn btn-primary"><i class="flaticon2-plus]"></i> Sign Out</span>', ['controller' => 'Users', 'action' => 'logout', 'type' => 'button'], ['escape' => false]) ?>
-                <!--                    <a href="custom_user_login-v2.html" target="_blank" class="btn btn-label-brand btn-sm btn-bold">Sign-->
-                <!--                        Out</a>-->
-            </div>
-        </div>
-
-        <!--end: Navigation -->
-    </div>
-</div>
-<!--end: User bar -->
-
-</div>
-<!-- end:: Header Topbar -->
-</div>
-</div>
-</div>
 <!-- end:: Header -->
 <div class="kt-header__bottom">
     <div class="kt-container">
@@ -139,15 +13,14 @@
         <!-- begin: Header Menu -->
         <div class="kt-header-menu-wrapper" id="kt_header_menu_wrapper">
             <div id="kt_header_menu" class="kt-header-menu">
-
                 <ul class="kt-menu__nav ">
+                    <li class="kt-menu__item  kt-menu__item--submenu" aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>" class="kt-menu__link ">
+                            <span class="kt-menu__link-text">Dashboard </span></a></li>
                     <li class="kt-menu__item   " aria-haspopup="true"><a href=" <?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>" class="kt-menu__link "><span class="kt-menu__link-text">Projects </span></a></li>
                     <li class="kt-menu__item kt-menu__item--active kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Talents', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Talent</span></a></li>
                     <li class="kt-menu__item  kt-menu__item--submenu kt-menu__item--rel" aria-haspopup="true"><a href="<?php echo $this->Url->build(['controller'=>'Clients', 'action'=>'index'])?>" class="kt-menu__link "><span class="kt-menu__link-text">Client</span></a></li>
                 </ul>
-
             </div>
-
         </div>
         <!-- end: Header Menu -->
     </div>
@@ -174,7 +47,7 @@
                         </a>
                         <span class="kt-subheader__breadcrumbs-separator"></span>
 
-                        <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Add New Talent</span>
+                        <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Add New User</span>
                     </div>
                 </div>
                 <div class="kt-subheader__toolbar">
@@ -210,7 +83,7 @@
 											<i class="la la-gear"></i>
 										</span>
                                 <h3 class="kt-portlet__head-title">
-                                    Add New Talent
+                                    Add New User
                                 </h3>
                             </div>
                         </div>
@@ -230,6 +103,7 @@
                                             </div>
 
                                         </div>
+
                                         <div class="col-lg-6">
                                             <?php echo $this->Form->control('password', ['class' => 'form-control', 'id' => 'exampleSelect1', 'placeholder' => 'Enter password', 'type' => 'text']); ?>
                                             <div class="kt-input-icon">
@@ -237,21 +111,28 @@
                                             </div>
                                         </div>
                                     </div>
+                                    <div class="form-group row">
+                                    <div class="col-lg-6">
+                                        <?php echo $this->Form->control('email', ['class' => 'form-control', 'type'=>'email', 'placeholder' => 'Enter email for resetting password']); ?>
+                                        <div class="kt-input-icon">
+                                            <span class="kt-input-icon__icon kt-input-icon__icon--right"><span></span></span>
+                                        </div>
+                                    </div>
+                                    </div>
                                     <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg"></div>
                                     <div class="form-group row">
                                         <div class="col-lg-4">
-                                            <?php echo $this->Form->control('role',['options' => array('Superadmin' => 'Superadmin', 'Admin' => 'Admin', 'Project Manager' => 'Project Manager')]); ?>
+                                            <?php echo $this->Form->control('role',['class' => 'form-control','options' => array('Superadmin' => 'Superadmin', 'Admin' => 'Admin', 'Project Manager' => 'Project Manager','Talent' => 'Talent')]); ?>
                                         </div>
 
 <div class="col-lg-4">
                                         <?php echo $this->Form->control('talent_id', ['options' => $talents, 'empty' => true, 'class' => 'form-control']);?>
-</div>>
+</div>
                                     </div>
-                                    <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg">
-                                        <span style="font-size: 30px">Permission Setting:</span>
-                                    </div>
-                                    <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg">
-                                    </div>
+                                    <button type="button" class="btn btn-outline-brand btn-elevate btn-pill col-lg-4" data-toggle="collapse" data-target="#demo"><i class="flaticon-cogwheel"></i>Permission Setting</button>
+                                    <div id="demo" class="collapse">
+                                        <br>
+
 
                                     <div class="form-group row">
                                         <div class="col-lg-4">
@@ -294,9 +175,73 @@
                                         <div class="col-lg-4">
                                             <?php echo $this->Form->control('permission_edit_talent', ['type' => 'checkbox', 'label'=>"Edit Talent"]);?>
                                         </div>
+                                        <div class="col-lg-4">
+                                            <?php echo $this->Form->control('permission_archive_talent', ['type' => 'checkbox', 'label'=>"Archive Talent"]);?>
+                                        </div>
+                                        <div class="col-lg-4">
+                                            <?php echo $this->Form->control('permission_unarchive_talent', ['type' => 'checkbox', 'label'=>"Unarchive Talent"]);?>
+                                        </div>
 
 
                                     </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_archive_client', ['type' => 'checkbox', 'label'=>"Archive Client"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_unarchive_client', ['type' => 'checkbox', 'label'=>"Unarchive Client"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_view_archive_client_list', ['type' => 'checkbox', 'label'=>"View Archive Client"]);?>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_view_archive_talent_list', ['type' => 'checkbox', 'label'=>"View Archive Talent"]);?>
+                                            </div>
+
+
+                                        </div>
+                                        <div class="form-group row">
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_view_full_project_list', ['type' => 'checkbox', 'label'=>"View All Project"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_view_limited_project_list', ['type' => 'checkbox', 'label'=>"View Assigned Project"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_view_archive_project_list', ['type' => 'checkbox', 'label'=>"View Archive Project"]);?>
+                                            </div>
+
+
+                                        </div>
+
+
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_archive_project', ['type' => 'checkbox', 'label'=>"Archive Project"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_unarchive_project', ['type' => 'checkbox', 'label'=>"Unarchive Project"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_add_project', ['type' => 'checkbox', 'label'=>"Add Project"]);?>
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group row">
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_edit_project', ['type' => 'checkbox', 'label'=>"Edit Project"]);?>
+                                            </div>
+                                            <div class="col-lg-4">
+                                                <?php echo $this->Form->control('permission_delete_project', ['type' => 'checkbox', 'label'=>"Delete Project"]);?>
+                                            </div>
+                                        </div>
+                                    </div>
+
 
                         </fieldset>
                     </div>

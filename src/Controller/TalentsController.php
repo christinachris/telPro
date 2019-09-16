@@ -3,6 +3,8 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\I18n\Time;
+use Cake\ORM\TableRegistry;
+
 ob_start();
 
 /**
@@ -26,16 +28,28 @@ class TalentsController extends AppController
 
 
         $this->paginate = [
-            'contain' => ['Specialities', 'SkillCategories','Projects'],'order' => [
+            'contain' => ['Specialities', 'SkillCategories','Projects','talentNotes'],'order' => [
                 'Talents.id' => 'desc']
         ];
         $this->loadModel('Projects');
         $user_id=$this->Auth->user('talent_id');
         $user_name=$this->Auth->user('username');
         $user_role=$this->Auth->user('role');
+        $view_full_talent_list=$this->Auth->user('permission_view_full_talent_list');
+        $view_limited_talent_list=$this->Auth->user('permission_view_limited_talent_list');
 
+        //$this->loadModel('TalentProjects');
+        //$talentprojects = $this->TalentProjects->find('all')->toArray();
+        //$count=0;
+        //foreach ($talentprojects as $talentproject){
+          //  if (($talentproject[progress_num])!= 100) {
+            //    $count = $count + 1;
+            //}
+        //}
+       // $this->set('talentProjects', $talentprojects);
+       // $this->set('count', $count);
 
-        if($user_role=='Project Manager'){
+        if($view_limited_talent_list==1&&$view_full_talent_list==0){
             $this->loadModel('TalentProjects');
             $project = $this->TalentProjects->find('all')->where(['talent_id'=>$user_id])->toArray();
             $array=[];
@@ -43,16 +57,21 @@ class TalentsController extends AppController
 
                 $array[]=$some->project_id;
             }
-
+             if(empty($array)){
+                 $talents = $this->paginate($this->Talents->find('all')->where(['Talents.id' => -1 ])->contain(['Projects']));
+             }else{
             $project = $this->TalentProjects->find('all')->where(['Project_id IN'=>$array])->toArray();
             foreach($project as $some){
 
                 $arrays[]=$some->talent_id;
             }
-
             $talents = $this->paginate($this->Talents->find('all')->where(['Talents.archive' => false ,'Talents.id IN'=>$arrays])->contain([]));
-        }else{
+             }
+        }else if($view_full_talent_list==1){
             $talents = $this->paginate($this->Talents->find('all')->where(['Talents.archive' => false ])->contain(['Projects']));
+        }else{
+            $talents = $this->paginate($this->Talents->find('all')->where(['Talents.id' => -1 ])->contain(['Projects']));
+
         }
 
         $this->set("user_role", $user_role);
@@ -141,15 +160,15 @@ class TalentsController extends AppController
         $talent_project = $this->Talents->get($id, [
             'contain' => [ 'Specialities', 'SkillCategories', 'Projects','TalentNotes']
         ]);
-        //    var_dump($client_talent['projects'][0]['talents']);
         $this->set('talent_project',$talent_project['projects']);
 
-$talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('id');
-
+        $talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('id');
+        $logs = TableRegistry::get('logs')->find('all', ['condition'=>['user_name'=> $user_name]])->select(['log_time'=>'create_date','user_name','action_type','task_name','project_id']);
 
         $clientnote=$this->ClientNotes->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','content','summary'=>'content','date'=>'create_date','time'=>'create_date']);
         $clientactivity=$this->Activities->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','type','summary','date','time']);
         $allActivity=$clientnote->unionAll($clientactivity)->epilog('ORDER BY create_date DESC')->toList();
+
         $this->set('allActivity',$allActivity);
 
         $talent_firstName=$talent_project->first_name;
@@ -159,6 +178,8 @@ $talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('
 
         $client=$this->Clients->find('all')->toList();
         $this->set('client',$client);
+        $this->set('logs',$logs);
+
 
         if ($this->request->is('post')) {
 
@@ -339,13 +360,68 @@ $talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('
 
     public function isAuthorized($user)
     {
-        if($this->request->getParam('action')==='view'){
+        if(in_array($this->request->getParam('action'),['view','edit'])&&($user['permission_view_full_talent_list']==1)){
+
             return true;
         }
-        if(in_array($this->request->getParam('action'),['add','delete','archive','archiveIndex'])){
-            return parent::isAuthorized($user);
+
+
+
+        if(in_array($this->request->getParam('action'),['view','edit'])&&($user['permission_view_limited_talent_list']==1)) {
+                $user_id=$this->Auth->user('talent_id');
+                $talentId = (int)$this->request->getParam('pass.0');
+
+                if($user['permission_view_full_talent_list']==1){
+
+                    return true;
+                }
+                $this->loadModel('TalentProjects');
+                $project = $this->TalentProjects->find('all')->where(['talent_id' => $user_id])->toArray();
+                $array = [];
+                foreach ($project as $some) {
+
+                    $array[] = $some->project_id;
+                }
+
+                $project = $this->TalentProjects->find('all')->where(['Project_id IN' => $array])->toArray();
+                foreach ($project as $some) {
+
+                    $arrays[] = $some->talent_id;
+                }
+
+                foreach ($arrays as $aaa) {
+                    if ($aaa == $talentId) {
+                        return true;
+                    }
+                }
         }
 
-        return true;
+
+
+        if(in_array($this->request->getParam('action'),['archive'])&&$user['permission_archive_talent']){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['unarchive'])&&$user['permission_unarchive_talent']){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['archiveIndex'])&&$user['permission_view_archive_talent_list']){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['add'])&&$user['permission_add_talent']==1){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['delete'])&&$user['permission_delete_talent']==1){
+            return true;
+        }
+
+        if(in_array($this->request->getParam('action'),['index'])&&($user['permission_view_limited_talent_list']==1||$user['permission_view_full_talent_list']==1)){
+            return true;
+        }
+
+        return false;
     }
 }

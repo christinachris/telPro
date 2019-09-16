@@ -16070,7 +16070,7 @@ canvas {
   -ms-user-select: none; }
 
 /* Customize website's scrollbar like Mac OS */
-/* 
+/*
 ::-webkit-scrollbar {
     background-color:#f6f6f6;
     width:14px;
@@ -23692,11 +23692,11 @@ strong {
 .fc-unthemed .fc-axis > span {
   font-size: 0.9rem; }
 
-.ui-draggable-handle {
-  cursor: move;
-  /* fallback if grab cursor is unsupported */
-  cursor: grab;
-  cursor: -webkit-grab; }
+/*.ui-draggable-handle {*/
+  /*cursor: move;*/
+  /*!* fallback if grab cursor is unsupported *!*/
+  /*cursor: grab;*/
+  /*cursor: -webkit-grab; }*/
 
 @media (max-width: 1024px) {
   .fc-unthemed .fc-toolbar {

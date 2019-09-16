@@ -38,7 +38,6 @@ class Activity extends Entity
         'date' => true,
         'time' => true,
         'client' => true,
-        'activity_flag'=>true,
-        'talent_id'=>true
+        'activity_flag'=>true
     ];
 }

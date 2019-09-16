@@ -75,9 +75,10 @@ class UsersTable extends Table
             ->notEmpty('username', 'A username is required')
             ->notEmpty('password', 'A password is required')
             ->notEmpty('role', 'A role is required')
-            ->notEmpty('talent_id', 'A talent is required')
+            ->notEmpty('email', 'A email for reset password is required')
+            ->allowEmptyString('talent_id', 'A talent is required')
             ->add('role', 'inList', [
-                'rule' => ['inList', ['Superadmin', 'Admin','Project Manager']],
+                'rule' => ['inList', ['Superadmin', 'Admin','Project Manager','Talent']],
                 'message' => 'Please enter a valid role'
             ]);
 
@@ -94,6 +95,7 @@ class UsersTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->isUnique(['username']));
+        $rules->add($rules->isUnique(['email']));
 
         return $rules;
     }

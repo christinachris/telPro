@@ -24,6 +24,7 @@ class Comment extends Entity
     protected $_accessible = [
         'comment_date' => true,
         'comment_desc' => true,
+        'user_name' => true,
         'task_id' => true
     ];
 }
