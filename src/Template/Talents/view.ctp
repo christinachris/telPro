@@ -411,7 +411,23 @@ $conn = ConnectionManager::get('default');
                                                                                                     <p><?php echo 'Summary: '.$activity['summary'];?></p>
                                                                                                     <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
                                                                                                     <?= h($activity->date->i18nFormat('dd/MM/yyyy').' ') ?><?php echo $this->Time->format($activity->time, 'HH:mm a') ?>
-                                                                                                <?php } else{ ?>
+                                                                                                <?php }
+                                                                                                else if(($activity['content']=='added')||($activity['content']=='deleted')||($activity['content']=='made a comment')||($activity['content']=='Updated Project Progress')||
+                                                                                                ($activity['content']=='Modified')||($activity['content']=='modified')||($activity['content']=='Deleted')){
+                                                                                                foreach($allProject as $allProjects){
+                                                                                                if($allProjects['id']==$activity['client_id']){ ?>
+                                                                                                       <p><?php echo $activity['user_name'].' '.$activity['content'].' '.$activity['summary'].' in '.$allProjects['project_name']?></p>
+                                                                                                <?php break; ?>
+
+                                                                                               <?php }} }
+                                                                                               else if($activity['content']=='moved'||($activity['content']=='Moved')){
+                                                                                                foreach($allProject as $allProjects){
+                                                                                                if($allProjects['id']==$activity['client_id']){ ?>
+                                                                                                <p><?php echo $activity['user_name'].' '.$activity['content'].' '.$activity['summary'].' to '.$activity['value'].' in '.$allProjects['project_name']?></p>
+                                                                                                <?php break; ?>
+
+                                                                                                <?php }} }
+                                                                                                else{ ?>
                                                                                                     <p><?php echo $talentfn.' '.$talentln.' added a note for '.$clientfn.' '.$clientln; ?></p>
                                                                                                     <p><?php echo 'Notes: '.$activity['content'];?></p>
                                                                                                 <?php } ?>

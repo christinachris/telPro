@@ -152,8 +152,10 @@ class TalentsController extends AppController
         $this->loadModel('talent_projects');
         $this->loadModel('Clients');
         $this->loadModel('Users');
+        $this->loadModel('Logs');
         $talentNote = $this->TalentNotes->newEntity();
         $activity = $this->Activities->newEntity();
+        $allProject= $this->Projects->find('all')->toList();
 
         $this->loadModel('Projects');
         $this->loadModel('Talents');
@@ -163,11 +165,14 @@ class TalentsController extends AppController
         $this->set('talent_project',$talent_project['projects']);
 
         $talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('id');
-        $logs = TableRegistry::get('logs')->find('all', ['condition'=>['user_name'=> $user_name]])->select(['log_time'=>'create_date','user_name','action_type','task_name','project_id']);
+       // $logs = TableRegistry::get('logs')->find('all', ['condition'=>['user_name'=> $user_name]])->select(['log_time'=>'create_date','user_name','action_type','task_name','project_id']);
 
-        $clientnote=$this->ClientNotes->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','content','summary'=>'content','date'=>'create_date','time'=>'create_date']);
-        $clientactivity=$this->Activities->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','type','summary','date','time']);
-        $allActivity=$clientnote->unionAll($clientactivity)->epilog('ORDER BY create_date DESC')->toList();
+        $clientnote=$this->ClientNotes->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','content','summary'=>'content','date'=>'create_date','time'=>'create_date','user_name'=>'content','value'=>'content']);
+        $clientactivity=$this->Activities->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','type','summary','date','time','user_name'=>'summary','value'=>'summary']);
+        $logs=$this->Logs->find('all',['conditions'=>['user_name'=>$user_name]])->select(['create_date'=>'log_time','project_id','action_type','task_name','date'=>'log_time','time'=>'log_time','user_name','value']);
+        $allActivity=$clientnote->unionAll($clientactivity)->unionAll($logs)->epilog('ORDER BY create_date DESC')->toList();
+//var_dump($allActivity);
+//$this->Talents->save();
 
         $this->set('allActivity',$allActivity);
 
@@ -175,10 +180,10 @@ class TalentsController extends AppController
         $talent_lastName=$talent_project->last_name;
         $this->set('talentfn',$talent_firstName);
         $this->set('talentln',$talent_lastName);
-
+        $this->set('allProject',$allProject);
         $client=$this->Clients->find('all')->toList();
         $this->set('client',$client);
-        $this->set('logs',$logs);
+        //$this->set('logs',$logs);
 
 
         if ($this->request->is('post')) {
