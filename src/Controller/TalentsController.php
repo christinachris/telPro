@@ -165,11 +165,13 @@ class TalentsController extends AppController
         $this->set('talent_project',$talent_project['projects']);
 
         $talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('id');
+        $thisUserNme=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('username');
+       // var_dump($thisUserNme);
        // $logs = TableRegistry::get('logs')->find('all', ['condition'=>['user_name'=> $user_name]])->select(['log_time'=>'create_date','user_name','action_type','task_name','project_id']);
 
         $clientnote=$this->ClientNotes->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','content','summary'=>'content','date'=>'create_date','time'=>'create_date','user_name'=>'content','value'=>'content']);
         $clientactivity=$this->Activities->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','type','summary','date','time','user_name'=>'summary','value'=>'summary']);
-        $logs=$this->Logs->find('all',['conditions'=>['user_name'=>$user_name]])->select(['create_date'=>'log_time','project_id','action_type','task_name','date'=>'log_time','time'=>'log_time','user_name','value']);
+        $logs=$this->Logs->find('all',['conditions'=>['user_name'=>$thisUserNme]])->select(['create_date'=>'log_time','project_id','action_type','task_name','date'=>'log_time','time'=>'log_time','user_name','value']);
         $allActivity=$clientnote->unionAll($clientactivity)->unionAll($logs)->epilog('ORDER BY create_date DESC')->toList();
 //var_dump($allActivity);
 //$this->Talents->save();
