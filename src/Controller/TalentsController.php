@@ -3,8 +3,6 @@ namespace App\Controller;
 
 use App\Controller\AppController;
 use Cake\I18n\Time;
-use Cake\ORM\TableRegistry;
-
 ob_start();
 
 /**
@@ -28,50 +26,33 @@ class TalentsController extends AppController
 
 
         $this->paginate = [
-            'contain' => ['Specialities', 'SkillCategories','Projects','talentNotes'],'order' => [
+            'contain' => ['Specialities', 'SkillCategories', 'Projects'], 'order' => [
                 'Talents.id' => 'desc']
         ];
         $this->loadModel('Projects');
-        $user_id=$this->Auth->user('talent_id');
-        $user_name=$this->Auth->user('username');
-        $user_role=$this->Auth->user('role');
-        $view_full_talent_list=$this->Auth->user('permission_view_full_talent_list');
-        $view_limited_talent_list=$this->Auth->user('permission_view_limited_talent_list');
+        $user_id = $this->Auth->user('talent_id');
+        $user_name = $this->Auth->user('username');
+        $user_role = $this->Auth->user('role');
 
-        //$this->loadModel('TalentProjects');
-        //$talentprojects = $this->TalentProjects->find('all')->toArray();
-        //$count=0;
-        //foreach ($talentprojects as $talentproject){
-          //  if (($talentproject[progress_num])!= 100) {
-            //    $count = $count + 1;
-            //}
-        //}
-       // $this->set('talentProjects', $talentprojects);
-       // $this->set('count', $count);
 
-        if($view_limited_talent_list==1&&$view_full_talent_list==0){
+        if ($user_role == 'Project Manager') {
             $this->loadModel('TalentProjects');
-            $project = $this->TalentProjects->find('all')->where(['talent_id'=>$user_id])->toArray();
-            $array=[];
-            foreach($project as $some){
+            $project = $this->TalentProjects->find('all')->where(['talent_id' => $user_id])->toArray();
+            $array = [];
+            foreach ($project as $some) {
 
-                $array[]=$some->project_id;
+                $array[] = $some->project_id;
             }
-             if(empty($array)){
-                 $talents = $this->paginate($this->Talents->find('all')->where(['Talents.id' => -1 ])->contain(['Projects']));
-             }else{
-            $project = $this->TalentProjects->find('all')->where(['Project_id IN'=>$array])->toArray();
-            foreach($project as $some){
 
-                $arrays[]=$some->talent_id;
+            $project = $this->TalentProjects->find('all')->where(['Project_id IN' => $array])->toArray();
+            foreach ($project as $some) {
+
+                $arrays[] = $some->talent_id;
             }
-            $talents = $this->paginate($this->Talents->find('all')->where(['Talents.archive' => false ,'Talents.id IN'=>$arrays])->contain([]));
-             }
-        }else if($view_full_talent_list==1){
-            $talents = $this->paginate($this->Talents->find('all')->where(['Talents.archive' => false ])->contain(['Projects']));
-        }else{
-            $talents = $this->paginate($this->Talents->find('all')->where(['Talents.id' => -1 ])->contain(['Projects']));
 
+            $talents = $this->paginate($this->Talents->find('all')->where(['Talents.archive' => false, 'Talents.id IN' => $arrays])->contain([]));
+        } else {
+            $talents = $this->paginate($this->Talents->find('all')->where(['Talents.archive' => false])->contain(['Projects']));
         }
 
         $this->set("user_role", $user_role);
@@ -82,13 +63,11 @@ class TalentsController extends AppController
         $talentNote = $this->TalentNotes->newEntity();
 
 
-
-
         if ($this->request->is('post')) {
 
             $talentNote = $this->TalentNotes->patchEntity($talentNote, $this->request->getData());
-            $talentNote->created_date= Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
-            $talentNote->edited_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
+            $talentNote->created_date = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
+            $talentNote->edited_date = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
 
             if ($this->TalentNotes->save($talentNote)) {
                 $this->Flash->success(__('The talent note has been saved.'));
@@ -103,9 +82,9 @@ class TalentsController extends AppController
     public function archiveIndex()
     {
 
-        $user_id=$this->Auth->user('id');
-        $user_role=$this->Auth->user('role');
-        $user_name=$this->Auth->user('username');
+        $user_id = $this->Auth->user('id');
+        $user_role = $this->Auth->user('role');
+        $user_name = $this->Auth->user('username');
 
 
         $this->set("user_name", $user_name);
@@ -120,7 +99,6 @@ class TalentsController extends AppController
     }
 
 
-
     /**
      * View method
      *
@@ -131,88 +109,59 @@ class TalentsController extends AppController
     public function view($id = null)
     {
 
-        $user_id=$this->Auth->user('id');
-        $user_role=$this->Auth->user('role');
-        $user_name=$this->Auth->user('username');
+        $user_id = $this->Auth->user('id');
+        $user_role = $this->Auth->user('role');
+        $user_name = $this->Auth->user('username');
 
 
         $this->set("user_name", $user_name);
         $this->set("user_role", $user_role);
 
         $talent = $this->Talents->get($id, [
-            'contain' => ['Specialities', 'SkillCategories', 'TalentNotes','Projects']
+            'contain' => ['Specialities', 'SkillCategories', 'TalentNotes', 'Projects']
         ]);
 
         $this->set('talent', $talent);
         $this->set('id', $id);
         $this->loadModel('Activities');
-        $this->loadModel('ClientNotes');
+
         $this->loadModel('TalentNotes');
         $this->loadModel('Projects');
         $this->loadModel('talent_projects');
-        $this->loadModel('Clients');
-        $this->loadModel('Users');
-        $this->loadModel('Logs');
+
         $talentNote = $this->TalentNotes->newEntity();
         $activity = $this->Activities->newEntity();
-        $allProject= $this->Projects->find('all')->toList();
 
         $this->loadModel('Projects');
         $this->loadModel('Talents');
         $talent_project = $this->Talents->get($id, [
-            'contain' => [ 'Specialities', 'SkillCategories', 'Projects','TalentNotes']
+            'contain' => ['Specialities', 'SkillCategories', 'Projects', 'TalentNotes']
         ]);
-        $this->set('talent_project',$talent_project['projects']);
-
-        $talentID=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('id');
-        $thisUserNme=$this->Users->find('all',['conditions'=>['talent_id'=>$id]])->select('username');
-       // var_dump($thisUserNme);
-       // $logs = TableRegistry::get('logs')->find('all', ['condition'=>['user_name'=> $user_name]])->select(['log_time'=>'create_date','user_name','action_type','task_name','project_id']);
-
-        $clientnote=$this->ClientNotes->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','content','summary'=>'content','date'=>'create_date','time'=>'create_date','user_name'=>'content','value'=>'content']);
-        $clientactivity=$this->Activities->find('all',['conditions'=>['talent_id'=>$talentID]])->select(['create_date'=>'create_date','client_id'=>'client_id','type','summary','date','time','user_name'=>'summary','value'=>'summary']);
-        $logs=$this->Logs->find('all',['conditions'=>['user_name'=>$thisUserNme]])->select(['create_date'=>'log_time','project_id','action_type','task_name','date'=>'log_time','time'=>'log_time','user_name','value']);
-        $allActivity=$clientnote->unionAll($clientactivity)->unionAll($logs)->epilog('ORDER BY create_date DESC')->toList();
-//var_dump($allActivity);
-//$this->Talents->save();
-
-        $this->set('allActivity',$allActivity);
-
-        $talent_firstName=$talent_project->first_name;
-        $talent_lastName=$talent_project->last_name;
-        $this->set('talentfn',$talent_firstName);
-        $this->set('talentln',$talent_lastName);
-        $this->set('allProject',$allProject);
-        $client=$this->Clients->find('all')->toList();
-        $this->set('client',$client);
-        //$this->set('logs',$logs);
-
+        //    var_dump($client_talent['projects'][0]['talents']);
+        $this->set('talent_project', $talent_project['projects']);
 
         if ($this->request->is('post')) {
 
             $activity = $this->Activities->patchEntity($activity, $this->request->getData());
-            $activity->create_date= Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
-            $activity->edit_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
-            $activity->client_id=$id;
+            $activity->create_date = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
+            $activity->edit_date = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
+            $activity->client_id = $id;
 
 
             if ($this->Activities->save($activity)) {
                 $this->Flash->success(__('The activity has been added.'));
-                return $this->redirect(['action' => 'view',$id]);
+                return $this->redirect(['action' => 'view', $id]);
             }
         }
         $this->set('activity', $activity);
 
 
-
-
-
         if ($this->request->is('post')) {
 
             $talentNote = $this->TalentNotes->patchEntity($talentNote, $this->request->getData());
-            $talentNote->created_date= Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
-            $talentNote->edited_date=Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
-            $talentNote->talent_id=$id;
+            $talentNote->created_date = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss', 'GMT+10');
+            $talentNote->edited_date = Time::now()->i18nFormat('yyyy-MM-dd HH:mm:ss');
+            $talentNote->talent_id = $id;
 
             if ($this->TalentNotes->save($talentNote)) {
                 $this->Flash->success(__('The talent note has been saved.'));
@@ -232,32 +181,31 @@ class TalentsController extends AppController
     public function add()
     {
 
-        $user_id=$this->Auth->user('id');
-        $user_role=$this->Auth->user('role');
-        $user_name=$this->Auth->user('username');
+        $user_id = $this->Auth->user('id');
+        $user_role = $this->Auth->user('role');
+        $user_name = $this->Auth->user('username');
 
 
         $this->set("user_name", $user_name);
         $this->set("user_role", $user_role);
 
         $talent = $this->Talents->newEntity();
-        $talent->archive=0;
+        $talent->archive = 0;
         if ($this->request->is('post')) {
             $talent = $this->Talents->patchEntity($talent, $this->request->getData());
             if ($this->Talents->save($talent)) {
-                if(isset($_POST['occupied'])){
-                    if($this->request->getData()['occupied']=='1'||$this->request->getData()['occupied']=='on'){
-                        $talent->occupied=1;
-                    }
-                    else{
-                        $talent->occupied=0;
+                if (isset($_POST['occupied'])) {
+                    if ($this->request->getData()['occupied'] == '1' || $this->request->getData()['occupied'] == 'on') {
+                        $talent->occupied = 1;
+                    } else {
+                        $talent->occupied = 0;
                     }
 
                 }
                 $this->Flash->success(__('The talent has been saved.'));
 
 
-                return $this->redirect(['controller'=>'Talents','action' => 'index']);
+                return $this->redirect(['controller' => 'Talents', 'action' => 'index']);
             }
             $this->Flash->error(__('The talent could not be saved. Please, try again.'));
         }
@@ -277,9 +225,9 @@ class TalentsController extends AppController
     public function edit($id = null)
     {
 
-        $user_id=$this->Auth->user('id');
-        $user_role=$this->Auth->user('role');
-        $user_name=$this->Auth->user('username');
+        $user_id = $this->Auth->user('id');
+        $user_role = $this->Auth->user('role');
+        $user_name = $this->Auth->user('username');
 
 
         $this->set("user_name", $user_name);
@@ -293,7 +241,7 @@ class TalentsController extends AppController
             if ($this->Talents->save($talent)) {
                 $this->Flash->success(__('The talent has been saved.'));
 
-                return $this->redirect(['controller'=>'Talents','action' => 'index']);
+                return $this->redirect(['controller' => 'Talents', 'action' => 'index']);
             }
             $this->Flash->error(__('The talent could not be saved. Please, try again.'));
         }
@@ -318,7 +266,7 @@ class TalentsController extends AppController
             $this->Flash->error(__('The talent could not be deleted. Please, try again.'));
         }
 
-        return $this->redirect(['controller'=>'Talents', 'action' => 'archive_index']);
+        return $this->redirect(['controller' => 'Talents', 'action' => 'archive_index']);
     }
 
 
@@ -367,68 +315,39 @@ class TalentsController extends AppController
 
     public function isAuthorized($user)
     {
-        if(in_array($this->request->getParam('action'),['view','edit'])&&($user['permission_view_full_talent_list']==1)){
+        $user_talent_id = $this->Auth->user('talent_id');
+        if ($this->request->getParam('action') === 'view' && $user['permission_view_limited_talent_list'] == 1) {
+            $talentId = (int)$this->request->getParam('pass.0');//this is the id of the talent
+            $this->loadModel('TalentProjects');
+            $project = $this->TalentProjects->find('all')->where(['talent_id' => $user_talent_id])->toArray();
+            $array = [];
+            foreach ($project as $some) {
 
-            return true;
-        }
+                $array[] = $some->project_id;
+            }
 
+            $project = $this->TalentProjects->find('all')->where(['Project_id IN' => $array])->toArray();
+            foreach ($project as $some) {
 
+                $arrays[] = $some->talent_id;
+            }
 
-        if(in_array($this->request->getParam('action'),['view','edit'])&&($user['permission_view_limited_talent_list']==1)) {
-                $user_id=$this->Auth->user('talent_id');
-                $talentId = (int)$this->request->getParam('pass.0');
-
-                if($user['permission_view_full_talent_list']==1){
-
+            foreach ($arrays as $aaa) {
+                if ($aaa == $talentId) {
                     return true;
                 }
-                $this->loadModel('TalentProjects');
-                $project = $this->TalentProjects->find('all')->where(['talent_id' => $user_id])->toArray();
-                $array = [];
-                foreach ($project as $some) {
-
-                    $array[] = $some->project_id;
-                }
-
-                $project = $this->TalentProjects->find('all')->where(['Project_id IN' => $array])->toArray();
-                foreach ($project as $some) {
-
-                    $arrays[] = $some->talent_id;
-                }
-
-                foreach ($arrays as $aaa) {
-                    if ($aaa == $talentId) {
-                        return true;
-                    }
-                }
+            }
         }
 
+            if (in_array($this->request->getParam('action'), ['add', 'delete', 'archive', 'archiveIndex'])) {
+                return parent::isAuthorized($user);
+            }
 
-
-        if(in_array($this->request->getParam('action'),['archive'])&&$user['permission_archive_talent']){
+        if (in_array($this->request->getParam('action'), ['index'])) {
             return true;
         }
 
-        if(in_array($this->request->getParam('action'),['unarchive'])&&$user['permission_unarchive_talent']){
             return true;
-        }
 
-        if(in_array($this->request->getParam('action'),['archiveIndex'])&&$user['permission_view_archive_talent_list']){
-            return true;
-        }
-
-        if(in_array($this->request->getParam('action'),['add'])&&$user['permission_add_talent']==1){
-            return true;
-        }
-
-        if(in_array($this->request->getParam('action'),['delete'])&&$user['permission_delete_talent']==1){
-            return true;
-        }
-
-        if(in_array($this->request->getParam('action'),['index'])&&($user['permission_view_limited_talent_list']==1||$user['permission_view_full_talent_list']==1)){
-            return true;
-        }
-
-        return false;
     }
 }

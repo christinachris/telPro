@@ -260,9 +260,9 @@ $conn = ConnectionManager::get('default');
                                             <td class="kt-datatable__cell--left kt-datatable__cell" data-field="Actions"
                                                 data-autohide-disabled="false">
                                                     <span style="overflow: visible; position: relative; width: 100px;">
-                                                        <?= $this->Html->link('', ['action' => 'unarchive', $talent->id], ['confirm' => __('Are you sure you want to UNarchive {0}'), 'class' => "btn btn-lg btn-clean la la-refresh",'style' => 'padding : 5px ; font-size: 24px', 'data-toggle' => "kt-popover", 'data-content' => "Unarchive Talent", 'data-placement' => 'bottom']) ?>
+                                                        <?= $this->Html->link('', ['action' => 'unarchive', $talent->id], ['confirm' => __('Are you sure you want to UNarchive {0}'), 'class' => "flaticon-refresh",'style' => 'padding : 5px ; font-size: 20px', 'data-toggle' => "kt-popover", 'data-content' => "Unarchive Talent", 'data-placement' => 'bottom']) ?>
 
-                                                        <?= $this->Html->link('  ', ['action' => 'delete', $talent->id], ['confirm' => __('Are you sure you want to DELETE {0}'), 'class' => "btn btn-lg btn-clean la la-close", 'style' => 'padding : 5px ; font-size: 24px; color:red', 'data-toggle' => "kt-popover", 'data-content' => "Delete Talent", 'data-placement' => 'bottom'] ) ?>
+                                                        <?= $this->Html->link('  ', ['action' => 'delete', $talent->id], ['confirm' => __('Are you sure you want to DELETE {0}'), 'class' => "flaticon2-delete", 'style' => 'padding : 5px ; font-size: 18px', 'data-toggle' => "kt-popover", 'data-content' => "Delete Talent", 'data-placement' => 'bottom'] ) ?>
 
                                                     </span>
                                             </td>

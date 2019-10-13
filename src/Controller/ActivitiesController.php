@@ -19,7 +19,6 @@ class ActivitiesController extends AppController
      */
     public function index()
     {
-        $this->autoRender = false;
         $this->paginate = [
             'contain' => ['Clients']
         ];
@@ -37,7 +36,6 @@ class ActivitiesController extends AppController
      */
     public function view($id = null)
     {
-        $this->autoRender = false;
         $activity = $this->Activities->get($id, [
             'contain' => ['Clients']
         ]);
@@ -52,7 +50,6 @@ class ActivitiesController extends AppController
      */
     public function add()
     {
-        $this->autoRender = false;
         $activity = $this->Activities->newEntity();
         if ($this->request->is('post')) {
             $activity = $this->Activities->patchEntity($activity, $this->request->getData());
@@ -76,7 +73,6 @@ class ActivitiesController extends AppController
      */
     public function edit($id = null)
     {
-        $this->autoRender = false;
         $activity = $this->Activities->get($id, [
             'contain' => []
         ]);
@@ -102,7 +98,6 @@ class ActivitiesController extends AppController
      */
     public function delete($id = null)
     {
-        $this->autoRender = false;
         $activity = $this->Activities->get($id);
         if ($this->Activities->delete($activity)) {
             $this->Flash->success(__('The activity has been deleted.'));
@@ -112,13 +107,6 @@ class ActivitiesController extends AppController
 
         return $this->redirect(['controller' =>'Clients', 'action' => 'view', $activity->client_id]);
     }
-
-    public function isAuthorized($user)
-    {
-
-        return true;
-    }
-
 
 
 }

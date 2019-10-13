@@ -235,11 +235,11 @@ $conn = ConnectionManager::get('default');
                                                     data-field="Actions"
                                                     data-autohide-disabled="false">
                                                     <a>
-                                                        <?= $this->Html->link('', ['action' => 'unarchive', $client->id], ['confirm' => __('Are you sure you want to unarchive {0}?', $client->first_name . ' ' . $client->last_name), 'class' => "btn btn-lg btn-clean la la-refresh", 'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Unarchive Talent", 'data-placement' => 'bottom']) ?>
+                                                        <?= $this->Html->link('', ['action' => 'unarchive', $client->id], ['confirm' => __('Are you sure you want to unarchive {0}?', $client->first_name . ' ' . $client->last_name), 'class' => "flaticon-refresh", 'style' => 'padding : 5px ; font-size: 20px', 'data-toggle' => "kt-popover", 'data-content' => "Unarchive Talent", 'data-placement' => 'bottom']) ?>
 
                                                     </a>
                                                     <a>
-                                                        <?= $this->Form->postLink('  ', ['action' => 'delete', $client->id], ['confirm' => __('Are you sure you want to DELETE {0}'), 'class' => "btn btn-lg btn-clean la la-close", 'style' => 'padding : 5px ; font-size: 25px; color:red', 'data-toggle' => "kt-popover", 'data-content' => "Delete Client", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $client->first_name . ' ' . $client->last_name)]) ?>
+                                                        <?= $this->Form->postLink('  ', ['action' => 'delete', $client->id], ['confirm' => __('Are you sure you want to DELETE {0}'), 'class' => "flaticon2-delete", 'style' => 'padding : 5px ; font-size: 18px', 'data-toggle' => "kt-popover", 'data-content' => "Delete Client", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $client->first_name . ' ' . $client->last_name)]) ?>
                                                     </a>
                                                 </td>
                                             </tr>

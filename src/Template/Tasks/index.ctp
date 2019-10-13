@@ -72,32 +72,27 @@ $conn = ConnectionManager::get('default');
                         <!-- <span class="kt-subheader__breadcrumbs-link kt-subheader__breadcrumbs-link--active">Active link</span> -->
                     </div>
                 </div>
-                <div class="kt-subheader__toolbar" style="display: ">
-                    <div class="btn btn-primary btn-block" data-toggle="kt-popover"
-                        data-content="Activity History" title="" data-placement="left">
-                        <a class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn"><i
-                                class="flaticon2-writing"></i>Activity History</a>
+                <div class="kt-subheader__toolbar">
+                    <div class="kt-subheader__wrapper">
+                        <div class="btn kt-subheader__btn-daterange" title="Select dashboard daterange">
+                            <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;
+                            <span class="kt-subheader__btn-daterange-date"
+                                  id="kt_dashboard_daterangepicker_date"><?php echo date("M d") ?></span>
+                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+                                 width="24px"
+                                 height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">
+                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+                                    <rect id="bound" x="0" y="0" width="24" height="24"/>
+                                    <path
+                                        d="M4.875,20.75 C4.63541667,20.75 4.39583333,20.6541667 4.20416667,20.4625 L2.2875,18.5458333 C1.90416667,18.1625 1.90416667,17.5875 2.2875,17.2041667 C2.67083333,16.8208333 3.29375,16.8208333 3.62916667,17.2041667 L4.875,18.45 L8.0375,15.2875 C8.42083333,14.9041667 8.99583333,14.9041667 9.37916667,15.2875 C9.7625,15.6708333 9.7625,16.2458333 9.37916667,16.6291667 L5.54583333,20.4625 C5.35416667,20.6541667 5.11458333,20.75 4.875,20.75 Z"
+                                        id="check" fill="#000000" fill-rule="nonzero" opacity="0.3"/>
+                                    <path
+                                        d="M2,11.8650466 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L12.9835977,18 C12.7263047,14.0909841 9.47412135,11 5.5,11 C4.23590829,11 3.04485894,11.3127315 2,11.8650466 Z M6,7 C5.44771525,7 5,7.44771525 5,8 C5,8.55228475 5.44771525,9 6,9 L15,9 C15.5522847,9 16,8.55228475 16,8 C16,7.44771525 15.5522847,7 15,7 L6,7 Z"
+                                        id="Combined-Shape" fill="#000000"/>
+                                </g>
+                            </svg>
+                        </div>
                     </div>
-<!--                    <div class="kt-subheader__wrapper">-->
-<!--                        <div class="btn kt-subheader__btn-daterange" title="Select dashboard daterange">-->
-<!--                            <span class="kt-subheader__btn-daterange-title" id="kt_dashboard_daterangepicker_title">Today</span>&nbsp;-->
-<!--                            <span class="kt-subheader__btn-daterange-date"-->
-<!--                                  id="kt_dashboard_daterangepicker_date">--><?php //echo date("M d") ?><!--</span>-->
-<!--                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"-->
-<!--                                 width="24px"-->
-<!--                                 height="24px" viewBox="0 0 24 24" version="1.1" class="kt-svg-icon kt-svg-icon--sm">-->
-<!--                                <g stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">-->
-<!--                                    <rect id="bound" x="0" y="0" width="24" height="24"/>-->
-<!--                                    <path-->
-<!--                                        d="M4.875,20.75 C4.63541667,20.75 4.39583333,20.6541667 4.20416667,20.4625 L2.2875,18.5458333 C1.90416667,18.1625 1.90416667,17.5875 2.2875,17.2041667 C2.67083333,16.8208333 3.29375,16.8208333 3.62916667,17.2041667 L4.875,18.45 L8.0375,15.2875 C8.42083333,14.9041667 8.99583333,14.9041667 9.37916667,15.2875 C9.7625,15.6708333 9.7625,16.2458333 9.37916667,16.6291667 L5.54583333,20.4625 C5.35416667,20.6541667 5.11458333,20.75 4.875,20.75 Z"-->
-<!--                                        id="check" fill="#000000" fill-rule="nonzero" opacity="0.3"/>-->
-<!--                                    <path-->
-<!--                                        d="M2,11.8650466 L2,6 C2,4.34314575 3.34314575,3 5,3 L19,3 C20.6568542,3 22,4.34314575 22,6 L22,15 C22,15.0032706 21.9999948,15.0065399 21.9999843,15.009808 L22.0249378,15 L22.0249378,19.5857864 C22.0249378,20.1380712 21.5772226,20.5857864 21.0249378,20.5857864 C20.7597213,20.5857864 20.5053674,20.4804296 20.317831,20.2928932 L18.0249378,18 L12.9835977,18 C12.7263047,14.0909841 9.47412135,11 5.5,11 C4.23590829,11 3.04485894,11.3127315 2,11.8650466 Z M6,7 C5.44771525,7 5,7.44771525 5,8 C5,8.55228475 5.44771525,9 6,9 L15,9 C15.5522847,9 16,8.55228475 16,8 C16,7.44771525 15.5522847,7 15,7 L6,7 Z"-->
-<!--                                        id="Combined-Shape" fill="#000000"/>-->
-<!--                                </g>-->
-<!--                            </svg>-->
-<!--                        </div>-->
-<!--                    </div>-->
                 </div>
             </div>
 
@@ -117,6 +112,11 @@ $conn = ConnectionManager::get('default');
                                 class="flaticon2-gear"></i></a>
                     </li>
 
+                    <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--primary" data-toggle="kt-popover"
+                        data-content="Activity History" title="" data-placement="left">
+                        <a class="kt-header__topbar-icon" id="kt_quick_panel_toggler_btn"><i
+                                class="flaticon2-writing"></i></a>
+                    </li>
 
                     <!--                        <li class="kt-sticky-toolbar__item kt-sticky-toolbar__item--danger" id="kt_sticky_toolbar_chat_toggler" data-toggle="kt-tooltip" title="" data-placement="left" data-original-title="Chat Example">-->
                     <!--                            <a href="#" data-toggle="modal" data-target="#kt_chat_modal"><i class="flaticon2-chat-1"></i></a>-->
@@ -180,7 +180,7 @@ $conn = ConnectionManager::get('default');
                         </div>
                     </div>
                     <span>
-                <b>Start Date : <?php echo date("m-d-Y H:i:s", strtotime($name->start_date));
+                <b>Start Date : <?php echo $name->start_date;
                     } ?> </b>
 			</span>
                 </div>
@@ -212,8 +212,8 @@ $conn = ConnectionManager::get('default');
                              aria-labelledby="exampleModalLabel" aria-hidden="true">
                             <div class="modal-dialog modal-lg" style="margin-top: 50px" role="document">
 
-                                <!--it will check if the upload img is valid before submitting  If validate() function returns true, the form will be submitted, otherwise, it'll not submit the data.-->
-                                <?= $this->Form->create($taskAdd, ['onsubmit'=>'return Validate(this)','enctype' => 'multipart/form-data']) ?>
+                                 <!--it will check if the upload img is valid before submitting  If validate() function returns true, the form will be submitted, otherwise, it'll not submit the data.-->
+                                 <?= $this->Form->create($taskAdd, ['onsubmit'=>'return Validate(this)','enctype' => 'multipart/form-data']) ?>
 
                                 <div class="modal-content">
                                     <div class="modal-header">
@@ -350,7 +350,7 @@ $conn = ConnectionManager::get('default');
                                                 <div class="col-lg-6">
                                                     <?php echo $this->Form->control('due_date', [
                                                         'templates' => ['inputContainer' => '{{content}}'],
-                                                        'class' => 'input-group date form-control col-lg-8 col-md-9 col-sm-12 datetimepicker_5',
+                                                        'class' => 'form-control col-lg-8 col-md-9 col-sm-12 datetimepicker_5',
                                                         'type' => 'text',
                                                         'required' => 'required',
                                                         //'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
@@ -367,17 +367,17 @@ $conn = ConnectionManager::get('default');
                                                         'templates' => ['inputContainer' => '{{content}}'],
                                                         'type' => 'textarea',
                                                         'maxlength'=>'5000',
-                                                        //'maxlength' => '4000',
+														//'maxlength' => '4000',
                                                         'row' => '8 ',
                                                         'class' => 'form-control mytextarea col-lg-10 col-md-10 col-sm-12',
                                                         'label' => [
                                                             'class' => 'col-form-label col-lg-3 col-sm-12',
                                                             'text' => 'Description'
                                                         ]
-                                                    ]);
-                                                    ?>
-
-
+                                                    ]); 
+													?>
+													               
+													
                                                 </div>
                                                 <?php
                                                 echo $this->Form->hidden('project_id', ['value' => $id]);
@@ -406,13 +406,10 @@ $conn = ConnectionManager::get('default');
                                             </button>
                                             <!--Button has not template in Cakephp, need to set a templates before change it -->
                                             <?php
-                                            $resultscounts = $conn
-                                                ->execute('select * from tasks');
-
-                                            $max_id = 0 ;
-                                            foreach ($resultscounts as $resultscount) {
-                                                if($resultscount['id']>$max_id ){
-                                                    $max_id=$resultscount['id'];
+                                            foreach ($tasks as $task) {
+                                                $max_id = 0 ;
+                                                if($task['id']>$max_id ){
+                                                    $max_id=$task['id'];
                                                 }
                                             }
                                             $this->Form->setTemplates([
@@ -502,11 +499,11 @@ $conn = ConnectionManager::get('default');
 
                                                                       }
                                                                       /* Portrait and Landscape */
-                                                                      .name2 {
+                                                                          .name2 {
 
-                                                                          height: auto !important;
-                                                                          line-height: 1; max-height: 30px;
-                                                                      }
+                                                                              height: auto !important;
+                                                                              line-height: 1; max-height: 30px;
+                                                                          }
 
                                                                       }
                                                                 </style>
@@ -624,8 +621,8 @@ $conn = ConnectionManager::get('default');
                                         <div class="modal-dialog modal-lg" style="margin-top: 50px" role="document">
                                             <?php $taskEdit = null ?>
 
-                                            <!--it will check if the upload img is valid before submitting  If validate() function returns true, the form will be submitted, otherwise, it'll not submit the data.-->
-                                            <?= $this->Form->create($taskEdit, ['onsubmit'=>'return Validate(this)','enctype' => 'multipart/form-data', 'url' => ['controller' => 'Tasks', 'action' => 'edit', $task->id]]) ?>
+											<!--it will check if the upload img is valid before submitting  If validate() function returns true, the form will be submitted, otherwise, it'll not submit the data.-->
+											<?= $this->Form->create($taskEdit, ['onsubmit'=>'return Validate(this)','enctype' => 'multipart/form-data', 'url' => ['controller' => 'Tasks', 'action' => 'edit', $task->id]]) ?>
 
                                             <div class="modal-content">
                                                 <div class="modal-header">
@@ -654,10 +651,10 @@ $conn = ConnectionManager::get('default');
                                                         ?>
                                                     </div>
                                                     <div class="right-align col-lg-3">
-                                                        <!--                                                        <button type="button" class="btn btn-secondary"-->
-                                                        <!--                                                                data-dismiss="modal">-->
-                                                        <!--                                                            Cancel-->
-                                                        <!--                                                        </button>-->
+<!--                                                        <button type="button" class="btn btn-secondary"-->
+<!--                                                                data-dismiss="modal">-->
+<!--                                                            Cancel-->
+<!--                                                        </button>-->
 
                                                         <?= $this->Form->button('Submit ', [
                                                             'type' => 'submit',
@@ -825,9 +822,9 @@ $conn = ConnectionManager::get('default');
                                                                 <?php echo $this->Form->hidden('create_date', ['value' => $task->create_date]); ?>
                                                                 <?php echo $this->Form->control('due_date', [
                                                                     'value' =>$task->due_date->i18nFormat('dd MMMM yyyy - hh:mm aaa'),
-                                                                    //'value' => date_format($task->due_date, 'd/m/Y h:i A'),
+																	//'value' => date_format($task->due_date, 'd/m/Y h:i A'),
                                                                     'templates' => ['inputContainer' => '{{content}}'],
-                                                                    'class' => 'input-group date form-control col-lg-8 col-md-9 col-sm-12 datetimepicker_5',
+                                                                    'class' => 'form-control col-lg-8 col-md-9 col-sm-12 datetimepicker_5',
                                                                     'type' => 'text',
                                                                     //'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
                                                                     'label' => [
@@ -852,6 +849,10 @@ $conn = ConnectionManager::get('default');
                                                                     'templates' => ['inputContainer' => '{{content}}'],
                                                                     'type' => 'textarea',
                                                                     'data-desc-text' => $task->description,
+                                                                    'maxlength'=>'5000',
+																	//'maxlength' => '4000',
+                                                                    // Rich text section
+//                                                                    'data-provide' => 'markdown',
                                                                     'row' => '10',
                                                                     'id' => 'desc',
                                                                     'class' => 'form-control mytextarea col-lg-10 col-md-10 col-sm-12',
@@ -860,7 +861,7 @@ $conn = ConnectionManager::get('default');
                                                                         'text' => 'Description'
                                                                     ]
                                                                 ]); ?>
-
+																													                
                                                             </div>
 
                                                             <div class="form-group row" style="margin : 5px">
@@ -944,17 +945,17 @@ $conn = ConnectionManager::get('default');
                                                                             <?php echo $this->Form->hidden('user_name', ['value' => $this->Session->read('Auth.User.username')]); ?>
                                                                             <div class="form-group row kt-margin-b-20">
                                                                                 <div class="col-lg-12">
-                                                                                    <?php echo $this->Form->control('comment_desc', [
-                                                                                        'templates' => ['inputContainer' => '{{content}}'],
-                                                                                        'type' => 'textarea',
-                                                                                        'maxlength' => '800',
-                                                                                        'rows' => '3',
-                                                                                        'class' => 'form-control mention col-lg-10 col-md-10 col-sm-12',
-                                                                                        'label' => [
-                                                                                            'class' => 'col-form-label col-lg-2 col-sm-12',
-                                                                                            'text' => 'Comments'
-                                                                                        ]
-                                                                                    ]); ?>
+                                                                                <?php echo $this->Form->control('comment_desc', [
+                                                                                    'templates' => ['inputContainer' => '{{content}}'],
+                                                                                    'type' => 'textarea',
+                                                                                    'maxlength' => '800',
+                                                                                    'rows' => '3',
+                                                                                    'class' => 'form-control mention col-lg-10 col-md-10 col-sm-12',
+                                                                                    'label' => [
+                                                                                        'class' => 'col-form-label col-lg-2 col-sm-12',
+                                                                                        'text' => 'Comments'
+                                                                                    ]
+                                                                                ]); ?>
                                                                                 </div>
 
                                                                                 <?php echo $this->Form->hidden('task_id', ['value' => $task->id]); ?>
@@ -1014,7 +1015,7 @@ $conn = ConnectionManager::get('default');
                                                                                                                     <div class="kt-widget4">
                                                                                                                         <div class="kt-widget4__item">
                                                                                                                             <div class="kt-widget4__pic">
-                                                                                                                                <!--                                                                                                                                <img src="../assets/media/users/100_4.jpg" alt="">-->
+<!--                                                                                                                                <img src="../assets/media/users/100_4.jpg" alt="">-->
                                                                                                                             </div>
                                                                                                                             <div class="kt-widget4__info">
                                                                                                                                 <a href="#" class="kt-widget4__username">
@@ -1130,9 +1131,9 @@ $conn = ConnectionManager::get('default');
                                                                                                                         </div>
                                                                                                                     </div>
                                                                                                                 </div>
-                                                                                                                <!--                                                                                                                <div class="kt-timeline-v1__item-actions">-->
-                                                                                                                <!--                                                                                                                    <a href="#" class="btn btn-sm btn-brand">Check all</a>-->
-                                                                                                                <!--                                                                                                                </div>-->
+<!--                                                                                                                <div class="kt-timeline-v1__item-actions">-->
+<!--                                                                                                                    <a href="#" class="btn btn-sm btn-brand">Check all</a>-->
+<!--                                                                                                                </div>-->
                                                                                                             </div>
                                                                                                         </div>
                                                                                                     <?php }; ?>
@@ -1181,7 +1182,7 @@ $conn = ConnectionManager::get('default');
                            role="tab">Activity History</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" id="delete_logs" data-project-id="<?php if(!empty($task->project_id)){ echo $task->project_id; } ?>">Clear Log
+                        <a class="nav-link" id="delete_logs" data-project-id="<?php echo $task->project_id ?>">Clear Log
                             History</a>
                     </li>
                 </ul>
@@ -1300,7 +1301,28 @@ $conn = ConnectionManager::get('default');
             </div>
         </div>
         <script src="https://cdn.tiny.cloud/1/skxxriyhfnae4ssf886wrpuv496ctdpkp14xxnp6zhxzs4yy/tinymce/5/tinymce.min.js" referrerpolicy="origin"></script>
+        <script>
+            /*tinymce.init({
+                selector: '.mytextarea',
+			    setup : function(ed) {
+					ed.onKeyUp.add(function(ed, e) {
+					var tinylen, htmlcount, maxlength = $("#" + tinyMCE.activeEditor.id).attr("maxlength");
+					if (maxlength) {
+						// grabbing the length of the curent editors content
+						tinylen = ed.getContent().length;
 
+						htmlcount = "HTML Character Count: " + tinylen + "/" + maxlength;
+						if (tinylen > maxlength) {
+							htmlcount = "<span style='font-weight:bold; color: #f00;'>" + htmlcount + "</span>";
+						}
+
+						// write the html count into the path row of the active editor
+						tinymce.DOM.setHTML(tinymce.DOM.get(tinyMCE.activeEditor.id+ '_path_row'), htmlcount);
+					}
+				});//ed.onKeyUp.add
+			}//setup	
+        });*/
+        </script>
         <!-- end::Quick Panel -->
         <?= $this->Html->css('trello-like.css') ?>
         <?= $this->Html->css('heartbeat.css') ?>
@@ -1311,6 +1333,10 @@ $conn = ConnectionManager::get('default');
         <?= $this->Html->script('base/scripts.bundle.js') ?>
         <?= $this->Html->script('app/custom/general/crud/forms/widgets/ion-range-slider.js') ?>
         <?= $this->Html->script('dropzone.js') ?>
+<!--        <?//= $this->Html->script('tinymce.min.js') ?>-->
+
+
+
 
         <style>
             .tox-statusbar__branding{
@@ -1323,12 +1349,12 @@ $conn = ConnectionManager::get('default');
             }
             .tox .tox-toolbar, .tox .tox-toolbar__overflow, .tox .tox-toolbar__primary{
                 border: 1px solid #cccccc63 !important;
-            background:none
+                background:none
 
-            .tox .tox-tbtn {
-                height: 25px;
-                OPACITY: 0.6;
-            }
+                .tox .tox-tbtn {
+                    height: 25px;
+                    OPACITY: 0.6;
+                }
             }
         </style>
 
@@ -1372,7 +1398,7 @@ $conn = ConnectionManager::get('default');
 
                     //Get Value from Text area
                 }).val(
-                    $(this).data("desc-text")
+                $(this).data("desc-text")
                 );
 
 
@@ -1860,56 +1886,135 @@ $conn = ConnectionManager::get('default');
             });
         </script>
 
-        <!--Restrict the format of uploaded pictures-->
-        <script type="text/javascript">
+<!--Restrict the format of uploaded pictures-->
+<script type="text/javascript">
 
-            var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
+    var _validFileExtensions = [".jpg", ".jpeg", ".bmp", ".gif", ".png"];
 
-            function Validate(oForm) {
-                var arrInputs = oForm.getElementsByTagName("input");
-                for (var i = 0; i < arrInputs.length; i++) {
-                    var oInput = arrInputs[i];
-                    if (oInput.type == "file") {
-                        var sFileName = oInput.value;
-                        if (sFileName.length > 0) {
-                            var blnValid = false;
-                            for (var j = 0; j < _validFileExtensions.length; j++) {
-                                var sCurExtension = _validFileExtensions[j];
-                                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
-                                    blnValid = true;
-                                    break;
-                                }
-                            }
-
-                            if (!blnValid) {
-                                alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
-                                return false;
-                            }
+    function Validate(oForm) {
+        var arrInputs = oForm.getElementsByTagName("input");
+        for (var i = 0; i < arrInputs.length; i++) {
+            var oInput = arrInputs[i];
+            if (oInput.type == "file") {
+                var sFileName = oInput.value;
+                if (sFileName.length > 0) {
+                    var blnValid = false;
+                    for (var j = 0; j < _validFileExtensions.length; j++) {
+                        var sCurExtension = _validFileExtensions[j];
+                        if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                            blnValid = true;
+                            break;
                         }
                     }
+
+                    if (!blnValid) {
+                        alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                        return false;
+                    }
                 }
-
-                return true;
             }
-        </script>
+        }
 
-        <script type="text/javascript">
-            $(function() {
+        return true;
+    }
+</script>
 
-                $(".datetimepicker_5").datetimepicker({
-                    format: "dd MM yyyy - HH:ii P",
-                    showMeridian: true,
-                    autoclose: true,
-                    todayBtn: true,
-                    todayHighlight: true
-                });
-            });
-        </script>
+<script type="text/javascript">
+$(function() {
 
-        <script type="text/javascript">
+    $(".datetimepicker_5").datetimepicker({
+        format: "dd MM yyyy - HH:ii P",
+        showMeridian: true,
+        autoclose: true,
+        todayBtn: true,
+		todayHighlight: true,
+		pickerPosition: "bottom-left"
+    });
+});
+</script> 
+
+                                            <script>									
+											//does not work abandoned
+                                                /*tinymce.init({
+                                                    selector: '.mytextarea',
+                                                    //height : "280px",
+                                                    toolbar: "false",
+                                                    statusbar: true,
+													plugins: "wordcount",
+													resize: false,
+													max_chars: 5000, // max. allowed chars
+													setup: function (ed) {
+														ed.onKeyDown.add(function(ed, e) {
+
+														//define local variables
+														var tinymax, tinylen, htmlcount;
+
+														//manually setting our max character limit
+														tinymax = ed.settings.charLimit;
+
+														//grabbing the length of the curent editors content
+														tinylen = ed.getContent().replace(/(<([^>]+)>)/ig,"").length;
+
+														//setting up the text string that will display in the path area
+														htmlcount = "HTML Character Count: " + tinylen + "/" + tinymax;
+
+														//if the user has exceeded the max turn the path bar red.
+														if (tinylen > tinymax){
+
+															// place text string in path bar
+															if ( $('#max_char_string').size() ){
+																$('#max_char_string').html( '&nbsp;' + htmlcount);
+															}
+															else {
+																$("div#"+ed.id+"_path_row").append('<span id="max_char_string">&nbsp;'+htmlcount+'</span>')
+															}
+
+															// prevent insertion of typed character
+															e.preventDefault();
+															e.stopPropagation();
+															return false;
+														} 
+													},
+
+
+													
+													/*setup:function (ed) {
+														ed.onKeyUp.add(
+															function (ed, evt) {
+																document.form1.deslen.value = tinyMCE.activeEditor.getContent().replace(/]+>/g, ”).length;
+															}
+														);
+													},*/
+                                                },
+												
+												/*$(document).ready(function() {
+													// validate form on keyup and submit
+													$("#form1").validate({
+														rules: {
+															deslen: {
+																min: 2,
+																max: 5000
+															}
+														},
+														messages: {
+															deslen: {
+																min: " Please enter a description",
+																max: " Description must not be longer than 5000 characters"
+															},
+														}
+													});
+												});*/
+		
+})										
+                                            </script>
+
+
+<script type="text/javascript">
             tinymce.init({
                 selector: '.mytextarea',
-                plugins: "wordcount",  //count the word/characters
+				plugins: "wordcount",  //count the word/characters
+				
             });
 
-        </script>
+</script>
+

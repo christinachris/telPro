@@ -25,6 +25,7 @@ use Cake\Controller\Component\AuthComponent;
  *
  * @link https://book.cakephp.org/3.0/en/controllers.html#the-app-controller
  */
+
 class AppController extends Controller
 {
 
@@ -57,6 +58,9 @@ class AppController extends Controller
             ],
             'authorize'=>['Controller']
         ]);
+		
+		//Type::build('datetime')->useLocaleParser()->setLocaleFormat('dd-mm-yyyy');
+        //Time::setToStringFormat('dd/MM/YYYY');
 
         /*
          * Enable the following component for recommended CakePHP security settings.
@@ -68,15 +72,15 @@ class AppController extends Controller
     public function isAuthorized($user)
     {
         if(isset($user['role']) && (in_array($user['role'],['Admin','Superadmin']))){
-            return true;
+           return true;
         }
-        $this->redirect(array('controller' => 'Projects', 'action' => 'index'));
+//        $this->redirect(array('controller' => 'projects', 'action' => 'index'));
         return false;
     }
 
 
     public function beforeFilter(Event $event) {
-        $this->Auth->allow(['logout','forgetPassword','resetPassword']);
+        $this->Auth->allow('logout');
 
     }
 }

@@ -90,6 +90,16 @@ class CommentsController extends AppController
                 }
             }
             // @mention END ----------------
+			$errorMessage=false;
+			if(strlen($this->request->getData()['comment_desc'])>4000){
+                //$this->set('errors','Characters exceed the upper limit');
+                $errorMessage=true;				
+			}
+			if($errorMessage){
+				//$this->set('errors','Characters exceed the upper limit');
+				$this->Flash->error(__('The note could not be saved. Characters exceed the upper limit.'));
+				return $this->redirect(["controller" => 'tasks','action' => 'index']);
+			}			
             if ($this->Comments->save($comment)) {
                 $this->Flash->success(__('The comment has been saved.'));
 
@@ -122,7 +132,18 @@ class CommentsController extends AppController
         ]);
         if ($this->request->is(['patch', 'post', 'put'])) {
             $comment = $this->Comments->patchEntity($comment, $this->request->getData());
-            if ($this->Comments->save($comment)) {
+            
+			$errorMessage=false;
+			if(strlen($this->request->getData()['comment_desc'])>4000){
+                //$this->set('errors','Characters exceed the upper limit');
+                $errorMessage=true;				
+			}
+			if($errorMessage){
+				//$this->set('errors','Characters exceed the upper limit');
+				$this->Flash->error(__('The comment could not be saved. Characters exceed the upper limit.'));
+				return $this->redirect(["controller" => 'tasks','action' => 'index', $projectId]);
+			}			
+			if ($this->Comments->save($comment)) {
                 $this->Flash->success(__('The comment has been saved.'));
 
                 return $this->redirect(['controller'=> 'tasks', 'action' => 'index', $projectId]);

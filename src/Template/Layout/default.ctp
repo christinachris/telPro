@@ -215,13 +215,6 @@ $cakeDescription = 'Set My Brand Up';
                                                         $due_date = date_create_from_format('Y-m-d H:i:s', $mention['mention_date']);
                                                         $sys_date = date_create_from_format('Y-m-d', date('Y-m-d'));
                                                         $datediff = date_diff($due_date, $sys_date);
-                                                        if ($datediff->d > 0) {
-                                                            $message = $datediff->format(" %d Days ");
-                                                        } elseif ($datediff->h > 0) {
-                                                            $message = $datediff->format("%h Hours ");
-                                                        } else {
-                                                            $message = $datediff->format("%i Minutes");
-                                                        }
                                                         ?>
                                                         <a href="<?php echo $this->Url->build(["controller" => "tasks", "action" => "index", $mention['project_id'], 'task' => $mention['task_id']]); ?>"
                                                            class="kt-notification__item metion-noti">
@@ -234,7 +227,7 @@ $cakeDescription = 'Set My Brand Up';
                                                                     <b> <?php echo $mention["task_name"]; ?> </b> !
                                                                 </div>
                                                                 <div class="kt-notification__item-time">
-                                                                    <?php echo $message ?>  ago
+                                                                    <?php echo $datediff->days ?> Days ago
                                                                 </div>
                                                             </div>
                                                         </a>
@@ -345,7 +338,6 @@ $cakeDescription = 'Set My Brand Up';
 
                                     <!--begin: Navigation -->
                                     <div class="kt-notification">
-
                                         <!--                <a href="#" class="kt-notification__item">-->
                                         <!--                    <div class="kt-notification__item-icon">-->
                                         <!--                        <i class="flaticon2-calendar-3 kt-font-success"></i>-->
@@ -398,21 +390,10 @@ $cakeDescription = 'Set My Brand Up';
                                         <!--                        </div>-->
                                         <!--                    </div>-->
                                         <!--                </a>-->
-
                                         <div class="kt-notification__custom">
-                                            <?php
-                                            $userrole=$this->Session->read('Auth.User.role');
-                                            if ($userrole == 'Superadmin'){?>
-                                                <?= $this->Html->link('<span > View User</span>', ['controller' => 'Users', 'action' => 'index'], ['escape' => false]) ?>
-                                            <?php } ?>
-                                        </div>
-                                        <div class="kt-notification__custom">
-
                                             <?= $this->Html->link('<span class="btn btn-primary"><i class="flaticon2-plus]"></i> Sign Out</span>', ['controller' => 'Users', 'action' => 'logout', 'type' => 'button'], ['escape' => false]) ?>
                                         </div>
-
-
-                                        </div>
+                                    </div>
 
                                     <!--end: Navigation -->
                                 </div>

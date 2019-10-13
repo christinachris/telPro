@@ -139,7 +139,7 @@ $conn = ConnectionManager::get('default');
                                             </div>
                                         </div>
                                         <div class="col-lg-6">
-                                            <?php echo $this->Form->control('url', ['label' => 'Url address', 'class' => 'form-control', 'id' => 'exampleSelect1', 'placeholder' => 'Enter url address']); ?>
+                                            <?php echo $this->Form->control('address_url', ['label' => 'Url address', 'class' => 'form-control', 'id' => 'exampleSelect1', 'placeholder' => 'Enter url address']); ?>
                                             <div class="kt-input-icon">
                                                 <div class="kt-input-icon">
                                         <span
@@ -228,6 +228,25 @@ $conn = ConnectionManager::get('default');
                                     </div>
 
                                     <div class="kt-separator kt-separator--border-dashed kt-separator--space-lg"></div>
+
+                                    <div class="form-group row">
+                                        <div class="col-lg-6">
+                                            <?php echo $this->Form->control('username', ['class' => 'form-control', 'id' => 'exampleSelect1', 'placeholder' => 'Enter username']); ?>
+                                            <div class="kt-input-icon">
+                                                <div class="kt-input-icon">
+                                        <span
+                                            class="kt-input-icon__icon kt-input-icon__icon--right"><span></span></span>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="col-lg-6">
+                                            <?php echo $this->Form->control('password', ['class' => 'form-control', 'id' => 'exampleSelect1', 'placeholder' => 'Enter password', 'type' => 'text']); ?>
+                                            <div class="kt-input-icon">
+                                                <span class="kt-input-icon__icon kt-input-icon__icon--right"><span></span></span>
+                                            </div>
+                                        </div>
+                                    </div>
                         </fieldset>
                     </div>
 

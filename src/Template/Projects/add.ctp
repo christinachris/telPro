@@ -115,7 +115,7 @@
 								<div class="form-group">
 									<label>Project Name</label>
 									<?php
-                                        echo $this->Form->control('project_name',['required'=>true,'label'=>false,'class'=>'form-control','style'=>'background:white']);
+                                        echo $this->Form->control('project_name',['required'=>true,'label'=>false,'class'=>'form-control','maxlength'=>50,'style'=>'background:white']);
                                      ?>
 									<span class="form-text text-muted">Please enter the project name.</span>
 								</div>
@@ -124,14 +124,14 @@
 								<div class="col-xl-6">
 								<div class="form-group">
 									<label>Start Date</label>
-
+									
 										<div class="input-group date">
 										                <?php echo $this->Form->control('start_date', [
 										                    'required'=>false,
                                                             'templates' => ['inputContainer' => '{{content}}'],
-                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 ',
+                                                            'class' => 'form-control col-lg-4 col-md-6 col-sm-12 datetimepicker_5',
                                                             'type' => 'text',
-                                                            'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
+                                                            //'id' => 'datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
                                                             'label' => false
                                                         ]); ?>
 											<div class="input-group-append">
@@ -139,9 +139,11 @@
 													<i class="la la-calendar"></i>
 												</span>
 											</div>
-										</div>
-
+										</div>									
 										<span class="form-text text-muted">Please enter the start date of the project.</span>
+									
+
+
 
 								</div>
 								</div>
@@ -154,9 +156,9 @@
 										                <?php echo $this->Form->control('end_date', [
 										                    'required'=>false,
                                                             'templates' => ['inputContainer' => '{{content}}'],
-                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 ',
+                                                            'class' => 'form-control col-lg-4 col-md-6 col-sm-12 datetimepicker_5',
                                                             'type' => 'text',
-                                                            'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
+                                                            //'id' => 'kt_datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
                                                             'label' => false
                                                         ]); ?>
 											<div class="input-group-append">
@@ -255,5 +257,16 @@
 
 
 
+<script type="text/javascript">
+$(function() {
 
+    $(".datetimepicker_5").datetimepicker({
+        format: "dd MM yyyy - HH:ii P",
+        showMeridian: true,
+        autoclose: true,
+        todayBtn: true,
+		todayHighlight: true
+    });
+});
+</script> 
 

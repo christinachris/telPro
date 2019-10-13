@@ -163,7 +163,9 @@ use Cake\Core\Configure;
                                     'data-toggle' => "kt-popover", 'data-content' => "View Task Board", 'data-placement' => 'bottom'
                                 ]); ?>
                             </td>
-                            <td><?= $this->Html->link($project->project_name, ['controller' => 'Projects', 'action' => 'edit', $project->id],['data-toggle' => "kt-popover", 'data-content' => "Edit Project", 'data-placement' => 'bottom']) ?></td>
+                                        <td style="text-align: center">
+                                            <span class="btn btn-block btn-label-brand btn-sm btn-bold" style="font-size: 13px  ;   background-color: rgba(113, 106, 202, 0.04);">  <?= $this->Html->link($project->project_name, ['controller' => 'Tasks', 'action' => 'index', $project->id,], ['data-toggle' => "kt-popover", 'data-content' => "View Task Board", 'data-placement' => 'bottom']) ?></span>
+                                        </td>							
                             <!--    <td><?= h($project->project_name) ?></td> -->
                             <td>
                                 <div class="progress" style="font-size: 15px ;height: 20px ; font-weight: 500">
@@ -176,16 +178,31 @@ use Cake\Core\Configure;
                                     </div>
                                 </div>
                             </td>
-                            <?php if($project->start_date!=null){ ?>
-                            <td><?php echo date_format($project->start_date, "d M Y "); ?></td>
-                            <?php } else{ ?>
-                            <td></td>
-                            <?php } ?>
-                            <?php if($project->end_date!=null){ ?>
-                            <td><?php echo date_format($project->end_date, "d M Y "); ?></td>
-                            <?php } else{ ?>
-                            <td></td>
-                            <?php } ?>
+                                        <?php if ($project->start_date != null) { ?>
+                                            <td><span
+                                                    class="btn btn-label-brand btn-sm btn-bold btn-upper" style=" background: transparent;  "><?php echo date_format($project->start_date, "d M Y "); ?></span>
+                                            </td>
+                                        <?php } else { ?>
+                                            <td></td>
+                                        <?php } ?>
+                                        <?php if ($project->end_date != null) {
+                                            $due_date = $project->end_date;
+                                            $sys_date = date_create_from_format('Y-m-d H:i:s', date('Y-m-d H:i:s'));
+                                            $datediff = date_diff($sys_date, $due_date);
+                                            if ($datediff->days < 10) {
+                                                ?>
+                                                <td><span
+                                                        class="btn btn-label-danger btn-sm btn-bold btn-upper" style=" background: transparent;"><?php echo date_format($project->end_date, "d M Y "); ?></span>
+                                                </td>
+                                            <?php } else { ?>
+                                                <td><span
+                                                        class="btn btn-label-brand btn-sm btn-bold btn-upper" style=" background: transparent; "><?php echo date_format($project->end_date, "d M Y "); ?></span>
+                                                </td>
+                                                <?php
+                                            }
+                                        } else { ?>
+                                            <td></td>
+                                        <?php } ?>
 
                             <td><?= $project->has('client') ? $this->Html->link($project->client->last_name . ' ' . $project->client->first_name, ['controller' => 'Clients', 'action' => 'view', $project->client->id],['data-toggle' => "kt-popover", 'data-content' => "View Client Details", 'data-placement' => 'bottom']) : '' ?></td>
                             <td>
@@ -201,7 +218,7 @@ use Cake\Core\Configure;
                             <td class="actions">
                                <?= $this->Html->link('', ['action' => 'unarchive', $project->id], ['confirm' => __('Are you sure you want to UNarchive this project?'), 'class' => "btn btn-lg btn-clean  la la-refresh",'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Unarchive Project", 'data-placement' => 'bottom']) ?>
 
-                               <?= $this->Form->postLink('  ', ['action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to DELETE this project?'), 'class' => "btn btn-lg btn-clean  la la-close",'style' => 'padding : 5px ; font-size: 25px; color:red', 'data-toggle' => "kt-popover", 'data-content' => "Delete Project", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $project->project_name)]) ?>
+                               <?= $this->Form->postLink('  ', ['action' => 'delete', $project->id], ['confirm' => __('Are you sure you want to DELETE this project?'), 'class' => "btn btn-lg btn-clean  la la-close",'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Delete Project", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $project->project_name)]) ?>
 
                             </td>
                         </tr>

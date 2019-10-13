@@ -158,7 +158,7 @@ $conn = ConnectionManager::get('default');
                                         <div class="col-lg-3">
                                             <div>
                                                 <?php echo $this->Form->control('lifecycle_stage',
-                                                    ['options' => array('' => '', 'Potential Lead' => 'Potential Lead','Offer Sent' => 'Offer Sent', 'Offer Accepted' => 'Offer Accepted','Project In Progress' => 'Project In Progress','Project Completed' => 'Project Completed ','Awaiting Payment' => 'Awaiting Payment', 'Business Closed' => 'Business Closed'),
+                                                    ['options' => array('' => '', 'Offer Sended' => 'Offer Sended', 'Awaiting Payment' => 'Awaiting Payment', 'Potential Lead' => 'Potential Lead', 'Contacted' => 'Contacted'),
                                                         'class' => 'form-control', 'id' => 'exampleSelect1']); ?>
                                             </div>
                                         </div>
@@ -189,7 +189,7 @@ $conn = ConnectionManager::get('default');
                                                     <td><?php echo $this->Form->control('Phones.' . '0' . '.title', ['placeholder' => 'Enter title', 'class' => 'form-control']) ?></td>
                                                     <td><?php echo $this->Form->control('Phones.' . '0' . '.phone_no', ['type' => 'text', 'pattern' => "[0-9]{5-20}", 'class' => 'form-control', 'style' => 'margin-left:20%;', 'label' => ['style' => 'margin-left:20%;']]) ?></td>
                                                     <td>
-                                                        <br><?php echo $this->Form->control('Phones.' . '0' . '.is_primary', ['label' => '<span style="padding:0 5px 0 5px;">Primary</span>', 'escape' => false, 'type' => 'checkbox', 'style' => 'margin-left:80px;margin-top:15px;']) ?>
+                                                        <br><?php echo $this->Form->control('Phones.' . '0' . '.is_primary', ['label' => '<span style="padding:0 5px 0 5px;">Primary</span>', 'escape' => false, 'type' => 'checkbox', 'style' => 'margin-left:50px;margin-top:15px;']) ?>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -213,7 +213,7 @@ $conn = ConnectionManager::get('default');
                                                     <td><?php echo $this->Form->control('Emails.' . '0' . '.title', ['placeholder' => 'Enter title', 'class' => 'form-control']) ?></td>
                                                     <td><?php echo $this->Form->control('Emails.' . '0' . '.email_address', ['type' => 'email', 'class' => 'form-control', 'style' => 'margin-left:20%;', 'label' => ['style' => 'margin-left:20%;']]) ?></td>
                                                     <td>
-                                                        <br><?php echo $this->Form->control('Emails.' . '0' . '.is_primary', ['label' => '<span style="padding:0 5px 0 5px;">Primary</span>', 'escape' => false, 'type' => 'checkbox', 'style' => 'margin-left:80px;margin-top:15px;']) ?>
+                                                        <br><?php echo $this->Form->control('Emails.' . '0' . '.is_primary', ['label' => '<span style="padding:0 5px 0 5px;">Primary</span>', 'escape' => false, 'type' => 'checkbox', 'style' => 'margin-left:50px;margin-top:15px;']) ?>
                                                     </td>
                                                 </tr>
                                             </table>
@@ -263,7 +263,7 @@ $conn = ConnectionManager::get('default');
                         $('#dynamic_field').append('<tr id="row' + i + '">' +
                             '<td><br><input type="text" placeholder="Enter title" name="Phones[' + (i - 1) + '][title]" class="form-control name_list" /></td>' +
                             '<td><br><input style="margin-left:20%;" type="tel" name="Phones[' + (i - 1) + '][phone_no]" class="form-control name_list" /></td>' +
-                            '<td><br><input style="margin-left:80px; margin-top:15px;" type="checkbox" name="Phones[' + (i - 1) + '][is_primary]" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
+                            '<td><br><input style="margin-left:50px; margin-top:15px;" type="checkbox" name="Phones[' + (i - 1) + '][is_primary]" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
                             '<td><br><button style="margin-left:50%;" type="button" name="remove" id="' + i + '" class=" btn_remove btn btn-danger btn-elevate btn-pill btn-sm">Delete</button></td></tr>');
                     });
                     $(document).on('click', '.btn_remove', function () {
@@ -281,7 +281,7 @@ $conn = ConnectionManager::get('default');
                         $('#dynamic_field2').append('<tr id="roww' + i + '">' +
                             '<td><br><input type="text" placeholder="Enter title" name="Emails[' + (i - 1) + '][title]" class="form-control name_list" /></td>' +
                             '<td><br><input style="margin-left:20%;" type="text" name="Emails[' + (i - 1) + '][email_address]" class="form-control name_list" /></td>' +
-                            '<td><br><input style="margin-left:80px; margin-top:15px;" type="checkbox" name="Emails[' + (i - 1) + '][is_primary]" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
+                            '<td><br><input style="margin-left:50px; margin-top:15px;" type="checkbox" name="Emails[' + (i - 1) + '][is_primary]" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
                             '<td><br><button style="margin-left:50%;" type="button" name="remove" id="' + i + '" class=" btnremove btn btn-danger btn-elevate btn-pill btn-sm">Delete</button></td></tr>');
                     });
                     $(document).on('click', '.btnremove', function () {

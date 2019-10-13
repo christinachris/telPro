@@ -155,7 +155,6 @@ $conn = ConnectionManager::get('default');
                                         <thead>
                                         <tr>
                                             <th style="width: 3%"><?= __('') ?></th>
-                                            <th style="width: 14%"><?= __('Lifecycle Stage') ?></th>
                                             <th style="width: 10%"><?= $this->Paginator->sort('first_name', 'Full name') ?></th>
                                             <th style="width: 10%"><?= $this->Paginator->sort('preferred_name') ?></th>
                                             <th style="width: 10%"><?= $this->Paginator->sort('phone_no') ?></th>
@@ -163,6 +162,7 @@ $conn = ConnectionManager::get('default');
                                             <th style="width: 18%"><?= $this->Paginator->sort('contact_owner') ?></th>
                                             <th style="width: 18%"><?= $this->Paginator->sort('company_name') ?></th>
                                             <th style="width: 10%"><?= $this->Paginator->sort('Last Contacted Date') ?></th>
+                                            <th style="width: 14%"><?= __('Lifecycle Stage') ?></th>
                                             <th style="width: 10%" class="actions"><?= __('Actions') ?></th>
                                             <th style="width: 10%"><?= __('Shortcuts') ?></th>
 
@@ -174,20 +174,20 @@ $conn = ConnectionManager::get('default');
 
 
                                                 <td>
-                                                    <?php $aaa=3;
-                                                        foreach ($client->activities as $activities):
-                                                        if ($activities->activity_flag==1):
-                                                            $aaa=1;
-                                                        endif;
-                                                        endforeach;
+<?php $aaa=3;
+foreach ($client->activities as $activities):
+if ($activities->activity_flag==1):
+    $aaa=1;
+endif;
+endforeach;
 
-                                                        foreach ($client->client_notes as $clientNotes):
-                                                        if($clientNotes->client_note_flag==1):
-                                                            $aaa=1;
-                                                        endif;
-                                                        endforeach;
+foreach ($client->client_notes as $clientNotes):
+if($clientNotes->client_note_flag==1):
+    $aaa=1;
+endif;
+endforeach;
 
-                                                    ?>
+?>
                                                     <?php if ($aaa == 1): ?>
 
                                                         <i class="flaticon-bell" style="font-size:30px;width: 3%;color:indianred"></i>
@@ -195,37 +195,6 @@ $conn = ConnectionManager::get('default');
                                                         <?= h("") ?>
                                                     <?php endif; ?>
 
-
-                                                </td>
-                                                <td>
-
-                                                    <?php if ($client->lifecycle_stage == 'Offer Sent'): ?>
-
-                                                        <i class="flaticon-envelope" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Offer Sent" data-placement='bottom'></i>
-                                                    <?php endif; ?>
-                                                    <?php if ($client->lifecycle_stage == 'Awaiting Payment'): ?>
-                                                        <i class="flaticon2-list" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Awaiting Payment" data-placement='bottom'></i>
-                                                    <?php endif; ?>
-
-                                                    <?php if ($client->lifecycle_stage == 'Offer Accepted'): ?>
-                                                        <i class="flaticon2-notepad" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Offer Accepted" data-placement='bottom'></i>
-
-                                                    <?php endif; ?>
-                                                    <?php if ($client->lifecycle_stage == 'Project In Progress'): ?>
-                                                        <i class="flaticon2-chart" style="font-size:25px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Project In Progress" data-placement='bottom'></i>
-                                                    <?php endif; ?>
-                                                    <?php if ($client->lifecycle_stage == 'Project Completed'): ?>
-                                                    <i class="flaticon2-calendar-5" style="font-size:25px;width: 3%;font-weight: bold;color:#00e6b8" data-toggle="kt-popover" data-content="Project Completed" data-placement='bottom'></i>
-                                                    <?php endif; ?>
-
-                                                    <?php if ($client->lifecycle_stage == 'Potential Lead'): ?>
-                                                        <i class="flaticon2-percentage" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Potential Lead" data-placement='bottom'></i>
-
-                                                    <?php endif; ?>
-
-                                                    <?php if ($client->lifecycle_stage == 'Business Closed'): ?>
-                                                        <i class="flaticon-customer" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Business Closed" data-placement='bottom'></i>
-                                                    <?php endif; ?>
 
                                                 </td>
                                                 <td><?= $this->Html->link(h($client->first_name) . ' ' . h($client->last_name), ['action' => 'view', $client->id]) ?></td>
@@ -254,7 +223,29 @@ $conn = ConnectionManager::get('default');
                                                     <?php }; ?>
                                                 </td>
 
+                                                <td>
 
+
+                                                    <?php if ($client->lifecycle_stage == 'Offer Sended'): ?>
+
+                                                        <i class="flaticon-envelope" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Offer Sended" data-placement='bottom'></i>
+
+
+                                                    <?php endif; ?>
+                                                    <?php if ($client->lifecycle_stage == 'Awaiting Payment'): ?>
+                                                        <i class="flaticon2-list" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Awaiting Payment" data-placement='bottom'></i>
+                                                    <?php endif; ?>
+
+                                                    <?php if ($client->lifecycle_stage == 'Potential Lead'): ?>
+                                                        <i class="flaticon2-percentage" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Potential Lead" data-placement='bottom'></i>
+
+                                                    <?php endif; ?>
+
+                                                    <?php if ($client->lifecycle_stage == 'Contacted'): ?>
+                                                        <i class="flaticon2-talk" style="font-size:30px;width: 3%;color:#00e6b8" data-toggle="kt-popover" data-content="Contacted" data-placement='bottom'></i>
+                                                    <?php endif; ?>
+
+                                                </td>
                                                 <td class="kt-datatable__cell--left kt-datatable__cell" data-field="Actions" data-autohide-disabled="false">
                                                     <a>
                                                         <!--<?= $this->Html->link('<span class="btn btn-sm btn-clean btn-icon btn-icon-sm" style="margin-left:-5%"><i class="flaticon2-note"></i></span>', ['action' => 'edit', $client->id],['escape' => false,'data-toggle'=>"kt-popover",'data-content'=>"Edit Client",'data-placement'=>'bottom']) ?>-->
@@ -403,12 +394,12 @@ $conn = ConnectionManager::get('default');
 
                                                                                         <div class="form-group row">
                                                                                             <div class="col-lg-4">
-                                                                                                <?php echo $this->Form->control('type', ['class' => 'form-control', 'empty' => '--select--', 'options' => array('' => '', 'Potential Lead' => 'Potential Lead','Offer Sent' => 'Offer Sent', 'Offer Accepted' => 'Offer Accepted','Project In Progress' => 'Project In Progress','Project Completed' => 'Project Completed ','Awaiting Payment' => 'Awaiting Payment', 'Business Closed' => 'Business Closed')]); ?>
+                                                                                                <?php echo $this->Form->hidden('type', ['class' => 'form-control', 'empty' => '--select--', 'options' => array('' => '', 'Email' => 'Email', 'Phone Call' => 'Phone Call')]); ?>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group row">
                                                                                             <div class="col-lg-4">
-                                                                                                <?php echo $this->Form->hidden('client_id', ['class' => 'form-control', 'type' => 'textarea', 'id' => 'client_note_id']); ?>
+                                                                                                <?php echo $this->Form->control('client_id', ['class' => 'form-control', 'type' => 'textarea', 'id' => 'client_note_id']); ?>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group row">
@@ -491,9 +482,6 @@ $conn = ConnectionManager::get('default');
                         </div>
                     </div>
                 </div>
-
-                <!--this js file is requied for shortcut function-->
-                <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
 
 
                 <script>

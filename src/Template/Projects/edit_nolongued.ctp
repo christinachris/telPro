@@ -13,7 +13,8 @@
 
 <?php use Cake\Routing\Router; ?>
 <?php use Cake\I18n\Time; ?>
-<?= $this->Html->script('general\bootstrap-datetimepicker\js\bootstrap-datetimepicker.js') ?>
+
+
 
 <!-- begin:: Add.ctp -->
 <link href="http://harvesthq.github.io/chosen/chosen.css" rel="stylesheet" />
@@ -25,9 +26,6 @@
   <link rel="stylesheet" href="/resources/demos/style.css">
   <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
   <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-  
-  
-
 
 
 
@@ -69,7 +67,7 @@
 <div class="kt-subheader   kt-grid__item" id="kt_subheader">
     <div class="kt-subheader__main">
         <?= $this->Flash->render() ?>
-        <a href="<?php echo $this->Url->build(["controller" => "projects", "action" => "index"]); ?>"
+        <a href="<?php echo $this->Url->build(["controller" => "dashboard", "action" => "index"]); ?>"
         <h3 class="kt-subheader__title">
             Dashboard </h3>
         </a>
@@ -123,7 +121,7 @@
 								<div class="form-group">
 									<label>Project Name</label>
 									<?php
-                                        echo $this->Form->control('project_name',['required'=>true,'label'=>false,'class'=>'form-control','maxlength'=>50,'style'=>'background:white']);
+                                        echo $this->Form->control('project_name',['required'=>true,'label'=>false,'class'=>'form-control','style'=>'background:white']);
                                      ?>
 									<span class="form-text text-muted">Please enter the project name.</span>
 								</div>
@@ -137,37 +135,23 @@
 										<div class="input-group date">
                                             <?php if($project->start_date!=null){ ?>
 										                <?php echo $this->Form->control('start_date', [
-										                    //'value'=>$project->start_date->i18nFormat('yyyy/MM/dd HH:mm'),
-															'value'=>$project->start_date->i18nFormat('dd MMMM yyyy - hh:mm aaa'),
-															//'value'=>  date('d M Y - h:m A', strtotime($project->start_date)),
+										                    //'value' => $project->end_date->i18nFormat('d MMMM y - h:mm aa'),
+															'value'=>$project->start_date->i18nFormat('yyyy/MM/dd HH:mm'),
 										                    'required'=>false,
                                                             'templates' => ['inputContainer' => '{{content}}'],
-                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 datetimepicker_5',
+                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 ',
                                                             'type' => 'text',
-                                                           // 'id' => 'kt_datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
+                                                            'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
                                                             'label' => false
 
-                                                        ]); 
-														/*$start_date=date('Y-m-d h:i:s',strtotime($this->Form->control('start_date', [
-										                    //'value'=>$project->start_date->i18nFormat('yyyy/MM/dd HH:mm'),
-															'value'=>  $project->start_date->i18nFormat('dd MMMM yyyy - hh:mm aaa'),
-															//'value'=>  date('d M Y - h:m A', strtotime($project->start_date)),
-										                    'required'=>false,
-                                                            'templates' => ['inputContainer' => '{{content}}'],
-                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12',
-                                                            'type' => 'text',
-                                                            'id' => 'kt_datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
-                                                            'label' => false
-
-                                                        ])));*/
-														?>
+                                                        ]); ?>
                                             <?php } else{ ?>
                                             <?php echo $this->Form->control('start_date', [
                                             'required'=>false,
                                             'templates' => ['inputContainer' => '{{content}}'],
-                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 datetimepicker_5',
+                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 ',
                                             'type' => 'text',
-                                            //'id' => 'kt_datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
+                                            'id' => 'kt_datetimepicker_2', // this ID is fixed, using for Helper Datepicker !
                                             'label' => false
                                             ]); ?>
                                             <?php }?>
@@ -189,13 +173,12 @@
 										<div class="input-group date">
                                             <?php if($project->end_date!=null){ ?>
 										                <?php echo $this->Form->control('end_date', [
-										                    //'value' => $project->end_date->i18nFormat('yyyy/MM/dd HH:mm'),
-															'value'=>$project->end_date->i18nFormat('dd MMMM yyyy - hh:mm aaa'),
+										                    'value' => $project->end_date->i18nFormat('dd/MM/yyyy hh:mm'),
 										                    'required'=>false,
                                                             'templates' => ['inputContainer' => '{{content}}'],
-                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 datetimepicker_5',
+                                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 ',
                                                             'type' => 'text',
-                                                            //'id' => 'kt_datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
+                                                            'id' => 'datetimepicker4', // this ID is fixed, using for Helper Datepicker !
                                                             'label' => false,
 
                                                         ]); ?>
@@ -203,9 +186,9 @@
                                             <?php echo $this->Form->control('end_date', [
                                             'required'=>false,
                                             'templates' => ['inputContainer' => '{{content}}'],
-                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 datetimepicker_5',
+                                            'class' => 'input-group date form-control col-lg-4 col-md-6 col-sm-12 ',
                                             'type' => 'text',
-                                            //'id' => 'kt_datetimepicker_5', // this ID is fixed, using for Helper Datepicker !
+                                            'id' => 'datetimepicker4', // this ID is fixed, using for Helper Datepicker !
                                             'label' => false
                                             ]); ?>
                                             <?php }?>
@@ -215,6 +198,7 @@
 												</span>
 											</div>
 										</div>
+
 										<span class="form-text text-muted">Please enter the end date of the project.</span>
 									    <?php if(isset($errorDate))
                   							  { ?>
@@ -295,6 +279,11 @@
 </div>
 </div>
 
+<?= $this->Html->script('app/custom/general/crud/forms/widgets/bootstrap-datetimepicker.js') ?>
+
+<?= $this->Html->css('general/bootstrap-datetime-picker/css/bootstrap-datetimepicker.css') ?>
+
+
 <script>
     $(document).ready(function() {
         $(".chosen-select-width").chosen({
@@ -306,16 +295,11 @@
 
 </script>
 
-<script type="text/javascript">
-$(function() {
 
-    $(".datetimepicker_5").datetimepicker({
-        format: "dd MM yyyy - HH:ii P",
-        showMeridian: true,
-        autoclose: true,
-        todayBtn: true,
-		todayHighlight: true
-    });
-});
-</script> 
-
+<script>
+    $('#datetimepicker4').datetimepicker({
+       format: 'dd/mm/yyyy hh:ii',
+	   autoclose: true,
+	   todayHighlight: true
+     });
+</script>

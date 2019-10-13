@@ -17,7 +17,7 @@ License: You must have a valid license purchased only from themeforest(the above
 <!-- begin::Head -->
 <head>
     <meta charset="utf-8" />
-    <title>Set My Brand Up Login</title>
+    <title>Metronic | Login Page v2</title>
     <meta name="description" content="Login page example">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 

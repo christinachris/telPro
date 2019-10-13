@@ -224,30 +224,36 @@ $conn = ConnectionManager::get('default');
                                                         style="margin-bottom: 8px">
                         <?= $project->has('talents') ? $this->Html->link($talent->first_name . ' ' . $talent->last_name, ['controller' => 'Talents', 'action' => 'view', $talent->id], ['class' => 'alinkcolor', 'data-toggle' => "kt-popover", 'data-content' => "View Talent Details", 'data-placement' => 'bottom']) : '' ?>
                         </span>
-                                    <?php } ?>
-                                </div>
-                            </td>
-                            <td class="actions">
-                                 <?= $this->Html->link($this->Html->tag('i', '', array('class' => 'btn btn-lg btn-clean  la la-edit', 'style' => 'padding : 5px ; font-size: 25px','data-toggle' => "kt-popover", 'data-content' => "Edit Project", 'data-placement' => 'bottom')) . '', array('controller' => 'projects', 'action' => 'edit', $project->id), array('escape' => false)) ?>
+                                                <?php } ?>
+                                            </div>
+                                        </td>
+                                        <td class="actions">
+                                            <?= $this->Html->link($this->Html->tag('i', '', array('class' => 'btn btn-lg btn-clean  la la-edit', 'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Edit Project", 'data-placement' => 'bottom')) . '', array('controller' => 'projects', 'action' => 'edit', $project->id), array('escape' => false)) ?>
 
-                                <?= $this->Form->postLink(' ', ['action' => 'archive', $project->id], ['confirm' => __('Are you sure you want to archive this project?'), 'class' => "btn btn-lg btn-clean  la la-archive",'style' => 'padding : 5px ; font-size: 25px; color:red', 'data-toggle' => "kt-popover", 'data-content' => "Archive Project", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $project->project_name)]) ?>
+                                            <?= $this->Form->postLink(' ', ['action' => 'archive', $project->id], ['confirm' => __('Are you sure you want to archive this project?'), 'class' => "btn btn-lg btn-clean  la la-archive", 'style' => 'padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Archive Project", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?', $project->project_name)]) ?>
 
-                            </td>
-                        </tr>
-                    <?php endforeach; ?>
-                    </tbody>
-                </table>
+                                        </td>
+                                    </tr>
+                                <?php endforeach; ?>
+                                </tbody>
+                            </table>
 
-                <div class="kt-pagination  kt-pagination--brand" style="margin: 10px">
-                    <ul class="kt-pagination__links">
-                        <div class="kt-pagination__link--first">
-                            <?= $this->Paginator->first('<i class="fa fa-angle-double-left kt-font-brand"></i> ', ['escape' => false]) ?>
+                            <div class="kt-pagination  kt-pagination--brand" style="margin: 10px">
+                                <ul class="kt-pagination__links">
+                                    <div class="kt-pagination__link--first">
+                                        <?= $this->Paginator->first('<i class="fa fa-angle-double-left kt-font-brand"></i> ', ['escape' => false]) ?>
+                                    </div>
+                                    <?= $this->Paginator->prev('<i class="fa fa-angle-left kt-font-brand"></i> ', ['escape' => false]) ?>
+                                    <?= $this->Paginator->numbers() ?>
+                                    <?= $this->Paginator->next('<i class="fa fa-angle-right kt-font-brand"></i>', ['escape' => false]) ?>
+                                    <?= $this->Paginator->last('<i class="fa fa-angle-double-right kt-font-brand"></i>', ['escape' => false]) ?>
+                                </ul>
+                                <p><?= $this->Paginator->counter(['format' => __('Page {{page}} of {{pages}}, showing {{current}} record(s) out of {{count}} total')]) ?></p>
+                            </div>
                         </div>
                     </div>
                 </div>
                 <?php }?>
-                    </div>
-                </div>
             </div>
             <style>
                 .kt-pagination {

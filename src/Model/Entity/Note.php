@@ -25,8 +25,8 @@ class Note extends Entity
      */
     protected $_accessible = [
         'note_desc' => true,
-        'user_id' => true,
+        'talent_id' => true,
         'modify_date' => true,
-        'user' => true
+        'talent' => true
     ];
 }

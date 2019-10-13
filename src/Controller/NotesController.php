@@ -50,30 +50,31 @@ class NotesController extends AppController
      */
     public function add()
     {
-        $note = $this->Notes->newEntity();
+        $note = $this->Notes->newEntity();	
         if ($this->request->is('post')) {
             $note = $this->Notes->patchEntity($note, $this->request->getData());
-            $errorMessage=false;
-            if(strlen($note)>5000){
+			$errorMessage=false;
+			if(strlen($note)>4000){
                 //$this->set('errors','Characters exceed the upper limit');
-                $errorMessage = true;
-            }
-            if($errorMessage){
-                //$this->set('errors','Characters exceed the upper limit');
-                $this->Flash->error(__('The note could not be saved. Characters exceed the upper limit.'));
-                return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
-            }
+                $errorMessage=true;				
+			}
+			if($errorMessage){
+				//$this->set('errors','Characters exceed the upper limit');
+				$this->Flash->error(__('The note could not be saved. Characters exceed the upper limit.'));
+				return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
+			}
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
 
                 return $this->redirect(['action' => 'index']);
             }else{
-                $this->Flash->error(__('The note could not be saved. Please, try again.'));
-            }
+            $this->Flash->error(__('The note could not be saved. Please, try again.'));
+			}
         }
         $users = $this->Notes->Users->find('list', ['limit' => 200]);
         $this->set(compact('note', 'users'));
     }
+
     /**
      * Edit method
      *
@@ -83,28 +84,28 @@ class NotesController extends AppController
      */
     public function edit($id = null)
     {
-        $this->autoRender =false;
+         $this->autoRender =false;
         $note = $this->Notes->newEntity();
-        $errorMessage=false;
+		$errorMessage=false;	
         if ($this->request->is(['patch', 'post', 'put'])) {
             $note = $this->Notes->patchEntity($note, $this->request->getData());
-            $errorMessage=false;
-            if(strlen($this->request->getData()['note_desc'])>4000){
+			$errorMessage=false;
+			if(strlen($this->request->getData()['note_desc'])>4000){
                 //$this->set('errors','Characters exceed the upper limit');
-                $errorMessage=true;
-            }
-            if($errorMessage){
-                //$this->set('errors','Characters exceed the upper limit');
-                $this->Flash->error(__('The note could not be saved. Characters exceed the upper limit.'));
-                return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
-            }
+                $errorMessage=true;				
+			}
+			if($errorMessage){
+				//$this->set('errors','Characters exceed the upper limit');
+				$this->Flash->error(__('The note could not be saved. Characters exceed the upper limit.'));
+				return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
+			}
             if ($this->Notes->save($note)) {
                 $this->Flash->success(__('The note has been saved.'));
                 return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
             }else{
-                $this->Flash->error(__('The note could not be saved. Please, try again.'));
-                return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
-            }
+					$this->Flash->error(__('The note could not be saved. Please, try again.'));          			
+			return $this->redirect(["controller" => 'Dashboard','action' => 'index']);
+			}
         }
         $users = $this->Notes->Users->find('list', ['limit' => 200]);
         $this->set(compact('note', 'users'));

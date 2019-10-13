@@ -119,7 +119,7 @@ $conn = ConnectionManager::get('default');
                                             </a>
                                             <div style="margin-right: ;float:right;">
                                                 <a >
-                                                    <?= $this->Html->link('<span class="btn btn-secondary" ><i class="flaticon2-note"></i>Edit</span>', ['action' => 'edit', $client->id], ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "Edit Client", 'data-placement' => 'bottom']) ?>
+                                                    <?= $this->Html->link('<span class="btn btn-sm btn-clean btn-icon btn-icon-sm" ><i class="flaticon2-note"></i></span>', ['action' => 'edit', $client->id], ['escape' => false, 'data-toggle' => "kt-popover", 'data-content' => "Edit Client", 'data-placement' => 'bottom']) ?>
 
                                                 </a></div>
                                             <div class="kt-wizard-v3__content" data-ktwizard-type="step-content"
@@ -152,15 +152,15 @@ $conn = ConnectionManager::get('default');
                                                                     <?php if (!empty($client->phones)): ?>
 
                                                                         <?php foreach ($client->phones as $phones): ?>
-                                                                            <a> <?= h($phones->phone_no) ?>
+                                                                            <a>Title</a>: <?= h($phones->title) . '  ' ?>,  Phone no: <?= h($phones->phone_no) ?>
                                                                             <br>
                                                                         <?php endforeach; ?>
                                                                     <?php endif; ?></h5><br>
                                                                 Email address:<br><h5>
                                                                     <?php if (!empty($client->emails)): ?>
                                                                         <?php foreach ($client->emails as $emails): ?>
-                                                                             <?= h($emails->email_address) ?>
-
+                                                                            Title: <?= h($emails->title) . '  ' ?>, Email address: <?= h($emails->email_address) ?>
+                                                                            <br><br>
                                                                         <?php endforeach; ?>
                                                                     <?php endif; ?></h5><br>
 
@@ -168,14 +168,7 @@ $conn = ConnectionManager::get('default');
                                                                 Url Address: <br><h5><?= h($client->address_url) ?></h5><br>
                                                                 Credential:<br><h5> <?= h($client->credential) ?></h5><br>
                                                                 Lifecycle Stage:<br><h5> <?= h($client->lifecycle_stage) ?></h5><br>
-
-                                                                Last Contacted Date:<br>
-
-                                                                    <?php if($client->last_contactdate!=null){ ?>
-                                                                    <h5><?php echo date_format($client->last_contactdate, 'd/m/Y'); ?> </h5>
-                                                                    <?php }?>
-
-                                                                <br>
+                                                                Last Contacted Date:<br><h5> <?= h($client->last_contactdate) ?></h5><br>
 
 
 
@@ -236,7 +229,7 @@ $conn = ConnectionManager::get('default');
 
                                             <!--end: Form Wizard Nav -->
                                         </div>
-                                        <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v3__wrapper" >
+                                        <div class="kt-grid__item kt-grid__item--fluid kt-wizard-v3__wrapper" style="width: 120%; float: left">
 
                                             <!--begin: Form Wizard Form-->
                                             <form id="kt_form">
@@ -245,11 +238,11 @@ $conn = ConnectionManager::get('default');
                                                 <div class="kt-wizard-v3__content" data-ktwizard-type="step-content"
                                                      data-ktwizard-state="current">
                                                     <div class="col-xl-12 kt-scroll ps ps--active-y">
-                                                        <div class="kt-portlet__body">
+                                                        <div class="kt-portlet__body" style="width: 130%; float: left; margin-left: -10%">
 
-                                                            <div class="row" >
+                                                            <div class="row" style="width: 90%;">
                                                                 <div class="col-xl-4"
-                                                                     style="margin-left: 60%; float:right;">
+                                                                     style="margin-left: auto; float:right;">
                                                                     <?php echo $this->Html->link('<span class="btn btn-primary" style="float:right" ><i class="flaticon2-plus"></i>Add Note</span>',
                                                                         array('type' => 'button'), ['escape' => false, 'data-target' => '#kt_modal_6note', 'data-toggle' => 'modal'])
                                                                     ?>
@@ -257,8 +250,8 @@ $conn = ConnectionManager::get('default');
                                                                 </div>
 
 
-                                                                <div class="col-lg-12" data-scroll="true" data-height="700"
-                                                                     style="height: 700px; overflow: hidden; ">
+                                                                <div class="col-lg-12" data-scroll="true" data-height="500"
+                                                                     style="height: 500px; overflow: hidden; ">
 
                                                                     <div
                                                                         class="kt-timeline-v1 kt-timeline-v1--justified"
@@ -268,13 +261,17 @@ $conn = ConnectionManager::get('default');
 
                                                                                 <div class="kt-timeline-v1__items"
                                                                                      style="margin-bottom: -5%;">
-                                                                                    <div class="kt-timeline-v1__marker"></div>
-                                                                                    <div class="kt-timeline-v1__item kt-timeline-v1__item--first">
-                                                                                        <div class="kt-timeline-v1__item-circle">
-                                                                                            <div class="kt-bg-danger"></div>
+                                                                                    <div
+                                                                                        class="kt-timeline-v1__marker"></div>
+                                                                                    <div
+                                                                                        class="kt-timeline-v1__item kt-timeline-v1__item--first">
+                                                                                        <div
+                                                                                            class="kt-timeline-v1__item-circle">
+                                                                                            <div
+                                                                                                class="kt-bg-danger"></div>
                                                                                         </div>
                                                                                         <span class=" kt-font-brand">
-															                                <b><?php echo date_format($clientNotes->create_date,'d/m/Y H:m') ?></b></span>
+															                                                                <b><?php echo date_format($clientNotes->create_date,'d/m/Y H:m') ?></b></span>
 
                                                                                         <div
                                                                                             class="kt-timeline-v1__item-content"
@@ -282,7 +279,7 @@ $conn = ConnectionManager::get('default');
                                                                                             <div class="kt-timeline-v1__item-title ">
                                                                                                 <div style="float: right; ">
                                                                                                     <button
-                                                                                                        class="editNoteButton btn btn-sm btn-clean btn-icon btn-icon-sm" id="<?php echo $clientNotes->id ?>"
+                                                                                                        class="editNoteButton btn btn-sm btn-clean btn-icon btn-icon-sm"
                                                                                                         data-note-id="<?php echo $clientNotes->id ?>"
 
                                                                                                         data-note-content="<?php echo $clientNotes->content ?>">
@@ -407,43 +404,49 @@ $conn = ConnectionManager::get('default');
                                                 <!-- modal -->
 
                                                 <!--begin: Form Wizard Step 2-->
-                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content"
-                                                     data-ktwizard-state="current">
+                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content">
                                                     <div class="col-xl-12 kt-scroll ps ps--active-y">
                                                         <div class="kt-portlet__body">
 
-                                                            <div class="row" >
-                                                                <div class="col-xl-4"
-                                                                     style="margin-left: 60%; float:right;">
+                                                            <div class="row">
+                                                                <div class="col-xl-10"></div>
+                                                                <div class="col-xl-6"
+                                                                     style="margin-left: 50%; float:right;">
                                                                     <?php echo $this->Html->link('<span class="btn btn-primary" style="float:right"><i class="flaticon2-plus"></i>Add Activity</span>',
                                                                         array('type' => 'button'), ['escape' => false, 'data-target' => '#kt_modal_6', 'data-toggle' => 'modal'])
                                                                     ?>
+                                                                    <!--?php echo $this->Html->link('<span class="btn btn-primary" style="float:right"><i class="flaticon2-plus"></i>Edit Activity</span>',
+                                                                        array('type'=> 'button'),['escape'=>false, 'data-target'=>'#editactivity','data-toggle'=>'modal'])
+                                                                    ?-->
 
                                                                 </div>
 
 
-                                                                <div class="col-lg-12" data-scroll="true" data-height="700"
-                                                                     style="height: 700px; overflow: hidden; ">
+                                                                <div data-scroll="true" data-height="500"
+                                                                     style="height: 500px; overflow: hidden; width:600px;">
 
-                                                                    <div
-                                                                        class="kt-timeline-v1 kt-timeline-v1--justified"
-                                                                        style="margin-left:5%;">
+                                                                    <div class="kt-timeline-v1 kt-timeline-v1--justified" style="margin-left:5%;">
                                                                         <?php if (!empty($client->activities)): ?>
                                                                             <?php foreach (array_reverse($client->activities) as $activity): ?>
-
                                                                                 <div class="kt-timeline-v1__items"
                                                                                      style="margin-bottom: -5%;">
-                                                                                    <div class="kt-timeline-v1__marker"></div>
-                                                                                    <div class="kt-timeline-v1__item kt-timeline-v1__item--first">
-                                                                                        <div class="kt-timeline-v1__item-circle">
-                                                                                            <div class="kt-bg-danger"></div>
+                                                                                    <div
+                                                                                        class="kt-timeline-v1__marker"></div>
+                                                                                    <div
+                                                                                        class="kt-timeline-v1__item kt-timeline-v1__item--first">
+                                                                                        <div
+                                                                                            class="kt-timeline-v1__item-circle">
+                                                                                            <div
+                                                                                                class="kt-bg-danger"></div>
                                                                                         </div>
-                                                                                        <span class=" kt-font-brand">
-															                                <b><?php echo date_format($activity->create_date,'d/m/Y H:m') ?></b></span>
 
+                                                                                        <span class=" kt-font-brand">
+															                                                                <b><?php echo date_format($activity->create_date,'d/m/Y H:m') ?></b></span>
                                                                                         <div
                                                                                             class="kt-timeline-v1__item-content"
                                                                                             style="max-width: 90%;">
+
+
                                                                                             <div class="kt-timeline-v1__item-title ">
                                                                                                 <?php if ($activity->type == 'Phone Call'): ?>
                                                                                                     <i class="flaticon2-phone" style="font-size:30px;width: 3%;color:#00e6b8" ></i>
@@ -451,15 +454,7 @@ $conn = ConnectionManager::get('default');
                                                                                                 <?php if ($activity->type == 'Email'): ?>
                                                                                                     <i class="flaticon2-envelope" style="font-size:30px;width: 3%;color:#00e6b8" ></i>
                                                                                                 <?php endif; ?>
-                                                                                                <?php if ($activity->type == 'Virtual Meeting'): ?>
-                                                                                                    <i class="flaticon-network" style="font-size:30px;width: 3%;color:#00e6b8" ></i>
-                                                                                                <?php endif; ?>
-                                                                                                <?php if ($activity->type == 'Meeting'): ?>
-                                                                                                    <i class="flaticon-presentation" style="font-size:30px;width: 3%;color:#00e6b8" ></i>
-                                                                                                <?php endif; ?>
-                                                                                                <?php if ($activity->type == 'Text Message'): ?>
-                                                                                                    <i class="flaticon2-chat-1" style="font-size:30px;width: 3%;color:#00e6b8" ></i>
-                                                                                                <?php endif; ?>
+
 
                                                                                                 <div style="float: right;">
 
@@ -486,8 +481,9 @@ $conn = ConnectionManager::get('default');
                                                                                             </div>
 
                                                                                             <div
-                                                                                                class="kt-timeline-v1__item-body "
-                                                                                                style="word-wrap:break-word;">
+                                                                                                class="kt-timeline-v1__item-body"
+                                                                                                style=" word-wrap:break-word;">
+
                                                                                                 <p>
                                                                                                     <?= h($activity->summary) ?>
                                                                                                 </p>
@@ -585,9 +581,7 @@ $conn = ConnectionManager::get('default');
 
                                                                             <?php endforeach; ?>
 
-                                                                        <?php endif; ?>
-
-                                                                    </div>
+                                                                        <?php endif; ?></div>
 
 
                                                                 </div>
@@ -597,20 +591,36 @@ $conn = ConnectionManager::get('default');
 
                                                         </div>
                                                     </div>
+
+
+                                                    <!--Begin::Timeline 3 -->
+
+
+                                                    <!--End::Timeline 3 -->
+                                                    <div class="ps__rail-x" style="left: 0px; bottom: 0px;">
+                                                        <div class="ps__thumb-x" tabindex="0"
+                                                             style="left: 0px; width: 0px;"></div>
+                                                    </div>
+                                                    <div class="ps__rail-y"
+                                                         style="top: 0px; height: 380px; right: 0px;">
+                                                        <div class="ps__thumb-y" tabindex="0"
+                                                             style="top: 0px; height: 300px;"></div>
+                                                    </div>
                                                 </div>
 
 
                                                 <!--end: Form Wizard Step 2-->
 
                                                 <!--begin: Form Wizard Step 3-->
-                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content"
-                                                     data-ktwizard-state="current">
+                                                <div class="kt-wizard-v3__content" data-ktwizard-type="step-content">
+                                                    <!--<div class="kt-heading kt-heading--md">Select your Services</div>-->
                                                     <div class="col-xl-12 kt-scroll ps ps--active-y">
                                                         <div class="kt-portlet__body">
 
-                                                            <div class="row" >
-                                                                <div class="col-xl-4"
-                                                                     style="margin-left: 60%; float:right;">
+                                                            <div class="row">
+                                                                <div class="col-xl-10"></div>
+                                                                <div class="col-xl-6"
+                                                                     style="margin-left: 50%; float:right;">
 
                                                                     <!--<span class="btn btn-primary" style="float:right"><i class="flaticon2-plus"></i>Add Project</span>-->
                                                                     <!--<?php echo $this->Html->link('<span class="btn btn-primary" style="float:right"><i class="flaticon2-plus"></i>Add Project</span>',
@@ -620,24 +630,31 @@ $conn = ConnectionManager::get('default');
 
                                                                 </div>
 
-                                                                <div data-scroll="true" data-height="700"
-                                                                     style="height: 700px; overflow: hidden; width:600px;">
+
+                                                                <div data-scroll="true" data-height="500"
+                                                                     style="height: 500px; overflow: hidden; width:600px;">
 
                                                                     <div class="kt-timeline-v1 kt-timeline-v1--justified" style="margin-left:5%;">
                                                                         <?php foreach($client_talent as $client_talents){ ?>
 
-                                                                            <div class="kt-timeline-v1__items"
-                                                                                 style="margin-bottom: -5%;">
-                                                                                <div class="kt-timeline-v1__marker"></div>
-                                                                                <div class="kt-timeline-v1__item kt-timeline-v1__item--first">
-                                                                                    <div class="kt-timeline-v1__item-circle">
-                                                                                        <div class="kt-bg-danger"></div>
-                                                                                    </div>
-
-                                                                                    <span class=" kt-font-brand">
+                                                                                <div class="kt-timeline-v1__items"
+                                                                                     style="margin-bottom: -5%;">
                                                                                     <div
-                                                                                        class="kt-timeline-v1__item-content"
-                                                                                        style="max-width: 90%;">
+                                                                                        class="kt-timeline-v1__marker"></div>
+                                                                                    <div
+                                                                                        class="kt-timeline-v1__item kt-timeline-v1__item--first">
+                                                                                        <div
+                                                                                            class="kt-timeline-v1__item-circle">
+                                                                                            <div
+                                                                                                class="kt-bg-danger"></div>
+                                                                                        </div>
+
+                                                                                        <span class=" kt-font-brand">
+                                                                                        <div
+                                                                                            class="kt-timeline-v1__item-content"
+                                                                                            style="max-width: 90%;">
+
+
                                                                                             <div class="kt-timeline-v1__item-title ">
 
                                                                                                 <?php echo $client_talents['project_name']?>
@@ -666,18 +683,18 @@ $conn = ConnectionManager::get('default');
                                                                                                 <p>
 
                                                                                                 <i class="flaticon-event-calendar-symbol" style="font-size:20px;width: 3%;color:#00e6b8" ></i>
-                                                                                                    <?php echo date_format($client_talents['start_date'], "d/m/Y "); ?> -
+                                                                                                <?php echo date_format($client_talents['start_date'], "d/m/Y "); ?> -
                                                                                                     <?php echo date_format($client_talents['end_date'], "d/m/Y "); ?>
                                                                                                 </p>
 
 
                                                                                                 <h6>Allocated Talents</h6>
 
-                                                                                                <?php for($i=0;$i<sizeOf($client_talents['talents']);$i++) { ?>
-                                                                                                    <span
-                                                                                                        class=" rotate-center kt-badge kt-badge--primary  kt-badge--inline kt-badge--pill kt-badge--md"
-                                                                                                        style="margin-bottom: 8px"><?php echo $client_talents['talents'][$i]['first_name'].' '.$client_talents['talents'][$i]['last_name']; ?></span>
-                                                                                                <?php } ?>
+                                                                                    <?php for($i=0;$i<sizeOf($client_talents['talents']);$i++) { ?>
+                                                                                        <span
+                                                                                            class=" rotate-center kt-badge kt-badge--primary  kt-badge--inline kt-badge--pill kt-badge--md"
+                                                                                            style="margin-bottom: 8px"><?php echo $client_talents['talents'][$i]['first_name'].' '.$client_talents['talents'][$i]['last_name']; ?></span>
+                                                                                                    <?php } ?>
 
 
 
@@ -688,9 +705,9 @@ $conn = ConnectionManager::get('default');
                                                                                             </div>
 
                                                                                         </div>
-                                                                            </div>
+                                                                                    </div>
 
-                                                                        </div>
+                                                                                </div>
 
                                                                         <?php } ?>
                                                                     </div>
@@ -704,28 +721,6 @@ $conn = ConnectionManager::get('default');
                                                         </div>
                                                     </div>
                                                 </div>
-
-                                                <!--end: Form Wizard Step 3-->
-
-
-                                                <!--end: Form Wizard Step 5-->
-
-                                                <!--begin: Form Actions -->
-                                                <!--<div class="kt-form__actions" >
-                                                    <div class="btn btn-secondary btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-prev">
-                                                        Previous
-                                                    </div>
-                                                    <div class="btn btn-success btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-submit">
-                                                        Submit
-                                                    </div>
-                                                    <div class="btn btn-brand btn-md btn-tall btn-wide kt-font-bold kt-font-transform-u" data-ktwizard-type="action-next">
-                                                        Next Step
-                                                    </div>
-                                                </div>
-                                                -->
-
-                                                <!--end: Form Actions -->
-
 
                                                 <!--end: Form Wizard Step 3-->
 
@@ -769,7 +764,7 @@ $conn = ConnectionManager::get('default');
                                                                             <fieldset>
                                                                                         <div class="form-group row">
                                                                                             <div class="col-lg-4">
-                                                                                                <?php echo $this->Form->control('type', ['class' => 'form-control','required' => true, 'empty' => '--select--', 'options' => array('' => '', 'Email' => 'Email', 'Phone Call' => 'Phone Call','Virtual Meeting' => 'Virtual Meeting', 'Meeting' => 'Meeting','Text Message' => 'Text Message')]); ?>
+                                                                                                <?php echo $this->Form->control('type', ['class' => 'form-control','required' => true, 'empty' => '--select--', 'options' => array('' => '', 'Email' => 'Email', 'Phone Call' => 'Phone Call')]); ?>
                                                                                             </div>
 
                                                                                         </div>
@@ -857,8 +852,7 @@ $conn = ConnectionManager::get('default');
                                                                                         </div>
                                                                                         <div class="form-group row">
                                                                                             <div class="col-lg-4">
-                                                                                                <?php echo $this->Form->control('type', ['class' => 'form-control','value' => $activity->type, 'options' => array('' => '', 'Email' => 'Email', 'Phone Call' => 'Phone Call','Virtual Meeting' => 'Virtual Meeting', 'Meeting' => 'Meeting','Text Message' => 'Text Message')]); ?>
-
+                                                                                                <?php echo $this->Form->control('type', ['class' => 'form-control', 'options' => array('' => '', 'Email' => 'Email', 'Phone Call' => 'Phone Call')]); ?>
                                                                                             </div>
 
                                                                                         </div>
@@ -1063,15 +1057,15 @@ $conn = ConnectionManager::get('default');
             })
         </script>
         <script>
-            function pass($something,$flag){
-            var string =$something.toString();
-            var test;
-            if($flag==1){
-                test=0;
-            }
-            else{
-                test=1;
-        }
+function pass($something,$flag){
+var string =$something.toString();
+var test;
+if($flag==1){
+    test=0;
+}
+else{
+    test=1;
+}
 
 
     $.ajax({
@@ -1105,6 +1099,23 @@ $conn = ConnectionManager::get('default');
                     test1=1;
                 }
 
+                $.ajax({
+                    url: '<?php echo $this->Url->build([
+                        'controller' => 'ClientNotes',
+                        'action' => 'getFlag'
+                    ])?>' + '/' + string1,
+                    type:'POST',
+                    headers: {
+                        'X-CSRF-Token': '<?= h($this->request->getParam('_csrfToken')); ?>'
+                    },
+                    data:{'id':string1},
+                    dataType:'String',
+                    success: function(data){
+                        alert(data);
+                    }
+
+
+                });
 
 
                 $.ajax({
@@ -1118,7 +1129,7 @@ $conn = ConnectionManager::get('default');
                     },
                     data:{'client_note_flag':test1},
                     success: function(){
-                        window.location.reload();
+                        //window.location.reload();
                     }
 
 
@@ -1155,17 +1166,8 @@ $conn = ConnectionManager::get('default');
                 $('#id').val(activityId);
                 if (type == "Email") {
                     $('#type option[value=Email]').prop('selected', true);
-                } else if (type == "Phone Call" || type == "PhoneCall"){
+                } else if (type == "Phone Call" || type == "PhoneCall")
                     $('#type option[value=PhoneCall]').prop('selected', true);
-                } else if (type == "Virtual Meeting" || type == "VirtualMeeting"){
-                    $('#type option[value=VirtualMeeting]').prop('selected', true);
-                } else if (type == "Meeting" || type == "Meeting"){
-                    $('#type option[value=Meeting]').prop('selected', true);
-                } else if (type == "Text Message" || type == "TextMessage")
-                    $('#type option[value=TextMessage]').prop('selected', true);
-
-
-
                 $('#summary').val(summary);
                 $('#date').attr('value', today);
                 $('#time').attr('value', timeline);

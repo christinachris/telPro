@@ -36,8 +36,8 @@ class NotesTable extends Table
         $this->setDisplayField('id');
         $this->setPrimaryKey('id');
 
-        $this->belongsTo('Users', [
-            'foreignKey' => 'user_id'
+        $this->belongsTo('Talents', [
+            'foreignKey' => 'talent_id'
         ]);
     }
 
@@ -70,7 +70,7 @@ class NotesTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
+        $rules->add($rules->existsIn(['talent_id'], 'Talents'));
 
         return $rules;
     }

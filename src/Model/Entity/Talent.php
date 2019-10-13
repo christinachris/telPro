@@ -41,14 +41,16 @@ class Talent extends Entity
     protected $_accessible = [
         'first_name' => true,
         'last_name' => true,
-        'preferred_name' => true,
+        'prefered_name' => true,
         'email' => true,
         'phone_no' => true,
         'address' => true,
         'url' => true,
+        'username' => true,
+        'password' => true,
         'cost' => true,
         'response_time' => true,
-        'quality_ofWork' => true,
+        'quality_of_work' => true,
         'note_id' => true,
         'occupied' => true,
         'speciality_id' => true,
@@ -59,4 +61,7 @@ class Talent extends Entity
         'skill_category' => true
     ];
 
+    protected $_hidden = [
+        'password'
+    ];
 }

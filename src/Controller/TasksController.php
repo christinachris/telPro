@@ -30,6 +30,33 @@ class TasksController extends AppController
     public function index($id)
     {
 
+        if(isset($_GET['task'])) {
+            $this->loadModel('Mentions');
+            if (sizeOf($this->Mentions->find('all', ['conditions' => ['AND' => ['task_id' => $_GET['task'], ['project_id' => $id], ['talent_id' => $this->Auth->user('talent_id')]]]])->toList()) > 0) {
+                $mentionnum=sizeOf($this->Mentions->find('all', ['conditions' => ['AND' => ['task_id' => $_GET['task'], ['project_id' => $id], ['talent_id' => $this->Auth->user('talent_id')]]]])->toList());
+                if($mentionnum==1){
+                    $taskViewd = $this->Mentions->find('all', ['conditions' => ['AND' => ['task_id' => $_GET['task'], ['project_id' => $id], ['talent_id' => $this->Auth->user('talent_id')]]]])->toList()[0];
+                    $taskViewd->viewed = 1;
+                    $this->Mentions->save($taskViewd);
+                } else{
+                    //foreach ($mentioncon as $mentioncons){
+
+                        //$taskViewd = $mentioncons->request->getData()['viewed'];
+                        //$taskViewd = $this->Mentions->find('all', ['conditions' => ['AND' => ['task_id' => $_GET['task'], ['project_id' => $id], ['talent_id' => $this->Auth->user('talent_id')]]]])->toList()[$mentioncons];
+                    for($i=0;$i<$mentionnum;$i++){
+                        $taskViewd = $this->Mentions->find('all', ['conditions' => ['AND' => ['task_id' => $_GET['task'], ['project_id' => $id], ['talent_id' => $this->Auth->user('talent_id')]]]])->toList()[$i];
+                        if($taskViewd->viewed == 0){
+                            $taskViewd->viewed = 1;
+                            $i=$mentionnum;
+                        }
+                        $this->Mentions->save($taskViewd);
+                    }
+                }
+
+
+            }
+        }
+
         if (!empty($id)) {
             $this->paginate = [
                 'contain' => ['Projects', 'Status', 'Colours', 'Labels', 'Comments', 'Talents','logs']
@@ -98,6 +125,7 @@ class TasksController extends AppController
                 else {
                     if ($this->Tasks->save($taskAdd)) {
                         $this->Flash->success(__('The task has been saved.'));
+                        return $this->redirect([]);
                     } else {
                         $this->Flash->error(__('The task could not be saved. Please, try again.'));
                     }

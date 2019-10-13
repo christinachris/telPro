@@ -31,8 +31,6 @@ $conn = ConnectionManager::get('default');
     </div>
 </div>
 
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-
 
 
 
@@ -181,69 +179,57 @@ $conn = ConnectionManager::get('default');
                                 <table class="table" id="myTalentTable">
                                     <thead>
                                     <tr style="left: 0px;">
-                                        <th style="width: auto"><?= __('') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('first_name', 'Full name') ?></span></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('position') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('skill_categories') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('speciality_id') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('cost') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('response_time') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('quality_of_work') ?></th>
-                                        <th style="width: auto"><?= $this->Paginator->sort('phone_no') ?></th>
-                                        <th style="width:auto"><?= $this->Paginator->sort('email') ?></th>
-
-                                        <th style="width: 15%" data-field="Actions" ><span>Actions</span></th>
-                                        <th style="width: 5%" data-field="Actions" data-autohide-disabled="false"><span>Shortcuts</span></th>
+                                        <th style="width: 3%"><?= __('') ?></th>
+                                        <th style="width: 10%">
+                                            <?= $this->Paginator->sort('first_name', 'Full name') ?></span>
+                                        </th>
+                                        <th style="width: 8%">
+                                            <?= $this->Paginator->sort('position') ?>
+                                        </th>
+                                        <th style="width: 10%">
+                                            <?= $this->Paginator->sort('skill_categories') ?>
+                                        </th>
+                                        <th style="width: 10%">
+                                            <?= $this->Paginator->sort('speciality_id') ?>
+                                        </th>
+                                        <th style="width: 5%">
+                                            <?= $this->Paginator->sort('cost') ?>
+                                        </th>
+                                        <th style="width: 10%">
+                                            <?= $this->Paginator->sort('response_time') ?>
+                                        </th>
+                                        <th style="width: 5%">
+                                            <?= $this->Paginator->sort('quality_of_work') ?>
+                                        </th>
+                                        <th style="width: auto">
+                                            <?= $this->Paginator->sort('phone_no') ?>
+                                        </th>
+                                        <th style="width:auto">
+                                            <?= $this->Paginator->sort('email') ?>
+                                        </th>
+                                        <th style="width: 10%" data-field="Actions" >
+                                            <span>Actions</span>
+                                        </th>
+                                        <th style="width: 10%" data-field="Actions" data-autohide-disabled="false">
+                                            <span>Shortcuts</span>
+                                        </th>
                                     </tr>
-                                    <?php foreach ($talents as $talent): ?>
+                                    <?php foreach ($talents
+
+                                    as $talent): ?>
                                     <tbody class="kt-datatable__body ps ps--active-y">
                                     <tr data-row="0" class="kt-datatable__row" style="left: 0px;">
                                         <td>
 
-                                            <?php
-                                            $count=0;
-                                            foreach ($talent->projects as $talentproject):
-                                                if ($talentproject->progress_num<100) {
-                                                    $count=$count+1;
-                                                }
-                                                ?>
-                                            <?php endforeach; ?>
-
-                                            <?php if ($count != 0): ?>
-                                                <div class="kt-header__topbar-wrapper" data-toggle="dropdown" data-offset="0px,10px" style="border: 5px solid transparent;width:5px;height: 4vh;">
-                                                    <span class="kt-header__topbar-icon" >
-                                                        <i class="flaticon2-time" style="font-size:25px;width: 3%;color:indianred"></i>
-                                                        <span class="kt-badge kt-badge--success kt-hidden"></span>
-                                                    </span>
-                                                    <span class="kt-badge kt-badge--danger"
-                                                          style=" background-color: #4000ff;position:relative;top: -40px;right: -15px; width:18px; height:18px ;opacity: 0.9 ; font-weight: 500;font-size: 15px"> <?php echo $count; ?></span>
-
-                                                </div>
-                                            <?php else: ?>
-                                                <?= h("") ?>
-
-                                            <?php endif; ?>
-
-
-                                            <?php $aaa=3;
-                                            foreach ($talent->talent_notes as $talentNotes):
-                                                if($talentNotes->if_flag==1):
-                                                    $aaa=1;
-                                                endif;
-                                            endforeach;
-
-                                            ?>
-                                            <?php if ($aaa == 1): ?>
-
-                                                <i class="flaticon-bell" style="font-size:30px;width: 3%;color:indianred"></i>
+                                            <?php if (!empty($talent->projects)): ?>
+                                                <i class='flaticon-rotate' style="font-size:30px;width: 3%;color:indianred"></i>
                                             <?php else: ?>
                                                 <?= h("") ?>
                                             <?php endif; ?>
                                         </td>
                                         <td data-field="OrderID" class="kt-datatable__cell">
                                     <span
-                                        style="width: 85px;"><?= $this->Html->link(h($talent->first_name) . ' ' . h($talent->last_name), ['action' => 'view', $talent->id]) ?>
-                                    </span>
+                                        style="width: 85px;"><?= $this->Html->link(h($talent->first_name) . ' ' . h($talent->last_name), ['action' => 'view', $talent->id]) ?></span>
                                         </td>
                                         <td data-field="ShipDate" class="kt-datatable__cell">
                                             <span style="width: 80px;"><?= h($talent->position) ?></span>
@@ -251,16 +237,18 @@ $conn = ConnectionManager::get('default');
                                         <td data-field="ShipDate" class="kt-datatable__cell">
                                     <span
                                         style="width: 80px;">
-                                        <!--<?php if ($talent->has('skill_category')) {
+                                        <?php if ($talent->has('skill_category')) {
                                             echo ($talent->skill_category->name);
-                                        } ?>-->
-                                        <?= $talent->has('skill_category') ? $this->Html->link($talent->skill_category->name, ['controller' => 'SkillCategories', 'action' => 'index', $talent->skill_category->id]) : '' ?></span>
+                                        } ?>
+                                        <!--<?= $talent->has('skill_category') ? $this->Html->link($talent->skill_category->name, ['controller' => 'SkillCategories', 'action' => 'view', $talent->skill_category->id]) : '' ?>--></span>
                                         </td>
                                         <td data-field="ShipDate" class="kt-datatable__cell">
                                     <span
                                         style="width: 80px;">
-
-                                        <?= $talent->has('speciality') ? $this->Html->link($talent->speciality->name, ['controller' => 'Specialities', 'action' => 'index', $talent->speciality->id]) : '' ?></span>
+                                        <?php if ($talent->has('speciality')) {
+                                            echo ($talent->speciality->name);
+                                        } ?>
+                                        <!--<?= $talent->has('speciality') ? $this->Html->link($talent->speciality->name, ['controller' => 'Specialities', 'action' => 'view', $talent->speciality->id]) : '' ?>--></span>
                                         </td>
                                         <td data-field="ShipDate" class="kt-datatable__cell">
                                             <span style="width: 45px;"><?= h($talent->cost) ?></span>
@@ -281,7 +269,6 @@ $conn = ConnectionManager::get('default');
                                             data-autohide-disabled="false">
                                                    <span style="overflow: visible; position: relative; width: 100px;">
                                                         <?= $this->Html->link('<span class= "btn btn-sm btn-clean btn-icon btn-icon-sm"  ><i class="flaticon2-note" style="padding : 5px ; font-size: 20px" ></i></span>', ['action' => 'edit', $talent->id],['escape' => false, 'data-toggle'=>"kt-popover",'data-content'=>"Edit Talent",'data-placement'=>'bottom']) ?>
-                                                        <?= $this->Form->postLink(' ', ['action' => 'archive', $talent->id], ['confirm' => __('Are you sure you want to archive this talent?'), 'class' => "btn btn-lg btn-clean  la la-archive",'style' => 'color:red ; padding : 5px ; font-size: 24px', 'data-toggle' => "kt-popover", 'data-content' => "Archive Talent", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?',  $talent->first_name.' '.$talent->last_name)]) ?>
 
                                                        <!--<?= $this->Html->link($this->Html->tag('i', '', array('class' => 'btn btn-lg btn-clean  la la-edit', 'style' => 'color:red ; padding : 5px ; font-size: 25px')) . '', array('controller' => 'talents', 'action' => 'edit', $talent->id), array('escape' => false)) ?>-->
                                                        <!--<?= $this->Html->link($this->Html->tag('i', '', array('class' => 'btn btn-lg btn-clean  flaticon-symbol', 'style' => 'padding : 5px ; font-size: 25px')) . '', array('controller' => 'talents', 'action' => 'archive', $talent->id), ['confirm' => __('Are you sure you want to delete {0}?', $talent->first_name.' '.$talent->last_name)]) ?> -->
@@ -290,6 +277,7 @@ $conn = ConnectionManager::get('default');
                                                        <!--<?= $this->Form->postLink(' ', [ 'action' => 'archive', $talent->id],['confirm' => __('Are you sure you want to delete {0}?', $talent->first_name.' '.$talent->last_name),'class'=>"flaticon-symbol" , 'data-toggle'=>"kt-popover",'data-content'=>"Archive Talent",'data-placement'=>'bottom']) ?> -->
 
                                                        <!--<?= $this->Html->link('<span class= "btn btn-sm btn-clean btn-icon btn-icon-sm" ><i class="flaticon-symbol" style="padding : 5px ; font-size: 20px" ></i></span>', [ 'action' => 'archive', $talent->id], ['confirm' => __('Are you sure you want to delete {0}?', $talent->first_name.' '.$talent->last_name), 'action' => 'archive', $talent->id]) ?> -->
+                                                       <?= $this->Form->postLink(' ', ['action' => 'archive', $talent->id], ['confirm' => __('Are you sure you want to archive this talent?'), 'class' => "btn btn-lg btn-clean  la la-archive",'style' => 'color:red ; padding : 5px ; font-size: 25px', 'data-toggle' => "kt-popover", 'data-content' => "Archive Talent", 'data-placement' => 'bottom'], ['confirm' => __('Are you sure you want to delete {0}?',  $talent->first_name.' '.$talent->last_name)]) ?>
 
 
 
@@ -299,7 +287,7 @@ $conn = ConnectionManager::get('default');
                                         <td>
                                             <button type="button" class="addNote btn btn-sm btn-clean btn-icon btn-icon-sm"
                                                     data-toggle="modal" data-target="#addNote"
-                                                        data-add-id="<?php echo $talent->id ?>"><i class="flaticon-notes" style="font-size: 23px" data-toggle="kt-popover" data-content="Add New Note" data-placement='bottom'></i>
+                                                        data-add-id="<?php echo $talent->id ?>"><i class="flaticon-notes" style="font-size: 23px" kt-popover" data-content="Add New Note" data-placement='bottom'></i>
 
 
 
@@ -364,7 +352,7 @@ $conn = ConnectionManager::get('default');
                                                                             <fieldset>
                                                                                         <div class="form-group row">
                                                                                             <div class="col-lg-4">
-                                                                                                <?php echo $this->Form->hidden('talent_id', ['class' => 'form-control', 'type' => 'textarea', 'id' => 'talent_id_pass']); ?>
+                                                                                                <?php echo $this->Form->hidden('talent_id', ['class' => 'form-control', 'type' => 'textarea', 'id' => 'talent_id']); ?>
                                                                                             </div>
                                                                                         </div>
                                                                                         <div class="form-group row">
@@ -403,7 +391,7 @@ $conn = ConnectionManager::get('default');
             $(document).on("click", ".addNote", function () {
                 var TalentId = $(this).attr("data-add-id");
                 if (TalentId !== "") {
-                    $('#talent_id_pass').val(TalentId);
+                    $('#talent_id').val(TalentId);
                     $('#addNote').modal('show');
                 }
 
@@ -449,5 +437,4 @@ $conn = ConnectionManager::get('default');
 
             }
         </script>
-
 

@@ -31,6 +31,7 @@ class Mention extends Entity
      */
     protected $_accessible = [
         'talent_id' => true,
+        'viewed'=>true,
         'mention_date' => true,
         'project_id' => true,
         'task_id' => true,

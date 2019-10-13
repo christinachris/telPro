@@ -141,7 +141,7 @@ $conn = ConnectionManager::get('default');
                                         <div class="col-lg-3">
                                             <div>
                                                 <?php echo $this->Form->control('lifecycle_stage',
-                                                    ['options' => array('' => '', 'Potential Lead' => 'Potential Lead','Offer Sent' => 'Offer Sent', 'Offer Accepted' => 'Offer Accepted','Project In Progress' => 'Project In Progress','Project Completed' => 'Project Completed ','Awaiting Payment' => 'Awaiting Payment', 'Business Closed' => 'Business Closed'),
+                                                    ['options' => array('' => '', 'Offer Sended' => 'Offer Sended', 'Awaiting Payment' => 'Awaiting Payment', 'Potential Lead' => 'Potential Lead', 'Contacted' => 'Contacted'),
                                                         'class' => 'form-control', 'id' => 'exampleSelect1']); ?>
                                             </div>
                                         </div>
@@ -188,7 +188,7 @@ $conn = ConnectionManager::get('default');
                                                         </div>
                                                         <td><?php echo $this->Form->control('Phones.' . $key . '.phone_no', ['value' => $phone->phone_no, 'class' => 'form-control', 'type' => 'text', 'style' => 'margin-left:20%;', 'label' => ['style' => 'margin-left:20%;']]) ?></td>
                                                         <td>
-                                                            <br><?php echo $this->Form->radio('phone_primary[]', [['value' => $key, 'text' => '<span style="padding:0 5px 0 5px;">Primary</span>']], ['value' => $row, 'hiddenField' => false, 'style' => 'margin-left:80px;margin-top:15px', 'escape' => false]) ?>
+                                                            <br><?php echo $this->Form->radio('phone_primary[]', [['value' => $key, 'text' => '<span style="padding:0 5px 0 5px;">Primary</span>']], ['value' => $row, 'hiddenField' => false, 'style' => 'margin-left:50px;margin-top:15px', 'escape' => false]) ?>
                                                         </td>
                                                         <td><br>
                                                             <button style="margin-left:50%;" type="button" name="remove"
@@ -233,7 +233,7 @@ $conn = ConnectionManager::get('default');
                                                             <td><?php echo $this->Form->control('Emails.' . $key . '.title', ['value' => $email->title, 'class' => 'form-control']) ?></td>
                                                             <td> <?php echo $this->Form->control('Emails.' . $key . '.email_address', ['value' => $email->email_address, 'class' => 'form-control', 'type' => 'email', 'style' => 'margin-left:20%;', 'label' => ['style' => 'margin-left:20%;']]) ?></td>
                                                             <td>
-                                                                <br><?php echo $this->Form->radio('email_primary[]', [['value' => $key, 'text' => '<span style="padding:0 5px 0 5px;">Primary</span>']], ['value' => $row, 'hiddenField' => false, 'style' => 'margin-left:80px;margin-top:15px', 'escape' => false]) ?>
+                                                                <br><?php echo $this->Form->radio('email_primary[]', [['value' => $key, 'text' => '<span style="padding:0 5px 0 5px;">Primary</span>']], ['value' => $row, 'hiddenField' => false, 'style' => 'margin-left:50px;margin-top:15px', 'escape' => false]) ?>
                                                             </td>
                                                             <td><br>
                                                                 <button style="margin-left:50%;" type="button" name="remove"
@@ -288,7 +288,7 @@ $conn = ConnectionManager::get('default');
                         $('#dynamic_field').append('<tr id="row' + i + '">' +
                             '<td><br><input type="text" placeholder="Enter title" name="Phones[' + (i - 1) + '][title]" class="form-control name_list" /></td>' +
                             '<td><br><input style="margin-left:20%;" type="tel" placeholder="Enter Phone No" name="Phones[' + (i - 1) + '][phone_no]" class="form-control name_list" /></td>' +
-                            '<td><br><input style="margin-left:80px; margin-top:15px;" type="radio" name="phone_primary[]" value="' + (i - 1) + '" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
+                            '<td><br><input style="margin-left:50px; margin-top:15px;" type="radio" name="phone_primary[]" value="' + (i - 1) + '" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
                             '<td><br><button style="margin-left:50%;" type="button" name="remove" id="' + i + '" class=" btn_remove btn btn-danger btn-elevate btn-pill btn-sm">Delete</button></td></tr>');
                     });
                     $(document).on('click', '.btn_remove', function () {
@@ -314,7 +314,7 @@ $conn = ConnectionManager::get('default');
                         $('#dynamic_field2').append('<tr id="row' + i + '">' +
                             '<td><br><input type="text" placeholder="Enter title" name="Emails[' + (i - 1) + '][title]" class="form-control name_list" /></td>' +
                             '<td><br><input style="margin-left:20%;" type="tel"  placeholder="Enter Email Address" name="Emails[' + (i - 1) + '][email_address]" class="form-control name_list" /></td>' +
-                            '<td><br><input style="margin-left:80px; margin-top:15px;" type="radio" name="email_primary[]" value="' + (i - 1) + '" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
+                            '<td><br><input style="margin-left:50px; margin-top:15px;" type="radio" name="email_primary[]" value="' + (i - 1) + '" ><span style="padding:0 5px 0 5px;">Primary</span></td>' +
                             '<td><br><button style="margin-left:50%;" type="button" name="remove" id="' + i + '" class=" btnremove btn btn-danger btn-elevate btn-pill btn-sm">Delete</button></td></tr>');
                     });
                     $(document).on('click', '.btnremove', function () {
